@@ -3,6 +3,9 @@ import { getAdminAuthMode, getCurrentAdmin } from '@/lib/server/admin-session';
 import { isSupabaseAuthConfigured } from '@/lib/server/supabase-auth';
 import { isRFQAdminBackendConfigured } from '@/lib/server/rfq-admin';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   let admin = null;
   try { admin = await getCurrentAdmin(); } catch { admin = null; }
