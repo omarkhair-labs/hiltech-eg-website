@@ -1,6 +1,25 @@
 import type { ProductItem } from '@/content/products';
 import { site } from '@/content/site';
 
+const wixInfrastructureDescriptionSlugs = new Set([
+  'fiber-enclosure-24-core-china',
+  'coupler-sc-simplex-mm-sm',
+  'patch-cord-lc-lc-sc-mm-om3-3-meter',
+  'patch-cord-lc-lc-sm-3-meter',
+  'cornet-rj45-connector-box-100-pieces',
+  'point-rj45-connector-box-100-pieces',
+  'fumo-double-faceplate-white',
+  'excel-cat6-utp-keystone-jack-idc-white',
+  'prolink-cat6a-rj45-mptl-stp-plug',
+  'local-rj11-telephone-patch-cord',
+  'blackstone-utp-cat6-cable-3m',
+  'leviton-cat6-utp-patch-cord-3m-gray',
+  'dema-prolink-cat6a-patch-cord-3m-lszh-gray',
+  'panduit-category-6-utp-patch-cord-1m',
+  'leviton-cat6-lszh-network-cable-305m-gray',
+  'leviton-optic-fiber-cable',
+]);
+
 function normalizeText(value: string) {
   return value.replace(/\s+/g, ' ').trim();
 }
@@ -19,16 +38,19 @@ export function absoluteSiteUrl(pathOrUrl?: string | null) {
 }
 
 export function getProductSeoDescription(product: ProductItem, locale: 'en' | 'ar' = 'en') {
+  if (locale === 'en') {
+    const projectScope = wixInfrastructureDescriptionSlugs.has(product.id)
+      ? 'network infrastructure, fiber optic, structured cabling and data center projects'
+      : 'professional networking and infrastructure projects';
+
+    return `${product.name}. Available from HILTECH Egypt for ${projectScope}. Request a quote.`;
+  }
+
   const brandPrefix = hasConcreteBrand(product.brand) && !product.name.toLowerCase().includes(product.brand.toLowerCase())
     ? `${product.brand} `
     : '';
-
   const core = normalizeText(`${brandPrefix}${product.name}. ${product.shortSpecs} ${product.useCase}`);
-  const suffix = locale === 'ar'
-    ? ' اطلب عرض سعر من HILTECH Egypt.'
-    : ' Request a quote from HILTECH Egypt.';
-
-  return `${core}${suffix}`.slice(0, 160).trim();
+  return `${core} اطلب عرض سعر من HILTECH Egypt.`.slice(0, 160).trim();
 }
 
 export function buildProductJsonLd(product: ProductItem, canonicalUrl: string, imageUrl?: string | null) {
