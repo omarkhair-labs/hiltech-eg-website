@@ -10,13 +10,19 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { arNavigation } from '@/content/ar/navigation';
 import { getLocalizedPath } from '@/lib/i18n/routes';
 
-const desktopNav = [
+const primaryNav = [
   ['Solutions', '/solutions', arNavigation.solutions],
   ['Products', '/products-partners', arNavigation.products],
-  ['Work', '/work', arNavigation.work],
   ['Services', '/services', arNavigation.services],
-  ['Company', '/company', arNavigation.company],
+  ['Work', '/work', arNavigation.work],
   ['Contact', '/contact', arNavigation.contact],
+] as const;
+
+const secondaryNav = [
+  ['Company', '/company', arNavigation.company],
+  ['Resources', '/resources', 'المصادر'],
+  ['Track RFQ', '/track', arNavigation.trackRfq],
+  ['Scope Finder', '/scope-finder', 'مساعد تحديد النطاق'],
 ] as const;
 
 export default function Header() {
@@ -37,41 +43,141 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
+
   const localizeHref = (href: string) => getLocalizedPath(href, isArabic ? 'ar' : 'en');
+  const isActive = (href: string) => {
+    const target = localizeHref(href);
+    return pathname === target || pathname.startsWith(`${target}/`);
+  };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)] backdrop-blur-md">
-      <div className="container flex h-14 items-center justify-between gap-2 md:h-16 md:gap-4">
-        <Link href={isArabic ? '/ar' : '/'} translate="no" className="flex min-w-0 items-center gap-2 text-lg font-extrabold tracking-[0.12em] text-white md:text-xl">
-          {showLogoImage ? <Image src="/logo-dark.png" alt="HILTECH logo" width={132} height={38} className="h-7 w-auto max-w-[112px] object-contain sm:max-w-[118px] md:h-8 md:max-w-[128px]" onError={() => setShowLogoImage(false)} priority /> : null}
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)] backdrop-blur-xl">
+      <div className="container flex h-16 items-center justify-between gap-3">
+        <Link
+          href={isArabic ? '/ar' : '/'}
+          translate="no"
+          className="flex min-w-0 items-center gap-2 text-lg font-extrabold tracking-[0.12em] text-white"
+          aria-label={isArabic ? 'العودة إلى الصفحة الرئيسية لهيلتك' : 'HILTECH home'}
+        >
+          {showLogoImage ? (
+            <Image
+              src="/logo-dark.png"
+              alt="HILTECH logo"
+              width={132}
+              height={38}
+              className="h-8 w-auto max-w-[126px] object-contain"
+              onError={() => setShowLogoImage(false)}
+              priority
+            />
+          ) : null}
           <span translate="no" className={showLogoImage ? 'sr-only' : 'text-white'}>HILTECH</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 py-1 md:flex lg:gap-1.5 backdrop-blur-sm" aria-label="Primary">
-          {desktopNav.map(([label, href, arLabel]) => (
-            <Link key={href} href={localizeHref(href)} translate="no" className="rounded-full px-3 py-1.5 text-sm font-semibold text-slate-200 transition hover:bg-white/15 hover:text-white">
-              {isArabic ? arLabel : label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label={isArabic ? 'التنقل الرئيسي' : 'Primary navigation'}>
+          {primaryNav.map(([label, href, arLabel]) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={localizeHref(href)}
+                translate="no"
+                aria-current={active ? 'page' : undefined}
+                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+              >
+                {isArabic ? arLabel : label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <SiteSearch className="inline-flex items-center rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-200 shadow-sm transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm" />
-          <LanguageSwitcher className="rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm" />
-          <Link href={localizeHref('/rfq')} className="rounded-md border border-white/20 bg-white/5 px-2.5 py-2 text-xs font-medium text-slate-200 transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm">{isArabic ? `${arNavigation.rfqBasket} (${rfqCount})` : `RFQ Basket (${rfqCount})`}</Link>
-          <Link href={localizeHref('/rfq')} className="inline-flex items-center rounded-md bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700 transition">{isArabic ? 'اطلب عرض سعر' : 'Request Quote'}</Link>
+        <div className="hidden items-center gap-1.5 lg:flex">
+          <SiteSearch className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
+          <LanguageSwitcher className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
+          <Link
+            href={localizeHref('/rfq')}
+            className="inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"
+          >
+            {isArabic ? `السلة ${rfqCount}` : `RFQ ${rfqCount}`}
+          </Link>
+          <Link
+            href={localizeHref('/rfq')}
+            className="inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"
+          >
+            {isArabic ? 'ابدأ طلب السعر' : 'Start RFQ'}
+          </Link>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1 md:hidden">
-          <LanguageSwitcher className="inline-flex min-h-10 items-center rounded-lg border border-white/20 bg-white/5 px-2 py-1.5 text-xs font-semibold text-slate-200 shadow-sm transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm" />
-          <SiteSearch className="inline-flex min-h-10 items-center rounded-lg border border-white/20 bg-white/5 px-2.5 py-1.5 text-sm font-semibold text-slate-200 shadow-sm transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm" onNavigate={() => setOpen(false)} />
-          <button className="inline-flex min-h-10 items-center rounded-lg border border-white/20 bg-white/5 px-2.5 py-1.5 text-sm font-semibold text-slate-200 shadow-sm transition hover:border-white/30 hover:bg-white/10 backdrop-blur-sm" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="mobile-nav">
-            <span translate="no">{isArabic ? 'القائمة' : 'Menu'}</span>
+        <div className="flex shrink-0 items-center gap-1 lg:hidden">
+          <SiteSearch
+            className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+            onNavigate={() => setOpen(false)}
+          />
+          <button
+            type="button"
+            className="inline-flex min-h-11 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={isArabic ? 'فتح قائمة التنقل' : 'Open navigation menu'}
+          >
+            {isArabic ? 'القائمة' : 'Menu'}
           </button>
         </div>
       </div>
 
-      {open ? <div id="mobile-nav" className="border-t border-white/10 bg-slate-950 md:hidden"><div className="container py-4 pb-28"><div className="rounded-xl border border-white/15 bg-white/5 p-3 shadow-sm backdrop-blur-sm"><div className="space-y-5"><section><p className="public-eyebrow px-2 text-slate-400">{isArabic ? 'الرئيسية' : 'Main'}</p><div className="mt-2 grid gap-1">{desktopNav.map(([label, href, arLabel]) => <Link key={href} href={localizeHref(href)} translate="no" onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white">{isArabic ? arLabel : label}</Link>)}</div></section><section><p className="public-eyebrow px-2 text-slate-400">{isArabic ? 'أدوات طلب العرض' : 'RFQ Tools'}</p><div className="mt-2 grid gap-2"><Link href={localizeHref('/rfq')} className="inline-flex w-full justify-center rounded-md bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-700" onClick={() => setOpen(false)}>{isArabic ? 'اطلب عرض سعر' : 'Request Quote'}</Link><Link href={localizeHref('/rfq')} className="inline-flex w-full justify-center rounded-md border border-white/20 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/10" onClick={() => setOpen(false)}>{isArabic ? `${arNavigation.rfqBasket} (${rfqCount})` : `RFQ Basket (${rfqCount})`}</Link><Link href={localizeHref('/track')} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white" onClick={() => setOpen(false)}>{isArabic ? arNavigation.trackRfq : 'Track RFQ'}</Link><LanguageSwitcher className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white" /></div></section></div></div></div></div> : null}
+      {open ? (
+        <div id="mobile-nav" className="border-t border-white/10 bg-slate-950/98 lg:hidden">
+          <div className="container max-h-[calc(100vh-4rem)] overflow-y-auto py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <nav aria-label={isArabic ? 'قائمة الهاتف' : 'Mobile navigation'} className="grid gap-1">
+              {primaryNav.map(([label, href, arLabel]) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={href}
+                    href={localizeHref(href)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`}
+                  >
+                    {isArabic ? arLabel : label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="my-4 h-px bg-white/10" />
+
+            <nav aria-label={isArabic ? 'روابط إضافية' : 'Secondary navigation'} className="grid grid-cols-2 gap-1">
+              {secondaryNav.map(([label, href, arLabel]) => (
+                <Link key={href} href={localizeHref(href)} className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white">
+                  {isArabic ? arLabel : label}
+                </Link>
+              ))}
+              <LanguageSwitcher className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white" />
+            </nav>
+
+            <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+              <Link href={localizeHref('/rfq')} className="inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white hover:bg-orange-500">
+                {isArabic ? 'ابدأ طلب عرض السعر' : 'Start RFQ'}
+              </Link>
+              <Link href={localizeHref('/rfq')} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10">
+                {isArabic ? `السلة (${rfqCount})` : `Basket (${rfqCount})`}
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
