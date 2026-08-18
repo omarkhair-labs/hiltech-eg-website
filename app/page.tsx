@@ -38,10 +38,10 @@ const productCategories = [
   { label: 'Testing & Handover', category: 'Faceplates / Keystone / RJ45' },
 ];
 const metrics = [
-  { value: '10+', label: 'Years of Experience' },
-  { value: '500+', label: 'Projects Delivered' },
-  { value: '1000+', label: 'Products Supplied' },
-  { value: '24/7', label: 'Technical Support' },
+  { value: 'Fiber + Copper', label: 'Core Connectivity' },
+  { value: 'Survey → Handover', label: 'Project Delivery' },
+  { value: 'RFQ Ready', label: 'Multi-item Quotations' },
+  { value: 'Fluke + OTDR', label: 'Testing Workflows' },
 ];
 
 export default function HomePage() {
@@ -59,17 +59,12 @@ export default function HomePage() {
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
-          
-          {/* Orange glow */}
           <div className="absolute top-1/3 right-0 w-96 h-96 bg-orange-500/20 blur-3xl rounded-full filter opacity-40" />
-          
-          {/* Blue glow */}
           <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-blue-500/15 blur-3xl rounded-full filter opacity-30" />
         </div>
 
         <div className="container relative z-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-            {/* Left: Main Content */}
             <div className="space-y-8">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-3">Network Infrastructure in Egypt</p>
@@ -81,13 +76,11 @@ export default function HomePage() {
                 HILTECH helps companies plan, source, install, and test structured cabling, fiber optics, racks, CCTV infrastructure, and project-ready RFQ packages.
               </p>
 
-              {/* Primary CTAs */}
               <div className="flex flex-col gap-3 sm:flex-row pt-2">
                 <Link href="/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors">Request Project Quote</Link>
                 <Link href="/products-partners" className="inline-flex items-center justify-center px-5 py-3 font-semibold text-white transition-colors border border-white/30 rounded-md hover:bg-white/10">Browse Products</Link>
               </div>
 
-              {/* Capability chips */}
               <div className="flex flex-wrap gap-2 pt-4">
                 {capabilities.map((cap) => (
                   <span key={cap} className="inline-flex items-center px-3 py-1.5 rounded-full border border-orange-500/40 bg-orange-500/10 text-xs font-semibold text-orange-200">
@@ -97,22 +90,19 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right: Premium Visual Card */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl p-6 space-y-6">
-                {/* Metric Cards */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-xl border border-white/20 bg-white/5 backdrop-blur-sm p-4 text-center">
-                    <p className="text-2xl font-bold text-orange-300">99.9%</p>
-                    <p className="text-xs font-semibold text-slate-300 mt-1">Signal Reliability</p>
+                    <p className="text-lg sm:text-xl font-bold text-orange-300">Fiber + Copper</p>
+                    <p className="text-xs font-semibold text-slate-300 mt-1">Structured Connectivity</p>
                   </div>
                   <div className="rounded-xl border border-white/20 bg-white/5 backdrop-blur-sm p-4 text-center">
-                    <p className="text-2xl font-bold text-orange-300">24/7</p>
-                    <p className="text-xs font-semibold text-slate-300 mt-1">Technical Support</p>
+                    <p className="text-lg sm:text-xl font-bold text-orange-300">RFQ Ready</p>
+                    <p className="text-xs font-semibold text-slate-300 mt-1">Project Supply</p>
                   </div>
                 </div>
 
-                {/* Main visual area */}
                 <div className="relative rounded-xl overflow-hidden">
                   <div className="relative aspect-[16/10] w-full">
                     <Image
@@ -134,7 +124,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FLOATING QUICK BROWSE PANEL */}
       <section className="relative -mt-16 z-20">
         <div className="container">
           <div className="rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl p-6 sm:p-8 space-y-6">
@@ -160,11 +149,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TRUST STRIP */}
       <section className="py-12 mt-12">
         <div className="container">
           <div className="rounded-2xl border border-white/15 bg-white/5 backdrop-blur-sm p-6">
-            <p className="text-xs font-semibold text-slate-400 mb-4">Qualified product systems and references</p>
+            <p className="text-xs font-semibold text-slate-400 mb-4">Product systems and testing references</p>
             <div className="flex flex-wrap gap-2">
               {['Fluke', 'Corning', 'CommScope', 'Siemon', 'Panduit', 'OTDR'].map((partner) => (
                 <span key={partner} className="text-xs font-semibold text-slate-300 px-3 py-1.5 rounded border border-white/15 bg-white/5">
@@ -176,7 +164,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SERVICES SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
@@ -195,7 +182,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PROJECT SCOPE SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
@@ -221,7 +207,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FIELD WORK SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
@@ -234,15 +219,10 @@ export default function HomePage() {
               { title: 'Rack & data room preparation', src: '/rack-front-cabling.jpg', desc: 'Scope note: layout, patching flow, and maintainable routing.', href: '/work#rack-data-room' },
               { title: 'Fiber / ODF work', src: '/fiber-splicing-workbench.jpg', desc: 'Scope note: backbone readiness and termination context.', href: '/work#fiber-odf' },
               { title: 'Structured cabling and testing', src: '/testing-otdr-device.jpg', desc: 'Confidence note: validation before handover.', href: '/work#testing-handover' },
-            ] .map((item) => (
+            ].map((item) => (
               <Link key={item.title} href={item.href} className="group relative rounded-xl overflow-hidden border border-white/15 bg-white/5 hover:border-orange-500/50 transition-all">
                 <div className="relative aspect-[16/10] w-full">
-                  <Image
-                    src={item.src}
-                    alt={item.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <Image src={item.src} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 space-y-1">
@@ -255,13 +235,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* METRICS SECTION */}
       <section className="py-16">
         <div className="container">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {metrics.map((metric) => (
               <div key={metric.label} className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm p-8 text-center space-y-3">
-                <p className="text-4xl sm:text-5xl font-black text-orange-400">{metric.value}</p>
+                <p className="text-xl sm:text-2xl font-black text-orange-400">{metric.value}</p>
                 <p className="font-semibold text-slate-300 text-sm">{metric.label}</p>
               </div>
             ))}
@@ -269,7 +248,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRODUCT PREVIEW SECTION */}
       <section className="py-16">
         <div className="container">
           <div className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm p-8 sm:p-12 space-y-6">
@@ -284,7 +262,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* RFQ PROCESS SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
@@ -296,9 +273,7 @@ export default function HomePage() {
             {['Select Products', 'Specify Quantities', 'Submit & Track'].map((step, idx) => (
               <div key={step} className="relative">
                 <div className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm p-6 text-center space-y-3">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white font-bold">
-                    {idx + 1}
-                  </div>
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white font-bold">{idx + 1}</div>
                   <p className="font-semibold text-white">{step}</p>
                 </div>
                 {idx < 2 && <div className="hidden sm:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-orange-500 to-transparent" />}
@@ -307,17 +282,12 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link href="/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors flex-1 sm:flex-none">
-              Request Project Quote
-            </Link>
-            <Link href="/track" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors flex-1 sm:flex-none">
-              Track a Request
-            </Link>
+            <Link href="/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors flex-1 sm:flex-none">Request Project Quote</Link>
+            <Link href="/track" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors flex-1 sm:flex-none">Track a Request</Link>
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
@@ -341,12 +311,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TESTING SECTION */}
       <section className="py-16">
         <div className="container space-y-8">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-3">Quality</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white">Testing & Validation Standards</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">Testing & Validation Workflows</h2>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -360,26 +329,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FINAL CTA SECTION */}
       <section className="py-16">
         <div className="container">
           <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-gradient-to-r from-orange-600/20 to-orange-500/10 backdrop-blur-sm p-8 sm:p-12 space-y-6">
             <div className="absolute inset-0 opacity-20 pointer-events-none">
               <div className="absolute top-0 right-0 w-48 h-48 bg-orange-600/40 blur-3xl rounded-full" />
             </div>
-            
             <div className="relative z-10 space-y-4">
               <h2 className="text-3xl sm:text-4xl font-bold text-white">Ready to Quote Your Infrastructure Project?</h2>
               <p className="text-slate-200 max-w-2xl">Submit products and quantities, a BOQ, or site requirements. HILTECH will review the scope and follow up with a project quote.</p>
             </div>
-
             <div className="relative z-10 flex flex-col gap-3 sm:flex-row pt-4">
-              <Link href="/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors">
-                Request Project Quote
-              </Link>
-              <a href={site.contact.whatsappGeneralLink} className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/40 hover:bg-white/10 rounded-md transition-colors">
-                Contact via WhatsApp
-              </a>
+              <Link href="/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors">Request Project Quote</Link>
+              <a href={site.contact.whatsappGeneralLink} className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/40 hover:bg-white/10 rounded-md transition-colors">Contact via WhatsApp</a>
             </div>
           </div>
         </div>
