@@ -12,6 +12,9 @@ import { site } from '@/content/site';
 import { absoluteSiteUrl, buildProductJsonLd, getProductSeoDescription, serializeJsonLd } from '@/lib/seo/product';
 import { getPublicProducts } from '@/lib/server/products-public';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface Params { productCode: string }
 
 const visualsByProductId = new Map(productVisuals.map((visual) => [visual.productId, visual]));
@@ -21,11 +24,6 @@ async function getProduct(productCode: string) {
   const { products } = await getPublicProducts();
   const product = products.find((i) => i.id === productCode);
   return { product, products };
-}
-
-export async function generateStaticParams() {
-  const { products } = await getPublicProducts();
-  return products.map((p) => ({ productCode: p.id }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
@@ -102,10 +100,7 @@ export default async function Page({ params }: { params: Params }) {
 
   return (
     <main dir="rtl" className="bg-slate-950 text-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }} />
       <SectionShell>
         <nav className="mb-4 overflow-x-auto whitespace-nowrap text-sm text-slate-300">
           <Link href="/ar/products-partners" className="transition hover:text-white">العودة إلى المنتجات</Link>
@@ -147,9 +142,7 @@ export default async function Page({ params }: { params: Params }) {
         <section className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-white">غالبًا يُطلب معه</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {oftenQuotedWith.map((tag) => (
-              <div key={tag} className="rounded-lg border border-white/15 bg-white/5 p-3 text-sm text-slate-300 backdrop-blur-sm">{tag}</div>
-            ))}
+            {oftenQuotedWith.map((tag) => <div key={tag} className="rounded-lg border border-white/15 bg-white/5 p-3 text-sm text-slate-300 backdrop-blur-sm">{tag}</div>)}
           </div>
         </section>
 
