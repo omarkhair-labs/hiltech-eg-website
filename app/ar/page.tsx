@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { site } from '@/content/site';
 
 export const metadata: Metadata = {
-  title: 'HILTECH | حلول الشبكات والفايبر وطلبات عروض الأسعار في مصر',
+  title: 'حلول الشبكات والفايبر وطلبات عروض الأسعار في مصر',
   description: 'توريد وتنفيذ واختبار حلول الشبكات والفايبر والراك للشركات في مصر، مع طلب عرض سعر وتتبع حالة الطلب.',
   alternates: { canonical: `${site.siteUrl}/ar`, languages: { en: `${site.siteUrl}/`, ar: `${site.siteUrl}/ar`, 'x-default': `${site.siteUrl}/` } },
 };
