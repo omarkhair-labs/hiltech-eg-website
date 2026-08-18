@@ -1,7 +1,8 @@
 import 'server-only';
 
 import { productVisuals } from '@/content/product-visuals';
-import { products as staticProducts, type ProductItem } from '@/content/products';
+import type { ProductItem } from '@/content/products';
+import { wixCatalogProducts as staticProducts } from '@/content/wix-catalog-products';
 import type { ProductRow } from '@/lib/types/products';
 
 export type PublicProductsSource = 'static' | 'db' | 'fallback';
