@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-  /* Light theme (legacy) */
   --surface-navy-950: #071526;
   --surface-navy-900: #0f172a;
   --surface-light: #f8fafc;
@@ -20,8 +19,7 @@
   --section-y-mobile: 2.75rem;
   --section-y-desktop: 5rem;
   --container-max: 72rem;
-  
-  /* Dark theme */
+
   --dark-bg: #0f172a;
   --dark-bg-secondary: #1a2847;
   --dark-border: rgba(255, 255, 255, 0.1);
@@ -31,11 +29,27 @@
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
 html, body { overflow-x: clip; }
 
 body {
   @apply bg-slate-950 antialiased text-slate-100;
   color: var(--dark-text);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.32);
+  color: #fff;
+}
+
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid #fb923c;
+  outline-offset: 3px;
 }
 
 .container {
@@ -130,6 +144,16 @@ body {
   .section { @apply py-10; }
   .section-compact { @apply py-10; }
   .public-proof-image { min-height: 11rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 [dir='rtl'] {
