@@ -7,6 +7,7 @@ import { SectionShell } from '@/components/ui/primitives';
 import { productIntelligenceSlugByCategory } from '@/content/product-intelligence';
 import { productVisuals } from '@/content/product-visuals';
 import { site } from '@/content/site';
+import { absoluteSiteUrl, buildProductJsonLd, getProductSeoDescription, serializeJsonLd } from '@/lib/seo/product';
 import { getPublicProducts } from '@/lib/server/products-public';
 
 interface Params { productCode: string }
@@ -27,10 +28,41 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { product } = await getProduct(params.productCode);
   if (!product) return {};
+
+  const encodedId = encodeURIComponent(product.id);
+  const canonical = `${site.siteUrl}/products-partners/${encodedId}`;
+  const arabicUrl = `${site.siteUrl}/ar/products-partners/${encodedId}`;
+  const description = getProductSeoDescription(product);
+  const mappedVisual = visualsByProductId.get(product.id);
+  const image = absoluteSiteUrl(product.image || mappedVisual?.imagePath);
+  const title = `${product.name} | HILTECH Egypt`;
+
   return {
-    title: `${product.name} | Network Infrastructure Product Reference | HILTECH`,
-    description: [product.shortSpecs, product.useCase, product.category].filter(Boolean).join(' ').slice(0, 160),
-    alternates: { canonical: `${site.siteUrl}/products-partners/${product.id}` },
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        ar: arabicUrl,
+        'x-default': canonical,
+      },
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: site.brand,
+      type: 'website',
+      ...(image ? { images: [{ url: image, alt: product.name }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }
 
@@ -41,6 +73,8 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const mappedVisual = visualsByProductId.get(product.id);
   const productImageSrc = product.image || mappedVisual?.imagePath;
   const productImageAlt = mappedVisual?.alt || product.name;
+  const canonical = `${site.siteUrl}/products-partners/${encodeURIComponent(product.id)}`;
+  const productJsonLd = buildProductJsonLd(product, canonical, productImageSrc);
 
   const categoryLower = product.category.toLowerCase();
   const oftenQuotedWith = categoryLower.includes('fiber')
@@ -61,6 +95,10 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   return (
     <main className="bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
+      />
       <SectionShell>
         <nav className="mb-4 overflow-x-auto whitespace-nowrap text-xs text-slate-400 sm:text-sm">
           <Link href="/products-partners" className="hover:text-white transition">Products</Link>
