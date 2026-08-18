@@ -28,6 +28,26 @@ const nextConfig = {
         destination: '/products-partners/:slug',
         permanent: true,
       },
+      {
+        source: '/categories',
+        destination: '/products-partners',
+        permanent: true,
+      },
+      {
+        source: '/book-online',
+        destination: '/rfq',
+        permanent: true,
+      },
+      {
+        source: '/cart-page',
+        destination: '/rfq',
+        permanent: true,
+      },
+      {
+        source: '/thank-you-page',
+        destination: '/rfq',
+        permanent: true,
+      },
     ];
   },
 };
