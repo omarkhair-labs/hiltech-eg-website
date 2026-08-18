@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { NoticeBox, PremiumCard, SectionShell } from '@/components/ui/primitives';
 import { CCTVInfrastructureDiagram, DataRoomDiagram, FiberBackboneDiagram, StructuredCablingDiagram, TechnicalDiagramPanel } from '@/components/diagrams';
 import { productIntelligenceBySlug, productIntelligenceCategories } from '@/content/product-intelligence';
-import { productDisclaimer, products } from '@/content/products';
+import { productDisclaimer } from '@/content/products';
+import { wixCatalogProducts as products } from '@/content/wix-catalog-products';
 import { site } from '@/content/site';
 import CategoryIntelligenceClient from './CategoryIntelligenceClient';
 
