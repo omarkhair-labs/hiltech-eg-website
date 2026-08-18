@@ -146,6 +146,70 @@ body {
   .public-proof-image { min-height: 11rem; }
 }
 
+/* Device QA hardening for the EN/AR homepage hero. Keep desktop composition unchanged. */
+@media (max-width: 639px) {
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container {
+    min-height: auto;
+    gap: 2rem;
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div {
+    min-width: 0;
+    width: 100%;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:first-child h1 {
+    max-width: 100%;
+    font-size: clamp(2.15rem, 10.5vw, 2.5rem);
+    line-height: 1.07;
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:first-child > p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:first-child > p:nth-of-type(2) {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.75;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:first-child > div:last-child {
+    margin-top: 1.75rem;
+    column-gap: 1.25rem;
+    row-gap: 0.5rem;
+    padding-top: 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:nth-child(2) > div:first-child > div:first-child {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:nth-child(2) > div:first-child > div:first-child > div:last-child {
+    padding: 1rem;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:nth-child(2) > div:first-child > div:first-child > div:last-child p:last-child {
+    margin-top: 0.4rem;
+    max-width: 100%;
+    font-size: 1rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  main.bg-slate-950.text-white > section.relative.overflow-hidden:first-child > .container > div:nth-child(2) > div:nth-child(2) {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
