@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/server/admin-session';
 import { listRFQRequests } from '@/lib/server/rfq-admin';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(request: Request) {
   try { await requirePermission('rfq:view'); } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); }
   const { searchParams } = new URL(request.url);
