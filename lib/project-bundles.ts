@@ -1,4 +1,5 @@
-import { products, type ProductCategory, type ProductItem } from '@/content/products';
+import type { ProductCategory, ProductItem } from '@/content/products';
+import { wixCatalogProducts as products } from '@/content/wix-catalog-products';
 import {
   projectBundles,
   type BundleRequirement,
@@ -137,10 +138,31 @@ export function getBestMatchingBundleForBasket(basketItems: BasketItemLike[]) {
 }
 
 const companionRules: Partial<Record<ProductCategory, ProductId[]>> = {
-  'Copper / CAT6 Cabling': ['copper-cat6-patch', 'fp-excel-keystone', 'fp-single-faceplate'],
-  'Fiber Optic Systems': ['fiber-odf', 'patch-fiber-lclc-om3', 'fiber-coupler-lc-sc'],
-  'Cabinets / Racks / PDU': ['rack-19in-pdu', 'cable-routing-acc', 'fiber-panel-24p'],
-  'CCTV & Security': ['cctv-cabling', 'cable-trunking', 'rack-network-cabinets'],
+  'Copper / CAT6 Cabling': [
+    'legrand-rj45-socket-category-6-utp-1-module-white',
+    'panduit-category-6-utp-patch-cord-1m',
+    'conteg-pdu-8-outlet-19-inch-1u-rack-power-distribution-unit',
+  ],
+  'Fiber Optic Systems': [
+    'dema-prolink-z2203190330-optical-distribution-frame-odf',
+    'hpe-premier-flex-lclc-multi-mode-om4-2-fiber-2m-cable-qk733a',
+    'dema-prolink-d1629-lcummd-lc-multimode-fiber-coupler',
+  ],
+  'Cabinets / Racks / PDU': [
+    'conteg-pdu-8-outlet-19-inch-1u-rack-power-distribution-unit',
+    'dema-prolink-z2203190330-optical-distribution-frame-odf',
+    'panduit-category-6-utp-patch-cord-1m',
+  ],
+  'Faceplates / Keystone / RJ45': [
+    'legrand-category-6-uutp-lszh-cable-305m-blue',
+    'panduit-category-6-utp-patch-cord-1m',
+    'leviton-surface-mount-back-box-single-gang-white',
+  ],
+  'Patch Cords & Connectivity': [
+    'legrand-category-6-uutp-lszh-cable-305m-blue',
+    'dema-prolink-z2203190330-optical-distribution-frame-odf',
+    'conteg-pdu-8-outlet-19-inch-1u-rack-power-distribution-unit',
+  ],
 };
 
 export function getCompanionRecommendationsForProduct(

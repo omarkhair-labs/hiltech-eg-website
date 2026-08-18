@@ -14,7 +14,10 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "paths": {"@/*": ["./*"]},
+    "paths": {
+      "@/content/products": ["./content/products-runtime.ts"],
+      "@/*": ["./*"]
+    },
     "plugins": [{"name": "next"}]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -1,5 +1,5 @@
 import { productIntelligenceCategories } from '@/content/product-intelligence';
-import { products } from '@/content/products';
+import { wixCatalogProducts as products } from '@/content/wix-catalog-products';
 import { solutions } from '@/content/solutions';
 
 export type SearchType = 'Products' | 'Solutions' | 'Services' | 'Resources' | 'Guides' | 'Pages';
@@ -50,8 +50,8 @@ const productLinks: SearchEntry[] = products.map((product) => ({
   title: product.name,
   description: `${product.category} • ${product.brand} • ${product.shortSpecs}`,
   type: 'Products',
-  href: `/products-partners?product=${product.id}`,
-  keywords: [product.brand, product.category, product.useCase, 'products', 'catalog', 'منتجات'],
+  href: `/products-partners/${product.id}`,
+  keywords: [product.brand, product.category, product.useCase, product.id, 'products', 'catalog', 'منتجات'],
 }));
 
 const solutionLinks: SearchEntry[] = solutions.map((solution) => ({

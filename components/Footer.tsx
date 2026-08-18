@@ -36,6 +36,8 @@ export default function Footer() {
         { label: 'اطلب عرض سعر', href: '/ar/rfq' },
         { label: 'تتبع طلب العرض', href: '/ar/track' },
         { label: 'اتصل بنا', href: '/ar/contact' },
+        { label: 'سياسة الخصوصية', href: '/privacy-policy' },
+        { label: 'بيان إمكانية الوصول', href: '/accessibility-statement' },
         { label: 'تحميل ملف الشركة', href: '/hiltech-company-profile.pdf' },
       ]
     : [
@@ -43,9 +45,10 @@ export default function Footer() {
         { label: 'RFQ Preparation Guide', href: '/resources/rfq-guide' },
         { label: 'Company', href: '/company' },
         { label: 'Work', href: '/work' },
-        { label: 'Resources', href: '/resources' },
         { label: 'Track RFQ', href: '/track' },
         { label: 'Scope Finder', href: '/scope-finder' },
+        { label: 'Privacy Policy', href: '/privacy-policy' },
+        { label: 'Accessibility Statement', href: '/accessibility-statement' },
       ];
 
   return (
