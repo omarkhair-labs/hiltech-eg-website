@@ -1,8 +1,18 @@
 # HILTECH Egypt Website & RFQ Platform
 
-HILTECH Egypt (`hiltech-eg.com`) is a production Next.js platform for public corporate presence **and** RFQ operations. It supports digital discovery, product exploration, RFQ capture, RFQ tracking, and internal admin workflows for network infrastructure projects in Egypt.
+**A Next.js B2B website and RFQ operations system for network-infrastructure sales and procurement workflows.**
 
-This is **not** a static-only marketing site. The current implementation includes live application behavior backed by Supabase and operational admin tooling.
+[Portfolio case study](https://omar-khair-portfolio.vercel.app/work/hiltech) · [Verified Next.js deployment](https://hiltech-eg-website.vercel.app)
+
+> **Domain note:** this README does not claim that `hiltech-eg.com` has been cut over to the Next.js implementation. The Vercel deployment above is the verified public proof target for this repository.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/omarkhair70-droid/omar-khair-portfolio/main/public/work/hiltech/01-home-hero.webp" alt="HILTECH home" width="31%" />
+  <img src="https://raw.githubusercontent.com/omarkhair70-droid/omar-khair-portfolio/main/public/work/hiltech/04-catalog.webp" alt="HILTECH product catalog" width="31%" />
+  <img src="https://raw.githubusercontent.com/omarkhair70-droid/omar-khair-portfolio/main/public/work/hiltech/06-rfq-basket.webp" alt="HILTECH RFQ basket" width="31%" />
+</p>
+
+HILTECH is not a static-only marketing site. The implementation combines public corporate/product discovery with Supabase-backed RFQ capture, tracking, and internal admin workflows.
 
 ## Project overview
 
