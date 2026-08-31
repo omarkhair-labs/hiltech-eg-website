@@ -92,6 +92,7 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_COMPANY_PRODUCTION_CLOSURE.md`
 - `HILTECH_RFQ_CONTACT_PRODUCTION_SPEC.md`
 - `HILTECH_RFQ_CONTACT_PRODUCTION_CLOSURE.md`
+- `HILTECH_ENGLISH_CREATIVE_SYNTHESIS_AUDIT_2026-08-31.md`
 
 These files form one system and must be read before major public-site implementation work.
 
@@ -124,3 +125,40 @@ Still intentionally deferred:
 - final whole-site / cross-route closure
 
 PR #183 remains **WIP / DO NOT MERGE** until deferred closure work is explicitly resumed and completed.
+
+
+## Active synthesis reopening
+
+The individual English lane closures remain valid for their business logic, evidence rules, and functional architecture.
+
+A later whole-English visual read exposed a cross-lane composition problem that individual lane QA could not detect:
+
+- Services, Work, and Company were beginning to reuse too much of the same photo / giant-type / alternating-section grammar.
+- the global creative-route footer was still the pre-redesign slate/orange corporate footer.
+- the creative header still retained several generic rounded utility-control patterns.
+
+Therefore **Work and Company are reopened for composition only**, and the English creative shell is reopened for visual synthesis.
+
+This does not reopen:
+- Home architecture,
+- Solutions architecture,
+- Products architecture,
+- RFQ backend behavior,
+- evidence gates.
+
+Current active audit:
+
+- `HILTECH_ENGLISH_CREATIVE_SYNTHESIS_AUDIT_2026-08-31.md`
+
+Current synthesis order:
+
+1. global Footer / shell endplate
+2. Work composition differentiation
+3. Company composition differentiation
+4. Header shell refinement
+5. targeted English creative-synthesis browser QA
+6. stop
+
+Arabic parity and final whole-site closure remain intentionally deferred.
+
+PR #183 remains **WIP / DO NOT MERGE**.
