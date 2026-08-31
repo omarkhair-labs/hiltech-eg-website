@@ -397,8 +397,65 @@ export default function ProductsClient({
   const hasActiveFilters =
     Boolean(query.trim()) || activeCategory !== 'All' || activeBrand !== 'All' || Boolean(searchParams.get('product'));
 
+  const scrollToEntryTarget = (targetId: string, focusSearch = false) => {
+    const move = () => {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      if (focusSearch) {
+        window.requestAnimationFrame(() => {
+          target.querySelector<HTMLInputElement>('input[type="text"], input[type="search"]')
+            ?.focus({ preventScroll: true });
+        });
+      }
+    };
+
+    window.requestAnimationFrame(() => window.requestAnimationFrame(move));
+  };
+
+  const chooseEntryMode = (mode: 'reference' | 'system' | 'project') => {
+    trackEvent('product_entry_mode', { mode, source: 'products_quick_entry' });
+
+    if (mode === 'project') {
+      setCatalogMode('project');
+      scrollToEntryTarget('project-scope');
+      return;
+    }
+
+    setCatalogMode('browse');
+    scrollToEntryTarget(mode === 'reference' ? 'exact-finding' : 'physical-library', mode === 'reference');
+  };
+
+  const quickEntry = isArabic
+    ? [
+        ['reference', '01 / أعرف المرجع', 'ابحث بالكود مباشرة', 'انتقل إلى البحث الدقيق عن الكود أو المواصفة.'],
+        ['system', '02 / أعرف النظام', 'استكشف النظام', 'ادخل إلى مكتبة الأنظمة والعائلات المادية.'],
+        ['project', '03 / أعرف المشروع', 'ابدأ بنطاق المشروع', 'ابدأ من نظام المشروع ثم عدّل المراجع والكميات.'],
+      ] as const
+    : [
+        ['reference', '01 / I KNOW THE REFERENCE', 'FIND THE EXACT CODE', 'Jump directly to reference, code, brand, or specification finding.'],
+        ['system', '02 / I KNOW THE SYSTEM', 'EXPLORE THE SYSTEM', 'Enter the physical library and inspect the infrastructure family first.'],
+        ['project', '03 / I KNOW THE PROJECT', 'BUILD BY PROJECT', 'Start from a project system, then edit exact references and quantities.'],
+      ] as const;
+
   return (
     <div className="hiltech-products-world-client">
+      <section className="hiltech-product-quick-entry" data-product-quick-entry aria-label={isArabic ? 'اختر طريقة الدخول إلى المنتجات' : 'Choose how to enter the product system'}>
+        {quickEntry.map(([mode, label, title, note]) => (
+          <button
+            type="button"
+            key={mode}
+            onClick={() => chooseEntryMode(mode)}
+          >
+            <span>{label}</span>
+            <strong>{title}</strong>
+            <small>{note}</small>
+            <em aria-hidden="true">→</em>
+          </button>
+        ))}
+      </section>
+
       <section className="hiltech-products-mode-switch" data-products-mode>
         <div>
           <span>PROCUREMENT MODE</span>
@@ -424,7 +481,7 @@ export default function ProductsClient({
 
       {catalogMode === 'browse' ? (
         <>
-          <section className="hiltech-product-world" data-product-world>
+          <section id="physical-library" className="hiltech-product-world" data-product-world>
             <div className="hiltech-product-world-topline">
               <span>02 / PHYSICAL LIBRARY</span>
               <strong>{currentWorld.code}</strong>
@@ -479,7 +536,7 @@ export default function ProductsClient({
             </div>
           </section>
 
-          <section className="hiltech-product-finder" data-products-filters>
+          <section id="exact-finding" className="hiltech-product-finder" data-products-filters>
             <div className="hiltech-product-finder-heading">
               <span>03 / EXACT FINDING</span>
               <strong>{filteredProducts.length} MATCHES</strong>
@@ -664,7 +721,7 @@ export default function ProductsClient({
           </section>
         </>
       ) : (
-        <section className="hiltech-product-project-builder" data-project-builder>
+        <section id="project-scope" className="hiltech-product-project-builder" data-project-builder>
           <div className="hiltech-product-reference-head">
             <span>02 / PROJECT SCOPE</span>
             <strong>START WITH A SYSTEM, THEN EDIT THE REFERENCES.</strong>
