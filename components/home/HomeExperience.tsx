@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SignalWorld from '@/components/home/SignalWorld';
 import SystemsField from '@/components/home/SystemsField';
+import ProcessSequence from '@/components/home/ProcessSequence';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -289,6 +290,7 @@ export default function HomeExperience() {
       </div>
 
       <SystemsField />
+      <ProcessSequence />
     </div>
   );
 }
