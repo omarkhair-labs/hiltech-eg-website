@@ -92,6 +92,15 @@ const familyByCategory: Record<ProductCategory, {
   },
 };
 
+const allSystemsWorld = {
+  family: 'all' as const,
+  code: 'SYSTEM / 00',
+  title: 'ALL SYSTEMS',
+  statement: 'THE PHYSICAL LAYER IS ONE CONNECTED SYSTEM OF PARTS.',
+  route: 'PATH → CONNECT → ORGANIZE → POWER → PROVE',
+  description: 'Live catalog families converge into one project infrastructure path before the exact reference is selected.',
+};
+
 const visualsByProductId = new Map(productVisuals.map((visual) => [visual.productId, visual]));
 
 function expandQuery(rawQuery: string) {
@@ -200,10 +209,11 @@ export default function ProductsClient({
     [initialProducts],
   );
 
-  const currentWorldCategory: ProductCategory =
-    activeCategory === 'All' ? 'Fiber Optic Systems' : activeCategory;
-  const currentWorld = familyByCategory[currentWorldCategory];
-  const currentWorldStats = categoryStats.find((entry) => entry.category === currentWorldCategory)!;
+  const currentWorld = activeCategory === 'All' ? allSystemsWorld : familyByCategory[activeCategory];
+  const currentWorldStats =
+    activeCategory === 'All'
+      ? { count: initialProducts.length, brands: productBrands }
+      : categoryStats.find((entry) => entry.category === activeCategory)!;
 
   const categoryFiltered = useMemo(
     () => (activeCategory === 'All' ? initialProducts : initialProducts.filter((item) => item.category === activeCategory)),
