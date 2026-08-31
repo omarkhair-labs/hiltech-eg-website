@@ -176,11 +176,11 @@ export default function Header() {
 
             <nav aria-label={isArabic ? 'روابط إضافية' : 'Secondary navigation'} className="grid grid-cols-2 gap-1">
               {secondaryNav.map(([label, href, arLabel]) => (
-                <Link key={href} href={localizeHref(href)} className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white">
+                <Link key={href} href={localizeHref(href)} className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"}>
                   {isArabic ? arLabel : label}
                 </Link>
               ))}
-              <LanguageSwitcher className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white" />
+              <LanguageSwitcher className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"} />
             </nav>
 
             <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
