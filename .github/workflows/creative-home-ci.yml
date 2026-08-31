@@ -1,4 +1,4 @@
-name: Creative Home CI
+name: Creative Public CI
 
 on:
   pull_request:
@@ -15,6 +15,7 @@ on:
       - 'tailwind.config.ts'
       - 'tsconfig.json'
       - 'scripts/capture-home-qa.mjs'
+      - 'scripts/capture-solutions-qa.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
 concurrency:
@@ -57,14 +58,24 @@ jobs:
           cat /tmp/hiltech-next.log
           exit 1
 
-      - name: Capture chapter visual QA
+      - name: Capture Home regression QA
         run: node scripts/capture-home-qa.mjs
 
-      - name: Upload visual QA
+      - name: Capture Solutions visual QA
+        run: node scripts/capture-solutions-qa.mjs
+
+      - name: Upload Home visual QA
         uses: actions/upload-artifact@v4
         with:
           name: hiltech-home-visual-qa
           path: visual-qa/
+          retention-days: 7
+
+      - name: Upload Solutions visual QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiltech-solutions-visual-qa
+          path: visual-qa-solutions/
           retention-days: 7
 
       - name: Stop production server
