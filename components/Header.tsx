@@ -28,7 +28,7 @@ const secondaryNav = [
 export default function Header() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith('/ar');
-  const isCreativePublic = pathname === '/' || pathname.startsWith('/solutions') || pathname.startsWith('/services') || pathname.startsWith('/products-partners') || pathname.startsWith('/work') || pathname.startsWith('/company');
+  const isCreativePublic = pathname === '/' || pathname.startsWith('/solutions') || pathname.startsWith('/services') || pathname.startsWith('/products-partners') || pathname.startsWith('/work') || pathname.startsWith('/company') || pathname.startsWith('/rfq') || pathname.startsWith('/contact');
   const [open, setOpen] = useState(false);
   const [showLogoImage, setShowLogoImage] = useState(true);
   const [rfqCount, setRfqCount] = useState(0);
