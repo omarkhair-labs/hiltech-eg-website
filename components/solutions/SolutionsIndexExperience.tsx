@@ -216,7 +216,10 @@ export default function SolutionsIndexExperience() {
 
       <section className="hiltech-solutions-index-field">
         <div className="hiltech-solutions-index-shell hiltech-solutions-index-layout">
-          <aside className="hiltech-solutions-index-inspector">
+          <aside
+            className="hiltech-solutions-index-inspector"
+            data-active-solution={active.slug}
+          >
             <div className="hiltech-solutions-index-inspector-head">
               <span>{active.code}</span>
               <strong>{active.eyebrow}</strong>
