@@ -28,7 +28,21 @@ const secondaryNav = [
 export default function Header() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith('/ar');
-  const isCreativePublic = pathname === '/' || pathname.startsWith('/solutions') || pathname.startsWith('/services') || pathname.startsWith('/products-partners') || pathname.startsWith('/work') || pathname.startsWith('/company') || pathname.startsWith('/rfq') || pathname.startsWith('/contact');
+  const isCreativePublic =
+    !isArabic &&
+    (pathname === '/' ||
+      pathname.startsWith('/solutions') ||
+      pathname.startsWith('/services') ||
+      pathname.startsWith('/products-partners') ||
+      pathname.startsWith('/work') ||
+      pathname.startsWith('/company') ||
+      pathname.startsWith('/rfq') ||
+      pathname.startsWith('/contact') ||
+      pathname.startsWith('/resources') ||
+      pathname.startsWith('/track') ||
+      pathname.startsWith('/scope-finder') ||
+      pathname.startsWith('/privacy-policy') ||
+      pathname.startsWith('/accessibility-statement'));
   const [open, setOpen] = useState(false);
   const [showLogoImage, setShowLogoImage] = useState(true);
   const [rfqCount, setRfqCount] = useState(0);
