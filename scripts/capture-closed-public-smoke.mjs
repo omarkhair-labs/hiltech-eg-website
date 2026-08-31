@@ -20,6 +20,9 @@ const checks = [
   { name: 'work-top', path: '/work', selector: '.hiltech-work-hero' },
   { name: 'work-evidence', path: '/work', selector: '.hiltech-work-index' },
   { name: 'work-final', path: '/work', selector: '.hiltech-work-close' },
+  { name: 'company-top', path: '/company', selector: '.hiltech-company-hero' },
+  { name: 'company-presence', path: '/company', selector: '.hiltech-company-presence' },
+  { name: 'company-final', path: '/company', selector: '.hiltech-company-close' },
 ];
 
 await mkdir('visual-qa-closed-public-smoke', { recursive: true });
