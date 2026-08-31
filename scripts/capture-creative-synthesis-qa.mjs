@@ -64,6 +64,17 @@ async function assertMobileTextFits(page, label, expectedWidth) {
   if (issues.length) throw new Error(`${label} visible text clipping: ${JSON.stringify(issues)}`);
 }
 
+async function primeLazyImages(page) {
+  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < height; y += 700) {
+    await page.evaluate((nextY) => window.scrollTo(0, nextY), y);
+    await page.waitForTimeout(45);
+  }
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(650);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(120);
+}
 async function assertAllImagesLoaded(page, label) {
   const broken = await page.locator('img').evaluateAll((images) => images.map((img, index) => ({ index, src: img.currentSrc || img.getAttribute('src') || '', complete: img.complete, naturalWidth: img.naturalWidth })).filter((entry) => !entry.complete || entry.naturalWidth <= 0));
   if (broken.length) throw new Error(`${label} broken images: ${JSON.stringify(broken.slice(0, 10))}`);
@@ -192,6 +203,7 @@ try {
       if (!response || !response.ok()) throw new Error(`${mobile.name} ${route.name} route failed`);
       await mobilePage.waitForTimeout(450);
       await assertMobileTextFits(mobilePage, `${mobile.name} ${route.name}`, mobile.width);
+      await primeLazyImages(mobilePage);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} ${route.name}`);
     }
 
@@ -200,6 +212,7 @@ try {
       if (!response || !response.ok()) throw new Error(`${mobile.name} ${name} route failed`);
       await mobilePage.waitForTimeout(350);
       await assertMobileTextFits(mobilePage, `${mobile.name} ${name}`, mobile.width);
+      await primeLazyImages(mobilePage);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} ${name}`);
       if (mobile.name === 'baseline-touch' && ['solution-fiber','solution-cctv','intel-racks','intel-cctv'].includes(name)) {
         await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-${name}.png`, fullPage: true });
@@ -215,6 +228,7 @@ try {
       if (!response || !response.ok()) throw new Error(`${mobile.name} product detail ${index + 1} route failed`);
       await mobilePage.waitForTimeout(350);
       await assertMobileTextFits(mobilePage, `${mobile.name} product detail ${index + 1}`, mobile.width);
+      await primeLazyImages(mobilePage);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} product detail ${index + 1}`);
       if (mobile.name === 'baseline-touch') {
         await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-product-detail-${index + 1}.png`, fullPage: true });
