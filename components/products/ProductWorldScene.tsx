@@ -3,17 +3,38 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+type ProductWorldFamily =
+  | 'all'
+  | 'fiber'
+  | 'copper'
+  | 'connectivity'
+  | 'access'
+  | 'rack'
+  | 'pathways'
+  | 'cctv';
+
 type Props = {
-  family:
-    | 'all'
-    | 'fiber'
-    | 'copper'
-    | 'connectivity'
-    | 'access'
-    | 'rack'
-    | 'pathways'
-    | 'cctv';
+  family: ProductWorldFamily;
 };
+
+const routeStepByFamily: Record<ProductWorldFamily, number> = {
+  all: 0,
+  fiber: 1,
+  copper: 1,
+  connectivity: 2,
+  pathways: 1,
+  rack: 3,
+  access: 4,
+  cctv: 4,
+};
+
+const routeNodes = [
+  { x: 88, y: 478, label: 'SYSTEM' },
+  { x: 278, y: 420, label: 'ROUTE' },
+  { x: 486, y: 468, label: 'TERMINATE' },
+  { x: 696, y: 392, label: 'SPACE' },
+  { x: 902, y: 446, label: 'ENDPOINT' },
+] as const;
 
 const palette = {
   signal: 0x8ff257,
@@ -478,5 +499,45 @@ export default function ProductWorldScene({ family }: Props) {
     };
   }, [family]);
 
-  return <div ref={mountRef} className="hiltech-product-world-canvas" aria-hidden="true" />;
+  const activeRouteStep = routeStepByFamily[family];
+  const routeProgress = [0.08, 0.29, 0.53, 0.76, 1][activeRouteStep];
+
+  return (
+    <div
+      ref={mountRef}
+      className="hiltech-product-world-canvas"
+      data-product-world-family={family}
+      aria-hidden="true"
+    >
+      <svg
+        className="hiltech-product-world-persistent-route"
+        viewBox="0 0 1000 560"
+        preserveAspectRatio="none"
+      >
+        <path
+          className="hiltech-product-world-route-base"
+          d="M88 478 C154 478 208 424 278 420 S414 468 486 468 S622 392 696 392 S826 446 902 446"
+          pathLength="1"
+        />
+        <path
+          className="hiltech-product-world-route-active"
+          d="M88 478 C154 478 208 424 278 420 S414 468 486 468 S622 392 696 392 S826 446 902 446"
+          pathLength="1"
+          style={{ strokeDasharray: `${routeProgress} 1` }}
+        />
+        {routeNodes.map((node, index) => (
+          <g
+            key={node.label}
+            className={index === activeRouteStep ? 'is-active' : index < activeRouteStep ? 'is-passed' : undefined}
+            transform={`translate(${node.x} ${node.y})`}
+          >
+            <circle r="6" />
+            <circle className="hiltech-product-world-route-node-core" r="2" />
+            <text x="12" y="-10">{String(index + 1).padStart(2, '0')}</text>
+            <text x="12" y="7">{node.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
 }
