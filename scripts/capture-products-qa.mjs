@@ -131,6 +131,19 @@ try {
       }
     }
 
+    if (target.name === 'desktop' && detailCodes.length) {
+      const arabicDetailURL = `${baseURL}/ar/products-partners/${encodeURIComponent(detailCodes[0])}`;
+      const arabicResponse = await page.goto(arabicDetailURL, { waitUntil: 'networkidle' });
+      if (!arabicResponse || !arabicResponse.ok()) {
+        throw new Error(`Arabic product detail failed for ${detailCodes[0]}: ${arabicResponse?.status() ?? 'no response'}`);
+      }
+      await page.locator('main[dir="rtl"]').waitFor();
+      await page.screenshot({
+        path: 'visual-qa-products/desktop-arabic-unicode-detail-smoke.png',
+        fullPage: false,
+      });
+    }
+
     for (const slug of intelligenceSlugs) {
       await page.goto(`${baseURL}/products-partners/intelligence/${slug}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
