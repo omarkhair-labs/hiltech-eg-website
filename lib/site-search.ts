@@ -1,6 +1,7 @@
 import { productIntelligenceCategories } from '@/content/product-intelligence';
 import { wixCatalogProducts as products } from '@/content/wix-catalog-products';
 import { solutions } from '@/content/solutions';
+import { onePagers } from '@/content/sales-materials';
 
 export type SearchType = 'Products' | 'Solutions' | 'Services' | 'Resources' | 'Guides' | 'Pages';
 
@@ -14,11 +15,12 @@ export interface SearchEntry {
 
 const basePages: SearchEntry[] = [
   { title: 'Home', description: 'HILTECH homepage with core capabilities and quick navigation.', type: 'Pages', href: '/', keywords: ['home', 'hiltech', 'homepage'] },
-  { title: 'Products & Partners', description: 'Browse products, brands, and add items to RFQ basket.', type: 'Pages', href: '/products-partners', keywords: ['products', 'catalog', 'partners', 'منتجات', 'كابلات', 'راكات', 'كاميرات'] },
+  { title: 'Products', description: 'Explore the physical library, search exact references, or build a project RFQ.', type: 'Pages', href: '/products-partners', keywords: ['products', 'catalog', 'physical library', 'reference', 'منتجات', 'كابلات', 'راكات', 'كاميرات'] },
   { title: 'Solutions', description: 'Outcome-oriented enterprise infrastructure solutions.', type: 'Pages', href: '/solutions', keywords: ['solutions', 'حلول', 'infrastructure'] },
   { title: 'Services', description: 'Infrastructure delivery services, installation, and testing.', type: 'Pages', href: '/services', keywords: ['services', 'خدمات', 'testing', 'field'] },
   { title: 'Resources', description: 'Company profile, RFQ guide, one-pagers, and templates.', type: 'Pages', href: '/resources', keywords: ['resources', 'guides', 'materials', 'موارد'] },
   { title: 'Field Work & References', description: 'Public visual references and field delivery proof.', type: 'Pages', href: '/work', keywords: ['work', 'references', 'projects', 'field', 'مرجع'] },
+  { title: 'Company', description: 'HILTECH operating identity, verified presence, and technical position.', type: 'Pages', href: '/company', keywords: ['company', 'about', 'hiltech', 'شركة', 'عن الشركة'] },
   { title: 'Contact', description: 'Contact HILTECH for project planning and support.', type: 'Pages', href: '/contact', keywords: ['contact', 'تواصل', 'phone', 'whatsapp'] },
   { title: 'Start RFQ', description: 'Open RFQ workflow and submit project requirements.', type: 'Pages', href: '/rfq', keywords: ['rfq', 'quote', 'عرض سعر', 'طلب عرض سعر', 'request for quotation'] },
   { title: 'Track RFQ', description: 'Track previously submitted RFQ updates and status.', type: 'Pages', href: '/track', keywords: ['track rfq', 'track', 'تتبع الطلب', 'rfq status'] },
@@ -37,6 +39,14 @@ const resourceLinks: SearchEntry[] = [
   { title: 'Company Profile', description: 'Company overview, capabilities, and proof content.', type: 'Resources', href: '/resources/company-profile', keywords: ['company profile', 'overview'] },
   { title: 'Client Communication Templates', description: 'Launch-ready public-safe communication templates.', type: 'Resources', href: '/resources/launch-copy', keywords: ['communication', 'templates'] },
 ];
+
+const onePagerLinks: SearchEntry[] = onePagers.map((item) => ({
+  title: item.title,
+  description: item.shortIntro,
+  type: 'Resources',
+  href: '/resources/one-pagers/' + item.slug,
+  keywords: [item.title, item.shortIntro, 'one pager', 'scope', 'resource'],
+}));
 
 const guideLinks: SearchEntry[] = productIntelligenceCategories.map((category) => ({
   title: `${category.shortTitle} Guide`,
@@ -66,15 +76,17 @@ export const siteSearchIndex: SearchEntry[] = [
   ...basePages,
   ...services,
   ...resourceLinks,
+  ...onePagerLinks,
   ...guideLinks,
   ...productLinks,
   ...solutionLinks,
 ];
 
 export const popularSearchShortcuts: SearchEntry[] = [
-  { title: 'Browse Products', description: 'Open product catalog and technical notes pathways.', type: 'Pages', href: '/products-partners', keywords: ['products', 'catalog'] },
-  { title: 'Start RFQ', description: 'Begin quotation request workflow.', type: 'Pages', href: '/rfq', keywords: ['rfq', 'quote'] },
-  { title: 'Track RFQ', description: 'Check RFQ progress and updates.', type: 'Pages', href: '/track', keywords: ['track', 'status'] },
-  { title: 'Solutions', description: 'Open solution pages by business outcome.', type: 'Pages', href: '/solutions', keywords: ['solutions'] },
-  { title: 'Contact', description: 'Get in touch with HILTECH team.', type: 'Pages', href: '/contact', keywords: ['contact'] },
+  { title: 'Products', description: 'Enter the physical library or search an exact reference.', type: 'Pages', href: '/products-partners', keywords: ['products', 'catalog', 'reference'] },
+  { title: 'Solutions', description: 'Choose the infrastructure system and define the path.', type: 'Pages', href: '/solutions', keywords: ['solutions', 'system'] },
+  { title: 'Company', description: 'Open HILTECH operating identity and verified presence.', type: 'Pages', href: '/company', keywords: ['company', 'about'] },
+  { title: 'Start RFQ', description: 'Turn references and project context into a structured request.', type: 'Pages', href: '/rfq', keywords: ['rfq', 'quote', 'project'] },
+  { title: 'Track RFQ', description: 'Read the current state of a submitted request.', type: 'Pages', href: '/track', keywords: ['track', 'status'] },
+  { title: 'Contact', description: 'Use direct verified HILTECH contact channels.', type: 'Pages', href: '/contact', keywords: ['contact'] },
 ];
