@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import {
   popularSearchShortcuts,
   siteSearchIndex,
@@ -81,7 +82,7 @@ export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
         {isArabic ? 'بحث' : 'Search'}
       </button>
 
-      {open ? (
+      {open && typeof document !== 'undefined' ? createPortal(
         <div
           className="hiltech-search-overlay"
           role="dialog"
@@ -184,7 +185,8 @@ export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
               </p>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );
