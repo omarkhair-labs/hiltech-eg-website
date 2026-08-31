@@ -134,25 +134,35 @@ Keep it concentrated. Do not stretch this into an unnecessarily long pinned sequ
 
 ## H06 — Capabilities
 
-Lifecycle:
-`Blueprint → Procured → Installed → Tested → Validated`
+Reality-backed delivery lifecycle from current HILTECH content:
+`Site Survey & Scope → Product Selection & Supply → Structured Installation → Cable Management → Testing & Validation → Handover & Support`
 
-Capability families:
-- Design & Architecture
-- Supply & Procurement
-- Fiber Installation & Splicing
-- Structured Cabling
-- Data Center Deployment
-- Testing & Certification
-- Support/Maintenance only where verified as a real HILTECH capability
+Detailed service evidence underneath the lifecycle:
+- Site Inspection & Technical Survey
+- Engineering Drawings & Infrastructure Planning
+- Fiber Optic Installation & Splicing
+- Copper Cabling Extension & Termination
+- Rack & Data Room Readiness
+- Testing & Measurement Workflows
+- Network Infrastructure Implementation
+- Maintenance & Operational Support
 
 Purpose:
 - explain what HILTECH physically does
 - move from art direction into execution confidence
+- keep procurement, installation, validation, and support connected as one project path
+
+Visual:
+- light execution/manual field
+- one continuous vertical project route
+- six large editorial stages with detailed real capabilities nested as technical lines
+- no service-card grid
 
 Motion:
 - lighter GSAP choreography
-- one connected lifecycle rather than a wall of unrelated cards
+- route progress fills with scroll
+- stage titles reveal once and active state follows the reader
+- no pinned cinematic sequence after H05
 
 ## H07 — Components / Products
 
