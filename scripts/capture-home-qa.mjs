@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000/';
-const chapters = ['h01', 'h02', 'h03', 'h04', 'h05', 'h06'];
+const chapters = ['h01', 'h02', 'h03', 'h04', 'h05', 'h06', 'h07'];
 const targets = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 },
@@ -37,6 +37,19 @@ try {
         path: `visual-qa/${target.name}-${chapter}.png`,
         fullPage: false,
       });
+
+      if (chapter === 'h07' && target.name === 'desktop') {
+        const tabs = page.locator('[data-product-category]');
+        const tabCount = await tabs.count();
+        for (let tabIndex = 0; tabIndex < tabCount; tabIndex += 1) {
+          await tabs.nth(tabIndex).focus();
+          await page.waitForTimeout(480);
+          await page.screenshot({
+            path: `visual-qa/desktop-h07-categories-${tabIndex + 1}.png`,
+            fullPage: false,
+          });
+        }
+      }
     }
 
     await context.close();
