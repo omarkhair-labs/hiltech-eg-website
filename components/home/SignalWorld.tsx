@@ -77,7 +77,7 @@ export default function SignalWorld({ rootId }: Props) {
 
     const strandCount = compact ? 11 : 22;
     for (let index = 0; index < strandCount; index += 1) {
-      const normalized = strandCount === 1 ? 0 : index / (strandCount - 1);
+      const normalized = index / (strandCount - 1);
       const spread = normalized - 0.5;
       const vertical = spread * (compact ? 2.8 : 4.2);
       const depth = Math.sin(index * 1.73) * (compact ? 0.72 : 1.2);
