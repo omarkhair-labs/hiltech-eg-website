@@ -12509,4 +12509,20 @@ body {
   .hiltech-validation-band-arrow {
     display: none;
   }
+
+  .hiltech-capabilities-map {
+    grid-template-columns: 1rem minmax(0, 1fr);
+    gap: .55rem;
+  }
+
+  .hiltech-capability-stage {
+    grid-template-columns: 1.7rem minmax(0, 1fr);
+    gap: .55rem;
+  }
+
+  .hiltech-capability-stage-main h3 {
+    max-width: 100%;
+    font-size: clamp(1.68rem, 8.55vw, 1.92rem);
+    overflow-wrap: anywhere;
+  }
 }
