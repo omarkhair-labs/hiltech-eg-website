@@ -237,79 +237,102 @@ Relationship rule:
 ## H09 — Work / Evidence
 
 Purpose:
-- prove execution
+- prove execution with approved real field visuals
+- avoid converting generic discipline evidence into fake named case studies
 
-Priority:
-**real evidence over CG**
+Current verified public visual evidence:
+- Rack & data room preparation — /rack-data-room.jpg
+- Structured copper patching — /copper-patch-panel.jpg
+- Fiber / ODF preparation — /fiber-distribution-panel.jpg
+- Testing / OTDR field context — /testing-otdr-device.jpg
 
-Case structure:
-- Environment
-- Challenge
-- Scope
-- Components / Brands
-- Execution
-- Testing
-- Measured result
-- Real gallery/evidence
+Visual:
+- dark field-evidence chapter
+- large alternating image strips, not cards
+- restrained technical overlays only
+- real photography takes priority over CG
 
 Rule:
-Never invent projects to fill layout.
+Do not add client name, project location, project scale, quantities, metrics, or measured results unless separately verified.
 
 ## H10 — Validation
 
 Purpose:
-- convert the early cinematic signal into measurable proof
+- convert the early cinematic signal into measurement logic
+- expose HILTECH’s published field-testing scope without fabricating pass/fail data
+
+Reality-backed testing language:
+- Fluke-oriented workflows
+- OTDR-oriented workflows
+- power meter
+- digital copper tester
+- project-specific acceptance criteria
 
 Visual:
-- pulse travels through fiber
-- return/reflection appears
-- OTDR/measurement trace forms
-- system states become verified
+- dark SVG measurement field
+- route pulse travels outward
+- return pulse comes back
+- event markers appear
+- trace forms below the physical route
+- Fiber / OTDR-oriented and Copper / Fluke-oriented explanatory modes
 
 Narrative:
-`Invisible → Visible → Measurable → Proven`
+`Invisible → Visible → Measurable → Interpretable`
 
-This is a key brand moment and should be one of the strongest sections.
-
-Implementation:
-- Rive/SVG/GSAP for diagrams when sufficient
-- WebGL only if spatial behavior materially improves the explanation
+Rule:
+No marketing telemetry. No invented loss, throughput, latency, uptime, pass-rate, or acceptance thresholds.
 
 ## H11 — Certainty
 
 Purpose:
 - release visual tension
-- communicate standards, reliability, assurance
+- communicate confidence through verifiable process rather than decorative certification badges
+
+Publicly supported certainty principles:
+- scope before execution
+- product/availability confirmation before promise
+- testing before handover
+- maintenance/operational support where agreed
 
 Behavior:
-- almost no camera travel
-- no visual storm
-- restrained composition
+- light quiet field
+- almost no motion
+- no camera travel
 - strong whitespace / precision
-
-Content:
-- only verified standards/certifications/process claims
+- four process principles only
 
 Narrative state:
-**CERTAINTY**
+**CERTAINTY IS A PROCESS.**
+
+Rule:
+Do not add standards/certification logos until exact relationship and evidence are verified.
 
 ## H12 — Start the Build
 
 Purpose:
-- resolve both business journeys
+- resolve both supported business journeys
+- close the visual signal path started in H01
 
 Primary actions:
-- Start a Project
-- Browse Products
+- Start RFQ → /rfq
+- Browse catalog → /products-partners
 
-Potential supporting actions:
-- Request Quote
-- Send BOQ
-- Talk to an Engineer
+Supporting:
+- Contact HILTECH → /contact
+- verified public email, phone, Cairo location
+
+Visual:
+- dark final viewport
+- oversized type: START WITH THE PHYSICAL PATH.
+- signal line reaches its final node
+- two clear project/procurement panels
+- no fake office/location details
 
 Motion:
-- the signal reaches its final state
-- subtle idle/off behavior
+- signal line completes
+- final node locks
+- typography reveals once
+- subtle idle state only
 
 ## Homepage rhythm
 
