@@ -4,25 +4,104 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import ProductWorldScene from '@/components/products/ProductWorldScene';
 import { productIntelligenceCategories, productIntelligenceSlugByCategory } from '@/content/product-intelligence';
 import { productVisuals } from '@/content/product-visuals';
-import { productCategories, products as staticProducts, type ProductItem } from '@/content/products';
-import { trackEvent } from '@/lib/client/analytics';
+import { productCategories, products as staticProducts, type ProductCategory, type ProductItem } from '@/content/products';
 import { projectBundles } from '@/content/project-bundles';
-import { getBestMatchingBundleForBasket, getBundleCompletion, getCompanionRecommendationsForProduct, getMissingBundleRequirements, getSuggestedProductsForMissingRequirements, getProjectBundleById } from '@/lib/project-bundles';
-import { getRFQWhatsappLink, normalizeRFQItem, normalizeRFQQuantity, readRFQItems, writeRFQItems, type RFQItem } from '@/lib/rfq';
+import { getBestMatchingBundleForBasket, getCompanionRecommendationsForProduct, getMissingBundleRequirements, getProjectBundleById, getSuggestedProductsForMissingRequirements } from '@/lib/project-bundles';
+import { trackEvent } from '@/lib/client/analytics';
 import { productDetailPath } from '@/lib/products/product-code';
+import { getRFQWhatsappLink, normalizeRFQItem, normalizeRFQQuantity, readRFQItems, writeRFQItems, type RFQItem } from '@/lib/rfq';
 
 const INITIAL_VISIBLE = 12;
 const LOAD_MORE_STEP = 12;
+
 const ARABIC_ALIAS_MAP: Record<string, string[]> = {
-  '\u0643\u0627\u0628\u0644\u0627\u062a': ['cable', 'cables', 'cat6', 'copper'],
-  '\u0641\u0627\u064a\u0628\u0631': ['fiber', 'optic', 'om3', 'os2'],
-  '\u0631\u0627\u0643\u0627\u062a': ['rack', 'cabinet', 'pdu'],
-  '\u0643\u0627\u0645\u064a\u0631\u0627\u062a': ['cctv', 'camera', 'security'],
-  '\u0623\u0644\u064a\u0627\u0641': ['fiber', 'optic'],
-  '\u0634\u0628\u0643\u0629': ['network', 'connectivity', 'switching'],
+  'كابلات': ['cable', 'cables', 'cat6', 'copper'],
+  'فايبر': ['fiber', 'optic', 'om3', 'os2'],
+  'راكات': ['rack', 'cabinet', 'pdu'],
+  'كاميرات': ['cctv', 'camera', 'security'],
+  'ألياف': ['fiber', 'optic'],
+  'شبكة': ['network', 'connectivity', 'switching'],
 };
+
+const familyByCategory: Record<ProductCategory, {
+  family: 'fiber' | 'copper' | 'connectivity' | 'access' | 'rack' | 'pathways' | 'cctv';
+  code: string;
+  title: string;
+  statement: string;
+  route: string;
+  description: string;
+}> = {
+  'Fiber Optic Systems': {
+    family: 'fiber',
+    code: 'OPTICAL / 01',
+    title: 'FIBER',
+    statement: 'LIGHT THROUGH A CONTROLLED PHYSICAL PATH.',
+    route: 'CABLE → ODF → CONNECTOR → TRACE',
+    description: 'Backbone cable, ODF, patching, couplers, pigtails, and termination references for optical infrastructure.',
+  },
+  'Copper / CAT6 Cabling': {
+    family: 'copper',
+    code: 'COPPER / 02',
+    title: 'COPPER',
+    statement: 'THE HORIZONTAL LINK STARTS INSIDE THE CABLE.',
+    route: 'PAIR → CABLE → TERMINATE → TEST',
+    description: 'CAT6/CAT6A horizontal cabling references for office floors, endpoints, and structured network routes.',
+  },
+  'Patch Cords & Connectivity': {
+    family: 'connectivity',
+    code: 'PATCH / 03',
+    title: 'CONNECTIVITY',
+    statement: 'THE SYSTEM CHANGES AT THE CONNECTION.',
+    route: 'PORT → PATCH → EQUIPMENT',
+    description: 'Copper and fiber patching references that connect panels, switches, servers, and active equipment.',
+  },
+  'Faceplates / Keystone / RJ45': {
+    family: 'access',
+    code: 'ACCESS / 04',
+    title: 'ENDPOINTS',
+    statement: 'THE NETWORK BECOMES PHYSICAL AT THE USER EDGE.',
+    route: 'BOX → MODULE → OUTLET → DEVICE',
+    description: 'Faceplates, keystones, sockets, plugs, and endpoint termination components.',
+  },
+  'Cabinets / Racks / PDU': {
+    family: 'rack',
+    code: 'RACK / 05',
+    title: 'RACK + POWER',
+    statement: 'EQUIPMENT NEEDS A MAINTAINABLE PHYSICAL HOME.',
+    route: 'ENCLOSURE → POWER → PATCH → ACCESS',
+    description: 'Cabinets, rack power, PDU, and supporting references for data rooms and technical spaces.',
+  },
+  'Cable Management / Duct Systems': {
+    family: 'pathways',
+    code: 'PATH / 06',
+    title: 'PATHWAYS',
+    statement: 'A CLEAN ROUTE IS PART OF THE SYSTEM.',
+    route: 'PATH → BEND → SEPARATE → ACCESS',
+    description: 'Duct, trunking, routing accessories, and physical pathway references for protected, maintainable runs.',
+  },
+  'CCTV & Security': {
+    family: 'cctv',
+    code: 'SECURITY / 07',
+    title: 'CCTV',
+    statement: 'COVERAGE DEPENDS ON THE INFRASTRUCTURE BEHIND THE CAMERA.',
+    route: 'CAMERA → LINK → CONTROL → REVIEW',
+    description: 'Camera, connectivity, cabling, and control-room infrastructure references for surveillance readiness.',
+  },
+};
+
+const visualsByProductId = new Map(productVisuals.map((visual) => [visual.productId, visual]));
+
+function expandQuery(rawQuery: string) {
+  const normalized = rawQuery.trim().toLowerCase();
+  if (!normalized) return [];
+  const tokens = normalized.split(/\s+/).filter(Boolean);
+  const expanded = new Set(tokens);
+  for (const token of tokens) (ARABIC_ALIAS_MAP[token] || []).forEach((alias) => expanded.add(alias));
+  return Array.from(expanded);
+}
 
 function toRFQItem(item: ProductItem): RFQItem {
   return normalizeRFQItem({
@@ -36,267 +115,120 @@ function toRFQItem(item: ProductItem): RFQItem {
   });
 }
 
-const visualsByProductId = new Map(productVisuals.map((visual) => [visual.productId, visual]));
-
-function ProductVisual({ item, isArabic = false }: { item: ProductItem; isArabic?: boolean }) {
+function ProductIndexVisual({ item }: { item: ProductItem }) {
   const visual = visualsByProductId.get(item.id);
-  const imagePath = item.image || visual?.imagePath || '';
-  const alt = visual?.alt || `Product image for ${item.name}`;
+  const src = item.image || visual?.imagePath;
   const [broken, setBroken] = useState(false);
 
-  if (!imagePath || broken) {
-    return <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-4 backdrop-blur-sm"><div className="flex h-full items-center justify-center rounded-xl border border-white/10 bg-white/5 text-center"><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-300">{isArabic ? 'صورة توضيحية للمنتج' : 'Illustrative visual'}</p><p className="mt-1 px-4 text-sm font-medium text-slate-100">{item.name}</p></div></div></div>;
+  if (!src || broken) {
+    return (
+      <div className="hiltech-product-index-media is-fallback">
+        <span>REFERENCE</span>
+        <strong>{item.category}</strong>
+      </div>
+    );
   }
 
-  return <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-4 backdrop-blur-sm"><div className="relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-white/5"><div className="absolute left-3 top-3 z-10 h-0.5 w-6 rounded-full bg-orange-400/80" /><Image src={imagePath} alt={alt} fill sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw" className="object-contain p-3" onError={() => setBroken(true)} /></div></div>;
+  return (
+    <div className="hiltech-product-index-media">
+      <Image
+        src={src}
+        alt={visual?.alt || item.name}
+        fill
+        sizes="(max-width: 700px) 28vw, 12vw"
+        className="object-contain"
+        onError={() => setBroken(true)}
+      />
+      <span>ILLUSTRATIVE VISUAL</span>
+    </div>
+  );
 }
 
-function expandQuery(rawQuery: string) {
-  const normalized = rawQuery.trim().toLowerCase();
-  if (!normalized) return [];
-  const tokens = normalized.split(/\s+/).filter(Boolean);
-  const expanded = new Set(tokens);
-
-  for (const token of tokens) {
-    (ARABIC_ALIAS_MAP[token] || []).forEach((alias) => expanded.add(alias));
-  }
-
-  return Array.from(expanded);
-}
-
-export default function ProductsClient({ initialProducts = staticProducts, locale = 'en', messages, rfqHref = '/rfq', productsHref = '/products-partners' }: { initialProducts?: ProductItem[]; locale?: 'en'|'ar'; messages?: any; rfqHref?: string; productsHref?: string }) {
+export default function ProductsClient({
+  initialProducts = staticProducts,
+  locale = 'en',
+  messages,
+  rfqHref = '/rfq',
+  productsHref = '/products-partners',
+}: {
+  initialProducts?: ProductItem[];
+  locale?: 'en' | 'ar';
+  messages?: any;
+  rfqHref?: string;
+  productsHref?: string;
+}) {
   const t = messages;
   const isArabic = locale === 'ar';
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const gridRef = useRef<HTMLElement>(null);
+
   const [items, setItems] = useState<RFQItem[]>([]);
   const [open, setOpen] = useState(false);
   const [justAdded, setJustAdded] = useState<string | null>(null);
+  const [activeCompanionProductId, setActiveCompanionProductId] = useState<string | null>(null);
   const [highlightedProductId, setHighlightedProductId] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<'All' | (typeof productCategories)[number]>('All');
+  const [activeCategory, setActiveCategory] = useState<'All' | ProductCategory>('All');
   const [activeBrand, setActiveBrand] = useState('All');
   const [query, setQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const [catalogMode, setCatalogMode] = useState<'browse' | 'project'>('browse');
-  const gridRef = useRef<HTMLElement>(null);
+  const [addedStarterBundles, setAddedStarterBundles] = useState<string[]>([]);
 
   useEffect(() => setItems(readRFQItems()), []);
   useEffect(() => writeRFQItems(items), [items]);
 
   const count = useMemo(() => items.reduce((sum, item) => sum + normalizeRFQQuantity(item.quantity), 0), [items]);
-  const totalUnits = count;
+  const productBrands = useMemo(
+    () => Array.from(new Set(initialProducts.map((item) => item.brand))).filter(Boolean).sort((a, b) => a.localeCompare(b)),
+    [initialProducts],
+  );
+  const categoryStats = useMemo(
+    () =>
+      productCategories.map((category) => {
+        const products = initialProducts.filter((item) => item.category === category);
+        return {
+          category,
+          count: products.length,
+          brands: Array.from(new Set(products.map((item) => item.brand))).filter(Boolean),
+          ...familyByCategory[category],
+        };
+      }),
+    [initialProducts],
+  );
 
-  const productBrands = useMemo(() => Array.from(new Set(initialProducts.map((item) => item.brand))).sort((a, b) => a.localeCompare(b)), [initialProducts]);
+  const currentWorldCategory: ProductCategory =
+    activeCategory === 'All' ? 'Fiber Optic Systems' : activeCategory;
+  const currentWorld = familyByCategory[currentWorldCategory];
+  const currentWorldStats = categoryStats.find((entry) => entry.category === currentWorldCategory)!;
 
-  const baseCategoryProducts = useMemo(
+  const categoryFiltered = useMemo(
     () => (activeCategory === 'All' ? initialProducts : initialProducts.filter((item) => item.category === activeCategory)),
     [activeCategory, initialProducts],
   );
-
-  const brandFilteredProducts = useMemo(
-    () => (activeBrand === 'All' ? baseCategoryProducts : baseCategoryProducts.filter((item) => item.brand === activeBrand)),
-    [activeBrand, baseCategoryProducts],
+  const brandFiltered = useMemo(
+    () => (activeBrand === 'All' ? categoryFiltered : categoryFiltered.filter((item) => item.brand === activeBrand)),
+    [activeBrand, categoryFiltered],
   );
-
   const queryTokens = useMemo(() => expandQuery(query), [query]);
-
   const filteredProducts = useMemo(() => {
-    if (!queryTokens.length) return brandFilteredProducts;
-
-    return brandFilteredProducts.filter((item) => {
+    if (!queryTokens.length) return brandFiltered;
+    return brandFiltered.filter((item) => {
       const haystack = [item.id, item.name, item.brand, item.category, item.shortSpecs, item.useCase].join(' ').toLowerCase();
       return queryTokens.every((token) => haystack.includes(token));
     });
-  }, [brandFilteredProducts, queryTokens]);
-
+  }, [brandFiltered, queryTokens]);
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
 
-  useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE);
-  }, [activeCategory, activeBrand, query]);
-
-  useEffect(() => {
-    trackEvent('product_category_filter', {
-      category: activeCategory,
-      visible_count: visibleProducts.length,
-      total_count: filteredProducts.length,
-    });
-  }, [activeCategory, filteredProducts.length, visibleProducts.length]);
-
-  useEffect(() => {
-    const productParam = searchParams.get('product');
-    const categoryParam = searchParams.get('category');
-    const queryParam = searchParams.get('q');
-    const brandParam = searchParams.get('brand');
-    const hasBrowseIntentParam = Boolean(productParam || categoryParam || brandParam || queryParam?.trim());
-
-    setQuery(queryParam?.trim() || '');
-    setActiveBrand(brandParam && productBrands.includes(brandParam) ? brandParam : 'All');
-    if (hasBrowseIntentParam) setCatalogMode('browse');
-
-    if (productParam) {
-      const target = initialProducts.find((item) => item.id === productParam);
-      if (!target) return;
-      setActiveCategory(target.category);
-      setVisibleCount((prev) => Math.max(prev, initialProducts.filter((item) => item.category === target.category).length));
-      setHighlightedProductId(target.id);
-      return;
-    }
-
-    if (categoryParam && productCategories.includes(categoryParam as (typeof productCategories)[number])) {
-      setActiveCategory(categoryParam as (typeof productCategories)[number]);
-      setHighlightedProductId(null);
-      window.setTimeout(() => {
-        gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 120);
-      return;
-    }
-
-    setActiveCategory('All');
-    setHighlightedProductId(null);
-  }, [initialProducts, productBrands, searchParams]);
-
-  useEffect(() => {
-    if (!highlightedProductId) return;
-    const timeout = window.setTimeout(() => {
-      const node = document.getElementById(`product-${highlightedProductId}`);
-      if (!node) return;
-      node.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      window.setTimeout(() => {
-        node.classList.add('ring-2', 'ring-orange-400', 'ring-offset-2');
-      }, 200);
-    }, 180);
-
-    const clear = window.setTimeout(() => {
-      setHighlightedProductId((curr) => (curr === highlightedProductId ? null : curr));
-    }, 5000);
-
-    return () => {
-      window.clearTimeout(timeout);
-      window.clearTimeout(clear);
-    };
-  }, [highlightedProductId]);
-
-  const setUrlState = (nextCategory: typeof activeCategory, nextQuery: string, includeProduct = false, nextBrand = activeBrand) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (nextCategory !== 'All') params.set('category', nextCategory);
-    else params.delete('category');
-
-    if (nextQuery.trim()) params.set('q', nextQuery.trim());
-    else params.delete('q');
-
-    if (nextBrand !== 'All') params.set('brand', nextBrand);
-    else params.delete('brand');
-
-    if (!includeProduct) params.delete('product');
-
-    const next = params.toString();
-    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
-  };
-
-  const clearFilters = () => {
-    setQuery('');
-    setActiveCategory('All');
-    setActiveBrand('All');
-    setHighlightedProductId(null);
-    setVisibleCount(INITIAL_VISIBLE);
-    router.replace(pathname, { scroll: false });
-  };
-
-  const hasActiveFilters = Boolean(query.trim()) || activeCategory !== 'All' || activeBrand !== 'All' || Boolean(searchParams.get('product'));
-  const localizeCategory = (category: string) => isArabic ? (t?.categoryLabels?.[category] || category) : category;
-  const productDetailHref = (id: string) => productDetailPath(id, isArabic ? 'ar' : 'en');
-
-  const arabicIntelligenceLabels: Record<string, { title: string; intro: string }> = {
-    fiber: {
-      title: 'ملاحظات فنية للفايبر',
-      intro: 'سياق فني يساعد على فهم مكونات الفايبر وODF والباتش كورد قبل طلب عرض السعر.',
-    },
-    copper: {
-      title: 'ملاحظات فنية للكابلات النحاسية',
-      intro: 'إرشادات سريعة لاختيار الكابلات وملحقات التوصيل المناسبة قبل تجهيز طلب التسعير.',
-    },
-    patching: {
-      title: 'ملاحظات فنية للربط والتوصيل',
-      intro: 'ملخص عملي حول عناصر الباتش كورد والتنظيم لضمان توافق المكونات داخل المشروع.',
-    },
-    access: {
-      title: 'ملاحظات فنية لنقاط الشبكة',
-      intro: 'نظرة مختصرة على الفيس بليت والكيستون وتنسيق المخارج بما يلائم نطاق العمل.',
-    },
-    infrastructure: {
-      title: 'ملاحظات فنية للبنية التحتية',
-      intro: 'محتوى مساعد لفهم الراك والكابينات وإدارة الطاقة قبل طلب العرض النهائي.',
-    },
-    pathways: {
-      title: 'ملاحظات فنية لمسارات الكابلات',
-      intro: 'توجيهات أساسية لتخطيط المسارات والدكت بما يدعم تنفيذًا منظمًا وسهل الصيانة.',
-    },
-    security: {
-      title: 'ملاحظات فنية للبنية الأمنية',
-      intro: 'نقاط فنية مختصرة لمكونات CCTV والملحقات قبل إدراجها ضمن طلب عرض السعر.',
-    },
-  };
-
-  const intelligenceHref = (slug?: string) => {
-    if (!slug) return isArabic ? '/ar/products-partners' : '/products-partners';
-    return isArabic ? `/ar/products-partners/intelligence/${slug}` : `/products-partners/intelligence/${slug}`;
-  };
-
-  const updateItem = (id: string, patch: Partial<RFQItem>) => setItems((prev) => prev.map((entry) => (entry.id === id ? normalizeRFQItem({ ...entry, ...patch }) : entry)));
-
-  const starterBundleIds = ['office-network-setup', 'rack-room-preparation', 'fiber-backbone-scope', 'cctv-infrastructure-scope'] as const;
-  const [addedStarterBundles, setAddedStarterBundles] = useState<string[]>([]);
-  const [activeCompanionProductId, setActiveCompanionProductId] = useState<string | null>(null);
-
-  const scopeKits = starterBundleIds
-    .map((bundleId) => getProjectBundleById(bundleId))
-    .filter((bundle): bundle is NonNullable<ReturnType<typeof getProjectBundleById>> => Boolean(bundle));
-
-
-
-  const addToRFQ = (product: ProductItem) => {
-    setItems((prev) => {
-      const found = prev.find((entry) => entry.id === product.id);
-      const nextItems = found ? prev.map((entry) => (entry.id === product.id ? { ...entry, quantity: normalizeRFQQuantity(entry.quantity + 1) } : entry)) : [...prev, toRFQItem(product)];
-
-      trackEvent('product_add_to_rfq', {
-        product_id: product.id,
-        product_name: product.name,
-        category: product.category,
-        brand: product.brand,
-        basket_count_after: nextItems.length,
-      });
-
-      return nextItems;
-    });
-    setJustAdded(product.id);
-    setActiveCompanionProductId(product.id);
-    setTimeout(() => setJustAdded((curr) => (curr === product.id ? null : curr)), 1400);
-  };
-
-  const addBundleStarterToRFQ = (bundleId: string) => {
-    const bundle = getProjectBundleById(bundleId);
-    if (!bundle) return;
-    setItems((prev) => {
-      const inBasket = new Set(prev.map((entry) => entry.id));
-      const missingStarterProducts = bundle.starterProductIds
-        .filter((productId) => !inBasket.has(productId))
-        .map((productId) => initialProducts.find((entry) => entry.id === productId))
-        .filter((entry): entry is ProductItem => Boolean(entry));
-      const nextItems = [...prev, ...missingStarterProducts.map((entry) => toRFQItem(entry))];
-      trackEvent('bundle_add_to_rfq', { bundle_id: bundle.id, added_count: missingStarterProducts.length, basket_count_after: nextItems.length });
-      return nextItems;
-    });
-    setAddedStarterBundles((prev) => (prev.includes(bundle.id) ? prev : [...prev, bundle.id]));
-  };
-
-  const addCompanionProduct = (product: ProductItem, sourceProductId: string) => {
-    addToRFQ(product);
-    trackEvent('aov_companion_add', { product_id: product.id, source_product_id: sourceProductId });
-  };
+  const scopeKits = useMemo(
+    () =>
+      ['office-network-setup', 'rack-room-preparation', 'fiber-backbone-scope']
+        .map((id) => getProjectBundleById(id))
+        .filter((bundle): bundle is NonNullable<ReturnType<typeof getProjectBundleById>> => Boolean(bundle)),
+    [],
+  );
 
   const bestBundleMatch = useMemo(() => getBestMatchingBundleForBasket(items), [items]);
   const bundleMissingRequirements = useMemo(
@@ -308,6 +240,574 @@ export default function ProductsClient({ initialProducts = staticProducts, local
     [bestBundleMatch, items, initialProducts],
   );
 
+  useEffect(() => setVisibleCount(INITIAL_VISIBLE), [activeCategory, activeBrand, query]);
 
-  return <div className="hiltech-products-client"><section data-products-mode className="mt-4 rounded-xl border border-white/15 bg-white/5 p-3 md:mt-6 md:bg-slate-900/95 md:p-4"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">{t?.chooseStartLabel || 'Choose how you want to start'}</p><div className="mt-3 inline-flex rounded-xl border border-white/15 bg-slate-950/50 p-1"><button type="button" onClick={() => setCatalogMode('browse')} className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${catalogMode === 'browse' ? 'bg-orange-500/15 text-orange-200' : 'text-slate-300 hover:bg-white/10'}`}>{t?.browseProducts || 'Browse Products'}</button><button type="button" onClick={() => setCatalogMode('project')} className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${catalogMode === 'project' ? 'bg-orange-500/15 text-orange-200' : 'text-slate-300 hover:bg-white/10'}`}>{t?.buildByProject || 'Build by Project'}</button></div><p className="mt-3 text-sm text-slate-300">{catalogMode === 'browse' ? (t?.browseModeHelper || 'Search or filter the catalog and add the products you need to your RFQ basket.') : (t?.projectModeHelper || 'Start from a project scope, then refine the request in your RFQ basket.')}</p></section>{catalogMode === 'browse' ? <><section data-products-filters className="mt-4 rounded-xl border border-white/15 bg-white/5 p-3 md:mt-6 md:bg-slate-900/95 md:p-4"><div className="hiltech-products-filter-heading"><h2 className="text-xl font-bold md:text-2xl">{t?.categoriesLabel || 'Find the exact reference'}</h2><span>{filteredProducts.length} MATCHES</span></div><div className="mt-3"><input value={query} onChange={(e) => { const nextQuery = e.target.value; setQuery(nextQuery); setUrlState(activeCategory, nextQuery); }} placeholder={t?.searchPlaceholder || 'Search product code, brand, CAT6, fiber, rack, ODF...'} className="w-full rounded-lg border border-white/20 px-3 py-2 text-sm text-white shadow-sm focus:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-400/20" /></div><div className="mt-2 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible"><button onClick={() => { setActiveCategory('All'); setUrlState('All', query); }} className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold shadow-sm md:px-4 md:py-1.5 md:text-sm ${activeCategory === 'All' ? 'border border-orange-500/40 bg-orange-500/10 text-orange-200' : 'border border-white/20 bg-white/5 text-slate-200'}`}>{t?.allCategories || 'All'}</button>{productCategories.map((category) => <button key={category} onClick={() => { setActiveCategory(category); setUrlState(category, query); }} className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition md:px-4 md:py-1.5 md:text-sm ${activeCategory === category ? 'border border-orange-500/40 bg-orange-500/10 text-orange-200' : 'border border-white/20 bg-white/5 text-slate-200 hover:border-white/30 hover:bg-gradient-to-br from-white/10 to-white/5'}`}>{localizeCategory(category)}</button>)}</div><div className="hiltech-products-brand-filter"><span>BRAND</span><div><button type="button" onClick={() => { setActiveBrand('All'); setUrlState(activeCategory, query, false, 'All'); }} className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${activeBrand === 'All' ? 'is-active' : ''}`}>All brands</button>{productBrands.map((brand) => <button key={brand} type="button" onClick={() => { setActiveBrand(brand); setUrlState(activeCategory, query, false, brand); }} className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${activeBrand === brand ? 'is-active' : ''}`}>{brand}</button>)}</div></div>{hasActiveFilters ? <div className="hiltech-products-applied-filters"><span>ACTIVE FILTERS</span><strong>{[activeCategory !== 'All' ? activeCategory : '', activeBrand !== 'All' ? activeBrand : '', query.trim() ? `“${query.trim()}”` : ''].filter(Boolean).join(' / ')}</strong></div> : null}{hasActiveFilters ? <div className="mt-3"><button onClick={clearFilters} className="inline-flex rounded-lg border border-white/20 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-gradient-to-br from-white/10 to-white/5 md:text-sm">{t?.clearFilters || 'Clear filters'}</button></div> : null}<p className="mt-3 text-sm text-slate-300">{query.trim() ? (t?.showingResultsFor ? t.showingResultsFor.replace('{count}', String(filteredProducts.length)).replace('{query}', query.trim()) : `Showing ${filteredProducts.length} results for “${query.trim()}”`) : (t?.showingOfProducts ? t.showingOfProducts.replace('{shown}', String(visibleProducts.length)).replace('{total}', String(filteredProducts.length)) : `Showing ${visibleProducts.length} of ${filteredProducts.length} products`)}</p></section><section id="all" ref={gridRef} data-products-results className="mt-8 pb-44 md:mt-10 md:pb-24">{filteredProducts.length === 0 ? <div className="rounded-2xl border border-white/15 bg-white/5 p-6 text-center"><p className="text-base font-semibold text-white">{t?.noProductsFound || t?.noResults || 'No products found. Try another keyword or start RFQ with your project notes.'}</p><div className="mt-4 flex flex-wrap justify-center gap-2"><button onClick={clearFilters} className="inline-flex rounded-lg border border-white/20 px-3 py-2 text-sm font-semibold text-slate-200">{t?.clearFilters || 'Clear filters'}</button><Link href={rfqHref} className="btn-primary">{t?.goToRFQ || 'Start RFQ'}</Link></div></div> : <><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleProducts.map((item) => { const slug = productIntelligenceSlugByCategory[item.category]; return (<article id={`product-${item.id}`} data-product-card key={item.id} className={`flex h-full scroll-mt-28 flex-col rounded-2xl border bg-white/5 p-4 shadow-sm transition md:p-5 ${highlightedProductId === item.id ? 'is-highlighted border-orange-300 ring-2 ring-orange-400 ring-offset-2' : 'border-white/15 hover:-translate-y-0.5 hover:border-orange-500/40 hover:shadow-md'}`}><Link href={productDetailHref(item.id)} className="block cursor-pointer" aria-label={item.name}><ProductVisual item={item} isArabic={isArabic} /></Link><div className="mt-4"><Link href={intelligenceHref(slug)} className="mb-2 inline-flex w-fit cursor-pointer rounded-full border border-orange-100 bg-orange-500/10 px-2 py-0.5 text-[9px] font-semibold tracking-wider text-orange-200 md:text-[10px]">{localizeCategory(item.category)}</Link><span className="hiltech-product-code">{item.id}</span><Link href={productDetailHref(item.id)} className="block cursor-pointer rounded-lg hover:bg-gradient-to-br from-white/10 to-white/5"><h3 className="break-words text-base font-bold leading-tight text-white hover:underline">{item.name}</h3></Link><div className="hiltech-product-card-meta"><span>{item.brand}</span><span>{item.shortSpecs}</span><span>{item.availabilityNote?.trim() || 'Availability confirmed during RFQ'}</span></div></div><p className="mt-2 text-xs text-slate-300">{isArabic ? 'أضف كل عناصر المشروع للحصول على تسعير أدق للنطاق بالكامل.' : 'Add all required items to quote the full project scope.'}</p><div className="mt-auto pt-3"><div className="flex flex-wrap gap-2"><button className="btn-primary px-4 py-2.5 text-sm" onClick={() => addToRFQ(item)} type="button">{t?.addToRFQ || 'Add to RFQ'}</button><Link className="inline-flex items-center rounded-lg border border-white/20 bg-white/5 px-3.5 py-2 text-sm font-medium text-slate-200 transition hover:border-white/30 hover:bg-gradient-to-br from-white/10 to-white/5" href={productDetailHref(item.id)}>{t?.viewDetails || 'View details'}</Link><Link className="inline-flex items-center px-1 py-2 text-xs font-medium text-slate-300 underline-offset-2 hover:underline" href={intelligenceHref(slug)}>{t?.technicalNotes || 'Technical Notes'}</Link></div>{justAdded === item.id ? <p className="mt-2 text-xs font-medium text-emerald-700">{t?.addedToRFQ || 'Added to RFQ'}</p> : null}{activeCompanionProductId === item.id ? <div className="mt-3 rounded-lg border border-white/15 bg-slate-900/70 p-2"><p className="text-xs font-semibold text-slate-100">{isArabic ? (t?.commonlyAddedWithItem || 'غالبًا يضاف مع هذا العنصر') : 'Commonly added with this item'}</p><div className="mt-2 space-y-2">{getCompanionRecommendationsForProduct(item, items, initialProducts).slice(0,3).map((rec) => <div key={rec.id} className="flex items-center justify-between gap-2 text-xs"><span className="text-slate-200">{rec.name}</span><button type="button" onClick={() => addCompanionProduct(rec, item.id)} className="rounded border border-orange-500/40 px-2 py-1 text-orange-200">{isArabic ? (t?.addRecommendation || 'أضف التوصية') : 'Add'}</button></div>)}</div></div> : null}</div></article>);})}</div>{hasMore ? <div className="mt-6 flex justify-center"><button type="button" onClick={() => setVisibleCount((prev) => prev + LOAD_MORE_STEP)} className="inline-flex items-center rounded-lg border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 hover:bg-gradient-to-br from-white/10 to-white/5">{t?.loadMoreProducts || 'Load More Products'}</button></div> : null}<div className="mt-6 rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 px-4 py-3 text-sm text-slate-200">{t?.needHelpScoping || 'Need help scoping items?'} <Link className="font-semibold text-orange-200 underline underline-offset-4 transition hover:text-orange-100" href={isArabic ? '/ar/scope-finder' : '/scope-finder'}>{t?.startScopeFinder || 'Start Scope Finder'}</Link>.</div></>}</section><section className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-5 md:p-6"><h2 className="text-2xl font-bold text-white">{isArabic ? 'ملاحظات فنية اختيارية' : `${t?.technicalNotes || 'Technical Notes'} ${t?.technicalNotesOptional || '(Optional)'}`}</h2><p className="mt-2 text-sm text-slate-300">{t?.technicalGuidesHelp || 'Use these guides when you need deeper technical context after building your RFQ list.'}</p><div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{productIntelligenceCategories.map((category) => <article key={category.slug} className="rounded-xl border border-white/15 bg-gradient-to-br from-slate-900/90 to-slate-800/70 p-4"><p className="text-[10px] font-semibold uppercase tracking-wider text-orange-200">{isArabic ? 'مرجع فني' : category.eyebrow}</p><h3 className="mt-1 text-lg font-semibold text-white">{isArabic ? (arabicIntelligenceLabels[category.slug]?.title || 'ملاحظات فنية') : category.title}</h3><p className="mt-2 text-sm text-slate-300">{isArabic ? (arabicIntelligenceLabels[category.slug]?.intro || 'قد تتضمن المراجع الفنية بعض المصطلحات الإنجليزية حسب طبيعة المنتجات.') : category.intro}</p><div className="mt-3 flex flex-wrap gap-2">{(isArabic ? ['قد تتضمن مصطلحات إنجليزية', 'روابط عربية متاحة'] : category.relatedCapabilityTags.slice(0, 2)).map((tag) => <span key={tag} className="rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-slate-300">{tag}</span>)}</div><Link className="mt-4 inline-flex items-center text-sm font-semibold text-orange-200" href={intelligenceHref(category.slug)}>{isArabic ? 'عرض الملاحظات الفنية ←' : (t?.viewTechnicalNotes || `View ${t?.technicalNotes || 'Technical Notes'}`) + ' →'}</Link></article>)}</div></section></> : <section className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-4 md:p-6"><h2 className="text-xl font-bold text-white md:text-2xl">{t?.buildByProject || 'Build by Project'}</h2><p className="mt-2 text-sm text-slate-300">{t?.projectModeHelper || 'Start from a project scope, then refine the request in your RFQ basket.'}</p><div className="mt-4 grid gap-3 md:grid-cols-2">{scopeKits.map((kit) => <article key={kit.id} className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-4"><h3 className="text-base font-semibold text-white">{kit.title}</h3><p className="mt-1 text-xs text-slate-300">{kit.shortDescription}</p><p className="mt-2 text-xs text-slate-300">{isArabic ? `عدد عناصر البداية: ${kit.starterProductIds.length}` : `${kit.starterProductIds.length} starter items`}</p><ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-200">{kit.requirements.slice(0,3).map((req) => <li key={req.id}>{req.label}</li>)}</ul><button type="button" onClick={() => addBundleStarterToRFQ(kit.id)} className="mt-3 inline-flex rounded-lg border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-sm font-semibold text-orange-200">{addedStarterBundles.includes(kit.id) ? (isArabic ? (t?.starterScopeAdded || 'تمت إضافة نطاق البداية') : 'Starter scope added') : (isArabic ? (t?.addStarterScope || 'أضف نطاق البداية لطلب العرض') : 'Add starter scope to RFQ')}</button></article>)}</div></section>}<button type="button" onClick={() => { trackEvent('rfq_basket_open', { item_count: items.length, total_units: totalUnits }); setOpen(true); }} className="fixed right-3 z-40 rounded-full bg-navy-900 px-4 py-2.5 text-xs font-semibold text-white shadow-lg ring-1 ring-black/10 transition hover:bg-navy-800 bottom-[max(1rem,calc(env(safe-area-inset-bottom)+0.5rem))] md:bottom-6 md:right-6 md:px-4 md:py-3 md:text-sm">{t?.basketTitle || 'RFQ Basket'} ({count})</button>{open ? <div className="fixed inset-0 z-50"><div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[1px]" onClick={() => setOpen(false)} /><aside className="absolute right-0 top-0 h-full w-full max-w-xl overflow-y-auto border-l border-white/15 bg-slate-950/95 shadow-2xl backdrop-blur-xl"><div className="sticky top-0 border-b border-white/10 bg-slate-950/95 px-5 py-4 text-white backdrop-blur"><div className="flex items-center justify-between"><h3 className="text-lg font-semibold">{t?.basketTitle || 'RFQ Basket'} ({items.length})</h3><button onClick={() => setOpen(false)} className="rounded-md border border-white/30 px-2 py-1 text-sm">{t?.close || 'Close'}</button></div><p className="mt-2 text-sm text-slate-100">{t?.basketIntro || 'Build your project supply request, add quantities and notes, then send it directly to HILTECH. Final quotation confirmed after RFQ review.'}</p></div><div className="space-y-4 p-5 md:p-6"><p className="rounded-xl border border-orange-100 bg-orange-500/10 px-3 py-2 text-xs text-slate-200">{t?.basketScopeHint || (isArabic ? 'أضف كل العناصر المطلوبة قبل الإرسال حتى يتمكن فريق HILTECH من تسعير نطاق المشروع بالكامل.' : 'Add all required items before submitting so HILTECH can quote the full project scope.')}</p>{items.length === 0 ? <div className="rounded-xl border border-white/15 bg-slate-900/70 p-5 text-sm leading-6"><p className="font-semibold text-white">{t?.basketEmpty || 'Your RFQ basket is currently empty.'}</p><p className="mt-1 text-slate-300">{t?.basketEmptyHint || 'Add products to define your request faster.'}</p><Link href={productsHref} onClick={() => setOpen(false)} className="mt-3 inline-flex rounded-lg bg-navy-900 px-3 py-2 text-white">{t?.browseProducts || t?.continueBrowsing || 'Browse Products'}</Link></div> : items.map((item) => <article key={item.id} className="rounded-xl border border-white/15 bg-slate-900/60 p-4"><h4 className="font-semibold text-white">{item.name}</h4><p className="mt-1 text-xs text-slate-300">{localizeCategory(item.category)} • {item.brand}</p><p className="mt-1 break-words text-xs font-medium text-slate-200">{item.priceNote?.trim() ? t?.priceRefLabel ? `${t.priceRefLabel} ${item.priceNote.trim()}` : `Reference: ${item.priceNote.trim()}` : (t?.priceOnRequest || 'Price on request')}</p><div className="mt-2 flex flex-wrap items-center gap-2"><button className="rounded border px-2" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity - 1) })}>-</button><span className="text-sm font-semibold">{t?.qtyLabel || 'Qty:'} {item.quantity}</span><button className="rounded border px-2" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity + 1) })}>+</button><input className="w-full min-w-0 rounded border border-white/20 px-2 py-1 text-xs sm:ml-auto sm:w-24" value={item.unit} onChange={(e) => updateItem(item.id, { unit: e.target.value })} /></div><textarea className="mt-2 w-full rounded-md border border-white/20 p-2 text-xs" rows={2} value={item.notes} onChange={(e) => updateItem(item.id, { notes: e.target.value })} placeholder={t?.addItemNotes || 'Add item notes'} /><button className="mt-2 text-xs font-semibold text-red-600" onClick={() => setItems((prev) => prev.filter((entry) => entry.id !== item.id))}>{t?.removeItem || 'Remove item'}</button></article>)}{bestBundleMatch ? <div className="rounded-xl border border-white/15 bg-slate-900/60 p-4"><p className="text-sm font-semibold text-white">{isArabic ? (t?.scopeCompletion || 'اكتمال النطاق') : 'Scope completion'}: {bestBundleMatch.bundle.title}</p><p className="mt-1 text-xs text-slate-300">{isArabic ? `${bestBundleMatch.completion.completedRequiredCount} من ${bestBundleMatch.completion.totalRequiredCount} عناصر مطلوبة مغطاة` : `${bestBundleMatch.completion.completedRequiredCount} of ${bestBundleMatch.completion.totalRequiredCount} required scope items covered`} • {bestBundleMatch.completion.completionPercentage}%</p>{bundleMissingRequirements.length === 0 ? <p className="mt-2 text-xs font-semibold text-emerald-300">{isArabic ? (t?.scopeComplete || 'النطاق مكتمل') : 'Scope complete'}</p> : <div className="mt-2 space-y-2"><p className="text-xs text-slate-200">{isArabic ? (t?.missingFromScope || 'ناقص من هذا النطاق') : 'Missing from this scope'}</p>{bundleSuggestedProducts.map((product) => <div key={product.id} className="flex items-center justify-between gap-2 text-xs"><span className="text-slate-200">{product.name}</span><button type="button" className="rounded border border-orange-500/40 px-2 py-1 text-orange-200" onClick={() => { addToRFQ(product); trackEvent('aov_missing_item_add', { product_id: product.id, bundle_id: bestBundleMatch.bundle.id, source: 'products_drawer' }); }}>{isArabic ? (t?.addRecommendation || 'أضف التوصية') : 'Add'}</button></div>)}</div>}</div> : null}<div className="flex flex-wrap gap-2"><Link href={rfqHref} onClick={() => { trackEvent('rfq_basket_review_click', { item_count: items.length, total_units: totalUnits, source: 'products_drawer' }); setOpen(false); }} className="btn-primary">{t?.reviewRfqBasket || t?.goToRFQ || 'Review RFQ Basket'}</Link><a className="inline-flex items-center rounded-lg border border-orange-500/40 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-orange-200 hover:bg-orange-100" href={getRFQWhatsappLink(items.map((item) => normalizeRFQItem(item)))} target="_blank" rel="noreferrer" onClick={() => trackEvent('rfq_whatsapp_click', { item_count: items.length, total_units: totalUnits, source: 'products_drawer' })}>{t?.sendViaWhatsapp || 'Send via WhatsApp'}</a><button className="inline-flex items-center rounded-lg border border-white/15 px-4 py-2 text-sm font-medium text-slate-500 hover:bg-gradient-to-br from-white/10 to-white/5" onClick={() => { trackEvent('rfq_basket_clear', { item_count: items.length, total_units: totalUnits, source: 'products_drawer' }); setItems([]); }}>{t?.clearBasket || 'Clear Basket'}</button></div></div></aside></div> : null}</div>;
+  useEffect(() => {
+    const productParam = searchParams.get('product');
+    const categoryParam = searchParams.get('category');
+    const queryParam = searchParams.get('q');
+    const brandParam = searchParams.get('brand');
+
+    setQuery(queryParam?.trim() || '');
+    setActiveBrand(brandParam && productBrands.includes(brandParam) ? brandParam : 'All');
+
+    if (productParam || categoryParam || brandParam || queryParam?.trim()) setCatalogMode('browse');
+
+    if (productParam) {
+      const target = initialProducts.find((item) => item.id === productParam);
+      if (target) {
+        setActiveCategory(target.category);
+        setHighlightedProductId(target.id);
+      }
+      return;
+    }
+
+    if (categoryParam && productCategories.includes(categoryParam as ProductCategory)) {
+      setActiveCategory(categoryParam as ProductCategory);
+      setHighlightedProductId(null);
+      return;
+    }
+
+    setActiveCategory('All');
+    setHighlightedProductId(null);
+  }, [initialProducts, productBrands, searchParams]);
+
+  useEffect(() => {
+    if (!highlightedProductId) return;
+    const timeout = window.setTimeout(() => {
+      document.getElementById(`product-${highlightedProductId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 180);
+    const clear = window.setTimeout(() => {
+      setHighlightedProductId((current) => (current === highlightedProductId ? null : current));
+    }, 5000);
+    return () => {
+      window.clearTimeout(timeout);
+      window.clearTimeout(clear);
+    };
+  }, [highlightedProductId]);
+
+  const setUrlState = (
+    nextCategory: typeof activeCategory,
+    nextQuery: string,
+    nextBrand = activeBrand,
+  ) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextCategory !== 'All') params.set('category', nextCategory);
+    else params.delete('category');
+    if (nextQuery.trim()) params.set('q', nextQuery.trim());
+    else params.delete('q');
+    if (nextBrand !== 'All') params.set('brand', nextBrand);
+    else params.delete('brand');
+    params.delete('product');
+    router.replace(params.toString() ? `${pathname}?${params.toString()}` : pathname, { scroll: false });
+  };
+
+  const chooseCategory = (category: 'All' | ProductCategory) => {
+    setActiveCategory(category);
+    setActiveBrand('All');
+    setUrlState(category, query, 'All');
+    trackEvent('product_category_filter', { category, source: 'product_world' });
+  };
+
+  const clearFilters = () => {
+    setQuery('');
+    setActiveCategory('All');
+    setActiveBrand('All');
+    setHighlightedProductId(null);
+    setVisibleCount(INITIAL_VISIBLE);
+    router.replace(pathname, { scroll: false });
+  };
+
+  const addToRFQ = (product: ProductItem) => {
+    setItems((previous) => {
+      const existing = previous.find((entry) => entry.id === product.id);
+      const next = existing
+        ? previous.map((entry) =>
+            entry.id === product.id
+              ? { ...entry, quantity: normalizeRFQQuantity(entry.quantity + 1) }
+              : entry,
+          )
+        : [...previous, toRFQItem(product)];
+
+      trackEvent('product_add_to_rfq', {
+        product_id: product.id,
+        product_name: product.name,
+        category: product.category,
+        brand: product.brand,
+        basket_count_after: next.length,
+      });
+      return next;
+    });
+    setJustAdded(product.id);
+    setActiveCompanionProductId(product.id);
+    window.setTimeout(() => setJustAdded((current) => (current === product.id ? null : current)), 1500);
+  };
+
+  const addCompanionProduct = (product: ProductItem, sourceProductId: string) => {
+    addToRFQ(product);
+    trackEvent('aov_companion_add', { product_id: product.id, source_product_id: sourceProductId });
+  };
+
+  const addBundleStarterToRFQ = (bundleId: string) => {
+    const bundle = getProjectBundleById(bundleId);
+    if (!bundle) return;
+
+    setItems((previous) => {
+      const existing = new Set(previous.map((entry) => entry.id));
+      const additions = bundle.starterProductIds
+        .filter((productId) => !existing.has(productId))
+        .map((productId) => initialProducts.find((entry) => entry.id === productId))
+        .filter((entry): entry is ProductItem => Boolean(entry))
+        .map(toRFQItem);
+      return [...previous, ...additions];
+    });
+    setAddedStarterBundles((previous) => (previous.includes(bundle.id) ? previous : [...previous, bundle.id]));
+    trackEvent('bundle_add_to_rfq', { bundle_id: bundle.id });
+  };
+
+  const updateItem = (id: string, patch: Partial<RFQItem>) => {
+    setItems((previous) =>
+      previous.map((entry) => (entry.id === id ? normalizeRFQItem({ ...entry, ...patch }) : entry)),
+    );
+  };
+
+  const productDetailHref = (id: string) => productDetailPath(id, isArabic ? 'ar' : 'en');
+  const intelligenceHref = (slug?: string) => {
+    if (!slug) return productsHref;
+    return isArabic
+      ? `/ar/products-partners/intelligence/${slug}`
+      : `/products-partners/intelligence/${slug}`;
+  };
+
+  const localizeCategory = (category: string) =>
+    isArabic ? t?.categoryLabels?.[category] || category : category;
+
+  const hasActiveFilters =
+    Boolean(query.trim()) || activeCategory !== 'All' || activeBrand !== 'All' || Boolean(searchParams.get('product'));
+
+  return (
+    <div className="hiltech-products-world-client">
+      <section className="hiltech-products-mode-switch" data-products-mode>
+        <div>
+          <span>PROCUREMENT MODE</span>
+          <strong>{catalogMode === 'browse' ? 'REFERENCE FINDING' : 'PROJECT SCOPE'}</strong>
+        </div>
+        <div>
+          <button
+            type="button"
+            className={catalogMode === 'browse' ? 'is-active' : undefined}
+            onClick={() => setCatalogMode('browse')}
+          >
+            Browse references
+          </button>
+          <button
+            type="button"
+            className={catalogMode === 'project' ? 'is-active' : undefined}
+            onClick={() => setCatalogMode('project')}
+          >
+            Build by project
+          </button>
+        </div>
+      </section>
+
+      {catalogMode === 'browse' ? (
+        <>
+          <section className="hiltech-product-world" data-product-world>
+            <div className="hiltech-product-world-topline">
+              <span>02 / PHYSICAL LIBRARY</span>
+              <strong>{currentWorld.code}</strong>
+            </div>
+
+            <div className="hiltech-product-world-layout">
+              <nav className="hiltech-product-world-nav" aria-label="Product families">
+                <button
+                  type="button"
+                  className={activeCategory === 'All' ? 'is-active' : undefined}
+                  onClick={() => chooseCategory('All')}
+                >
+                  <span>00</span>
+                  <strong>ALL SYSTEMS</strong>
+                  <small>{initialProducts.length} refs</small>
+                </button>
+
+                {categoryStats.map((entry, index) => (
+                  <button
+                    type="button"
+                    key={entry.category}
+                    data-product-family
+                    className={activeCategory === entry.category ? 'is-active' : undefined}
+                    onClick={() => chooseCategory(entry.category)}
+                  >
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{entry.title}</strong>
+                    <small>{entry.count} refs / {entry.brands.length} brands</small>
+                  </button>
+                ))}
+              </nav>
+
+              <div className="hiltech-product-world-stage">
+                <div className="hiltech-product-world-scene">
+                  <ProductWorldScene family={currentWorld.family} />
+                  <div className="hiltech-product-world-stage-label">
+                    <span>SEMANTIC 3D / {currentWorld.title}</span>
+                    <strong>{currentWorld.route}</strong>
+                  </div>
+                </div>
+
+                <div className="hiltech-product-world-copy">
+                  <span>{currentWorld.code}</span>
+                  <h2>{currentWorld.statement}</h2>
+                  <p>{currentWorld.description}</p>
+                  <div>
+                    <span>{currentWorldStats.count} CURRENT REFERENCES</span>
+                    <span>{currentWorldStats.brands.length} BRAND LABELS</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="hiltech-product-finder" data-products-filters>
+            <div className="hiltech-product-finder-heading">
+              <span>03 / EXACT FINDING</span>
+              <strong>{filteredProducts.length} MATCHES</strong>
+            </div>
+
+            <div className="hiltech-product-finder-grid">
+              <label>
+                <span>REFERENCE / CODE / SPEC</span>
+                <input
+                  value={query}
+                  onChange={(event) => {
+                    const next = event.target.value;
+                    setQuery(next);
+                    setUrlState(activeCategory, next);
+                  }}
+                  placeholder="Search product code, brand, CAT6, fiber, rack, ODF..."
+                />
+              </label>
+
+              <div className="hiltech-product-brand-index">
+                <span>BRAND INDEX</span>
+                <div>
+                  <button
+                    type="button"
+                    className={activeBrand === 'All' ? 'is-active' : undefined}
+                    onClick={() => {
+                      setActiveBrand('All');
+                      setUrlState(activeCategory, query, 'All');
+                    }}
+                  >
+                    ALL
+                  </button>
+                  {productBrands.map((brand) => (
+                    <button
+                      type="button"
+                      key={brand}
+                      className={activeBrand === brand ? 'is-active' : undefined}
+                      onClick={() => {
+                        setActiveBrand(brand);
+                        setUrlState(activeCategory, query, brand);
+                      }}
+                    >
+                      {brand}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {hasActiveFilters ? (
+              <div className="hiltech-product-finder-active">
+                <span>ACTIVE QUERY</span>
+                <strong>
+                  {[
+                    activeCategory !== 'All' ? activeCategory : '',
+                    activeBrand !== 'All' ? activeBrand : '',
+                    query.trim() ? `“${query.trim()}”` : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' / ')}
+                </strong>
+                <button type="button" onClick={clearFilters}>CLEAR</button>
+              </div>
+            ) : null}
+          </section>
+
+          <section ref={gridRef} id="all" className="hiltech-product-reference-index" data-products-results>
+            <div className="hiltech-product-reference-head">
+              <span>04 / TECHNICAL REFERENCE INDEX</span>
+              <strong>EXACT PART → PROJECT CONTEXT → RFQ</strong>
+            </div>
+
+            {visibleProducts.length === 0 ? (
+              <div className="hiltech-product-empty">
+                <span>NO CURRENT MATCH</span>
+                <h3>CHANGE THE REFERENCE, BRAND, OR SYSTEM.</h3>
+                <div>
+                  <button type="button" onClick={clearFilters}>Clear filters</button>
+                  <Link href={rfqHref}>Start RFQ</Link>
+                </div>
+              </div>
+            ) : (
+              <div className="hiltech-product-reference-list">
+                {visibleProducts.map((item, index) => {
+                  const slug = productIntelligenceSlugByCategory[item.category];
+                  const companions =
+                    activeCompanionProductId === item.id
+                      ? getCompanionRecommendationsForProduct(item, items, initialProducts).slice(0, 3)
+                      : [];
+
+                  return (
+                    <article
+                      id={`product-${item.id}`}
+                      data-product-card
+                      key={item.id}
+                      className={highlightedProductId === item.id ? 'is-highlighted' : undefined}
+                    >
+                      <div className="hiltech-product-reference-index-number">
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <small>{localizeCategory(item.category)}</small>
+                      </div>
+
+                      <Link href={productDetailHref(item.id)} className="hiltech-product-reference-media-link">
+                        <ProductIndexVisual item={item} />
+                      </Link>
+
+                      <div className="hiltech-product-reference-main">
+                        <span className="hiltech-product-code">{item.id}</span>
+                        <Link href={productDetailHref(item.id)}>
+                          <h3>{item.name}</h3>
+                        </Link>
+                        <p>{item.useCase}</p>
+                      </div>
+
+                      <div className="hiltech-product-reference-spec">
+                        <span>BRAND</span>
+                        <strong>{item.brand}</strong>
+                        <span>SPEC CONTEXT</span>
+                        <strong>{item.shortSpecs}</strong>
+                        <span>AVAILABILITY</span>
+                        <strong>{item.availabilityNote?.trim() || 'Confirm during RFQ'}</strong>
+                      </div>
+
+                      <div className="hiltech-product-reference-actions">
+                        <button type="button" onClick={() => addToRFQ(item)}>
+                          {justAdded === item.id ? 'ADDED' : 'ADD TO RFQ'}
+                        </button>
+                        <Link href={productDetailHref(item.id)}>DETAIL ↗</Link>
+                        <Link href={intelligenceHref(slug)}>TECHNICAL GUIDE ↗</Link>
+                      </div>
+
+                      {companions.length ? (
+                        <div className="hiltech-product-companion-row">
+                          <span>COMMONLY QUOTED WITH</span>
+                          <div>
+                            {companions.map((companion) => (
+                              <button
+                                type="button"
+                                key={companion.id}
+                                onClick={() => addCompanionProduct(companion, item.id)}
+                              >
+                                <strong>{companion.name}</strong>
+                                <small>ADD +</small>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+
+            {hasMore ? (
+              <button
+                type="button"
+                className="hiltech-product-load-more"
+                onClick={() => setVisibleCount((previous) => previous + LOAD_MORE_STEP)}
+              >
+                LOAD NEXT {Math.min(LOAD_MORE_STEP, filteredProducts.length - visibleCount)} REFERENCES
+              </button>
+            ) : null}
+          </section>
+
+          <section className="hiltech-product-guides">
+            <div className="hiltech-product-reference-head">
+              <span>05 / TECHNICAL INTELLIGENCE</span>
+              <strong>READ ONLY WHEN THE PROJECT NEEDS DEPTH.</strong>
+            </div>
+
+            <div className="hiltech-product-guide-index">
+              {productIntelligenceCategories.map((category, index) => (
+                <Link href={intelligenceHref(category.slug)} key={category.slug}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <small>{category.eyebrow}</small>
+                  <strong>{category.title}</strong>
+                  <em>↗</em>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="hiltech-product-project-builder" data-project-builder>
+          <div className="hiltech-product-reference-head">
+            <span>02 / PROJECT SCOPE</span>
+            <strong>START WITH A SYSTEM, THEN EDIT THE REFERENCES.</strong>
+          </div>
+
+          <header>
+            <h2>BUILD THE<br /><em>REQUEST AS A SYSTEM.</em></h2>
+            <p>
+              Project mode starts with a minimum technical scope from the live catalog. Add the starter references, then use the RFQ basket to change quantities, notes, and missing system items.
+            </p>
+          </header>
+
+          <div className="hiltech-product-project-lanes">
+            {scopeKits.map((kit, index) => (
+              <article key={kit.id}>
+                <div>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <small>PROJECT STARTER</small>
+                </div>
+                <div>
+                  <h3>{kit.title}</h3>
+                  <p>{kit.shortDescription}</p>
+                </div>
+                <div>
+                  <span>REQUIREMENTS</span>
+                  {kit.requirements.map((requirement) => (
+                    <strong key={requirement.id}>
+                      {requirement.required ? 'REQUIRED' : 'OPTIONAL'} / {requirement.label}
+                    </strong>
+                  ))}
+                </div>
+                <div>
+                  <span>STARTER SET</span>
+                  <strong>{kit.starterProductIds.length} REFERENCES</strong>
+                  <button type="button" onClick={() => addBundleStarterToRFQ(kit.id)}>
+                    {addedStarterBundles.includes(kit.id) ? 'STARTER ADDED' : 'ADD STARTER TO RFQ'}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="hiltech-product-project-return">
+            <button type="button" onClick={() => setCatalogMode('browse')}>RETURN TO REFERENCE INDEX</button>
+            <Link href={rfqHref}>REVIEW RFQ ↗</Link>
+          </div>
+        </section>
+      )}
+
+      <button
+        type="button"
+        className="hiltech-product-rfq-dock"
+        aria-label="RFQ Basket"
+        onClick={() => {
+          trackEvent('rfq_basket_open', { item_count: items.length, total_units: count });
+          setOpen(true);
+        }}
+      >
+        <span>RFQ</span>
+        <strong>{count}</strong>
+        <small>{count === 1 ? 'UNIT' : 'UNITS'} / REVIEW</small>
+      </button>
+
+      {open ? (
+        <div className="hiltech-product-rfq-overlay">
+          <button type="button" aria-label="Close RFQ overlay" onClick={() => setOpen(false)} />
+          <aside>
+            <header>
+              <div>
+                <span>PROJECT REQUEST</span>
+                <strong>RFQ BASKET / {items.length} REFERENCES / {count} UNITS</strong>
+              </div>
+              <button type="button" aria-label="Close" onClick={() => setOpen(false)}>CLOSE</button>
+            </header>
+
+            <div className="hiltech-product-rfq-body">
+              {items.length === 0 ? (
+                <div className="hiltech-product-rfq-empty">
+                  <span>EMPTY REQUEST</span>
+                  <h3>ADD EXACT REFERENCES OR START FROM A PROJECT SCOPE.</h3>
+                  <button type="button" onClick={() => setOpen(false)}>RETURN TO PRODUCTS</button>
+                </div>
+              ) : (
+                <>
+                  <div className="hiltech-product-rfq-items">
+                    {items.map((item, index) => (
+                      <article key={item.id}>
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <div>
+                          <small>{item.id}</small>
+                          <strong>{item.name}</strong>
+                          <p>{item.brand} / {item.specs}</p>
+                        </div>
+                        <div>
+                          <button type="button" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity - 1) })}>−</button>
+                          <strong>{item.quantity}</strong>
+                          <button type="button" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity + 1) })}>+</button>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={item.notes}
+                          onChange={(event) => updateItem(item.id, { notes: event.target.value })}
+                          placeholder="Project note / location / variant"
+                        />
+                        <button
+                          type="button"
+                          className="hiltech-product-rfq-remove"
+                          onClick={() => setItems((previous) => previous.filter((entry) => entry.id !== item.id))}
+                        >
+                          REMOVE
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+
+                  {bestBundleMatch ? (
+                    <div className="hiltech-product-rfq-scope">
+                      <span>SCOPE SIGNAL</span>
+                      <strong>{bestBundleMatch.bundle.title}</strong>
+                      <p>
+                        {bestBundleMatch.completion.completedRequiredCount} / {bestBundleMatch.completion.totalRequiredCount} required scope items covered.
+                      </p>
+                      {bundleMissingRequirements.length ? (
+                        <div>
+                          <span>MISSING FROM SCOPE</span>
+                          {bundleSuggestedProducts.map((product) => (
+                            <button type="button" key={product.id} onClick={() => addToRFQ(product)}>
+                              <strong>{product.name}</strong><small>ADD +</small>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <em>SCOPE COMPLETE</em>
+                      )}
+                    </div>
+                  ) : null}
+
+                  <div className="hiltech-product-rfq-final">
+                    <Link href={rfqHref} onClick={() => setOpen(false)}>REVIEW STRUCTURED RFQ ↗</Link>
+                    <a
+                      href={getRFQWhatsappLink(items.map(normalizeRFQItem))}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => trackEvent('rfq_whatsapp_click', { item_count: items.length, total_units: count, source: 'products_drawer' })}
+                    >
+                      SEND VIA WHATSAPP ↗
+                    </a>
+                    <button type="button" onClick={() => setItems([])}>CLEAR REQUEST</button>
+                  </div>
+                </>
+              )}
+            </div>
+          </aside>
+        </div>
+      ) : null}
+    </div>
+  );
 }
