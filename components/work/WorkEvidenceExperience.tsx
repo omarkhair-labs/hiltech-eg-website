@@ -84,8 +84,8 @@ const sequence = [
   {
     code: '04 / VERIFY',
     title: 'END WITH A CHECK.',
-    image: '/testing-otdr-device.jpg',
-    alt: 'OTDR field testing instrument used for validation context.',
+    image: '/testing-field-device.jpg',
+    alt: 'Testing device shown in field validation context.',
   },
 ] as const;
 
