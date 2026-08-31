@@ -28,7 +28,7 @@ const secondaryNav = [
 export default function Header() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith('/ar');
-  const isCreativePublic = pathname === '/' || pathname.startsWith('/solutions') || pathname.startsWith('/services');
+  const isCreativePublic = pathname === '/' || pathname.startsWith('/solutions') || pathname.startsWith('/services') || pathname.startsWith('/products-partners');
   const [open, setOpen] = useState(false);
   const [showLogoImage, setShowLogoImage] = useState(true);
   const [rfqCount, setRfqCount] = useState(0);
