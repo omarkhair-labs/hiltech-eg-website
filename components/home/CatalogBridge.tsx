@@ -191,26 +191,26 @@ export default function CatalogBridge() {
               </Link>
             </div>
           </div>
-        </div>
 
-        <div className="hiltech-catalog-category-rail" role="tablist" aria-label="Catalog categories">
-          {categories.map((entry, index) => (
-            <button
-              key={entry.category}
-              type="button"
-              role="tab"
-              aria-selected={active.category === entry.category}
-              data-product-category
-              className={active.category === entry.category ? 'is-active' : undefined}
-              onClick={() => setActiveCategory(entry.category)}
-              onMouseEnter={() => setActiveCategory(entry.category)}
-              onFocus={() => setActiveCategory(entry.category)}
-            >
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <strong>{entry.short}</strong>
-              <small>{String(entry.count).padStart(2, '0')}</small>
-            </button>
-          ))}
+                  <div className="hiltech-catalog-category-rail" role="tablist" aria-label="Catalog categories">
+                    {categories.map((entry, index) => (
+                      <button
+                        key={entry.category}
+                        type="button"
+                        role="tab"
+                        aria-selected={active.category === entry.category}
+                        data-product-category
+                        className={active.category === entry.category ? 'is-active' : undefined}
+                        onClick={() => setActiveCategory(entry.category)}
+                        onMouseEnter={() => setActiveCategory(entry.category)}
+                        onFocus={() => setActiveCategory(entry.category)}
+                      >
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <strong>{entry.short}</strong>
+                        <small>{String(entry.count).padStart(2, '0')}</small>
+                      </button>
+                    ))}
+                  </div>
         </div>
 
         <div className="hiltech-catalog-foot">
