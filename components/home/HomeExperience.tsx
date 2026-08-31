@@ -9,6 +9,7 @@ import SystemsField from '@/components/home/SystemsField';
 import ProcessSequence from '@/components/home/ProcessSequence';
 import CapabilitiesFlow from '@/components/home/CapabilitiesFlow';
 import CatalogBridge from '@/components/home/CatalogBridge';
+import BrandField from '@/components/home/BrandField';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -295,6 +296,7 @@ export default function HomeExperience() {
       <ProcessSequence />
       <CapabilitiesFlow />
       <CatalogBridge />
+      <BrandField />
     </div>
   );
 }
