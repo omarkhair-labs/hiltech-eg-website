@@ -223,12 +223,12 @@ export default function ProductWorldScene({ family }: Props) {
       root.add(plate);
 
       for (let index = 0; index < 4; index += 1) {
-        const module = new THREE.Mesh(
+        const accessModule = new THREE.Mesh(
           new THREE.BoxGeometry(1.25, 1.6, 0.38),
           index === 2 ? signalMaterial : darkMaterial,
         );
-        module.position.set(index % 2 ? 0.85 : -0.85, index < 2 ? 0.95 : -0.95, -0.76);
-        root.add(module);
+        accessModule.position.set(index % 2 ? 0.85 : -0.85, index < 2 ? 0.95 : -0.95, -0.76);
+        root.add(accessModule);
       }
     }
 
