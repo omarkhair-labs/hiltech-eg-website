@@ -11,6 +11,7 @@ import { trackEvent } from '@/lib/client/analytics';
 import { projectBundles } from '@/content/project-bundles';
 import { getBestMatchingBundleForBasket, getBundleCompletion, getCompanionRecommendationsForProduct, getMissingBundleRequirements, getSuggestedProductsForMissingRequirements, getProjectBundleById } from '@/lib/project-bundles';
 import { getRFQWhatsappLink, normalizeRFQItem, normalizeRFQQuantity, readRFQItems, writeRFQItems, type RFQItem } from '@/lib/rfq';
+import { productDetailPath } from '@/lib/products/product-code';
 
 const INITIAL_VISIBLE = 12;
 const LOAD_MORE_STEP = 12;
@@ -206,7 +207,7 @@ export default function ProductsClient({ initialProducts = staticProducts, local
 
   const hasActiveFilters = Boolean(query.trim()) || activeCategory !== 'All' || activeBrand !== 'All' || Boolean(searchParams.get('product'));
   const localizeCategory = (category: string) => isArabic ? (t?.categoryLabels?.[category] || category) : category;
-  const productDetailHref = (id: string) => isArabic ? `/ar/products-partners/${id}` : `/products-partners/${id}`;
+  const productDetailHref = (id: string) => productDetailPath(id, isArabic ? 'ar' : 'en');
 
   const arabicIntelligenceLabels: Record<string, { title: string; intro: string }> = {
     fiber: {
