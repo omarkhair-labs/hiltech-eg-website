@@ -14186,3 +14186,137 @@ body:has(.hiltech-creative-header)
     transition: none;
   }
 }
+
+
+/* ==========================================================================
+   FULL-SITE AUDIT REFINEMENT — ROUTE-SPECIFIC OPENING TEMPO
+   ========================================================================== */
+
+/* Company: let the operating map lead the opening instead of another
+   full-width campaign headline. */
+@media (min-width: 981px) {
+  .hiltech-company-hero-system {
+    grid-template-columns: minmax(20rem,.58fr) minmax(34rem,1.42fr);
+    gap: clamp(2.5rem,5vw,6rem);
+    min-height: min(68vh,46rem);
+  }
+
+  .hiltech-company-hero .hiltech-company-hero-system h1 {
+    max-width: 11ch;
+    font-size: clamp(3.15rem,5.4vw,6.4rem);
+    line-height: .84;
+    letter-spacing: -.062em;
+  }
+
+  .hiltech-company-hero .hiltech-company-hero-system h1 em {
+    color: #b9c4bc;
+    -webkit-text-stroke: 0;
+    opacity: 1;
+  }
+
+  .hiltech-company-system-stage {
+    align-self: stretch;
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  .hiltech-company-system-map {
+    align-self: center;
+  }
+}
+
+/* RFQ: the live request state is the hero object. The title remains a
+   framing statement, not a second marketing landing page. */
+@media (min-width: 981px) {
+  .hiltech-rfq-hero-grid {
+    grid-template-columns: minmax(19rem,.62fr) minmax(34rem,1.38fr);
+    gap: clamp(2.5rem,5vw,6rem);
+    padding-top: clamp(3rem,5vw,5rem);
+  }
+
+  .hiltech-rfq-hero h1 {
+    max-width: 10ch;
+    font-size: clamp(3rem,5vw,5.9rem);
+    line-height: .86;
+    letter-spacing: -.062em;
+  }
+
+  .hiltech-rfq-live-state > div {
+    min-height: 13.5rem;
+  }
+
+  .hiltech-rfq-steps {
+    margin-top: clamp(2.3rem,3.7vw,3.8rem);
+  }
+}
+
+/* Contact: direct paths lead. The headline stays authored but gives more
+   visual territory to the actual ways a visitor can reach HILTECH. */
+@media (min-width: 981px) {
+  .hiltech-contact-hero-grid {
+    grid-template-columns: minmax(18rem,.56fr) minmax(34rem,1.44fr);
+    gap: clamp(2.5rem,5vw,6rem);
+    padding-top: clamp(3.2rem,5.5vw,5.5rem);
+  }
+
+  .hiltech-contact-hero h1 {
+    max-width: 9ch;
+    font-size: clamp(3rem,5vw,5.9rem);
+    line-height: .86;
+    letter-spacing: -.062em;
+  }
+
+  .hiltech-contact-hero h1 em {
+    color: #c3cdc6;
+    -webkit-text-stroke: 0;
+    opacity: 1;
+  }
+
+  .hiltech-contact-hero-grid > div:last-child > p {
+    max-width: 42rem;
+    font-size: .84rem;
+  }
+
+  .hiltech-contact-paths {
+    margin-top: 1.5rem;
+  }
+
+  .hiltech-contact-paths a {
+    min-height: 5rem;
+    padding: 1.2rem 0;
+  }
+
+  .hiltech-contact-paths strong {
+    font-size: clamp(.9rem,1.2vw,1.12rem);
+  }
+}
+
+/* Solutions: reduce the campaign runway so the system inspector enters the
+   viewport sooner and owns more of the route identity. */
+@media (min-width: 981px) {
+  .hiltech-solutions-index-hero-grid {
+    padding-top: clamp(3.4rem,5.5vw,5.5rem);
+  }
+
+  .hiltech-solutions-index-hero-grid h1 {
+    max-width: 13ch;
+    font-size: clamp(3.6rem,6.7vw,7.4rem);
+  }
+
+  .hiltech-solutions-index-axis {
+    margin-top: clamp(2.4rem,4vw,4rem);
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-company-hero .hiltech-company-hero-system h1 em,
+  .hiltech-contact-hero h1 em {
+    color: #c3cdc6;
+    -webkit-text-stroke: 0;
+    opacity: 1;
+  }
+
+  .hiltech-contact-paths strong {
+    font-size: .86rem;
+  }
+}
