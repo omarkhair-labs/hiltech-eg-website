@@ -161,6 +161,9 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const productImageAlt = mappedVisual?.alt || product.name;
   const canonical = `${site.siteUrl}${productDetailPath(product.id)}`;
   const productJsonLd = buildProductJsonLd(product, canonical, productImageSrc);
+  const productTitleLength = Array.from(product.name).length;
+  const productTitleDensity = productTitleLength > 72 ? 'dense' : productTitleLength > 44 ? 'long' : 'standard';
+  const productTitleHasArabic = /[\u0600-\u06FF]/.test(product.name);
 
   const related = products
     .filter((item) => item.id !== product.id)
@@ -203,7 +206,13 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           <div className="hiltech-product-v2-title-row">
             <div>
               <span>{product.brand} / {product.category}</span>
-              <h1 data-product-detail-title>{product.name}</h1>
+              <h1
+                data-product-detail-title
+                data-title-density={productTitleDensity}
+                data-mixed-script={productTitleHasArabic ? 'true' : 'false'}
+              >
+                {product.name}
+              </h1>
             </div>
             <div>
               <span>REFERENCE CODE</span>
