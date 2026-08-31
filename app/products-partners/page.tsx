@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { productDisclaimer, productCategories } from '@/content/products';
+import { productDisclaimer } from '@/content/products';
 import { site } from '@/content/site';
 import { getPublicProducts } from '@/lib/server/products-public';
 import ProductsClient from './ProductsClient';
@@ -32,6 +32,7 @@ export const revalidate = 0;
 
 export default async function Page() {
   const { products, count, source } = await getPublicProducts();
+  const activeCategoryCount = new Set(products.map((product) => product.category)).size;
 
   return (
     <main className="hiltech-products-page">
@@ -63,8 +64,8 @@ export default async function Page() {
               </div>
               <div>
                 <span>CATEGORY COVERAGE</span>
-                <strong>{productCategories.length}</strong>
-                <small>INFRASTRUCTURE FAMILIES</small>
+                <strong>{activeCategoryCount}</strong>
+                <small>ACTIVE INFRASTRUCTURE FAMILIES</small>
               </div>
               <div>
                 <span>PROCUREMENT STATE</span>
