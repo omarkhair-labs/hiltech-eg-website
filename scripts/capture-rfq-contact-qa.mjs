@@ -155,9 +155,14 @@ try {
       await page.locator('[data-rfq-field="projectNotes"]').fill('Visual QA project request.');
 
       await page.locator('[data-rfq-submit-button]').click();
-      await page.locator('[data-rfq-success]').waitFor();
+      const receipt = page.locator('[data-rfq-success]');
+      await receipt.waitFor();
       const requestCode = (await page.locator('.hiltech-rfq-receipt-code strong').innerText()).trim();
       if (requestCode !== 'RFQ-QA-20260831') throw new Error(`RFQ receipt code mismatch: ${requestCode}`);
+      await receipt.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(350);
+      const receiptBox = await receipt.boundingBox();
+      if (!receiptBox || receiptBox.height < 180) throw new Error('RFQ receipt did not render at meaningful visual size');
       await page.screenshot({
         path: `visual-qa-rfq-contact/${target.name}-rfq-receipt.png`,
         fullPage: false,
