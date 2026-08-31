@@ -6016,6 +6016,19 @@ body {
     gap: 3rem;
   }
 
+  .hiltech-solution-problem-grid > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hiltech-solution-problem-grid h2,
+  .hiltech-solution-problem-grid h3,
+  .hiltech-solution-problem-grid p {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
   .hiltech-solution-problem-grid h2,
   .hiltech-solution-rfq-grid h2 {
     font-size: clamp(3rem, 14.2vw, 3.55rem);
@@ -6045,7 +6058,10 @@ body {
   }
 
   .hiltech-solution-outcome-list article > strong {
+    min-width: 0;
+    max-width: 100%;
     font-size: clamp(1.7rem, 8.4vw, 2.1rem);
+    overflow-wrap: anywhere;
   }
 
   .hiltech-solution-outcome-list article > i {
