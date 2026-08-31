@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000/';
-const chapters = ['h01', 'h02', 'h03', 'h04', 'h05'];
+const chapters = ['h01', 'h02', 'h03', 'h04', 'h05', 'h06'];
 const targets = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 },
