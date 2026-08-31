@@ -72,12 +72,23 @@ try {
     const recordCount = await records.count();
     if (recordCount !== 4) throw new Error(`Expected 4 Work evidence records, got ${recordCount}`);
 
+    const expectedDisciplines = [
+      'RACK / DATA ROOM',
+      'COPPER / ROUTE',
+      'FIBER / TERMINATION',
+      'TESTING / VALIDATION',
+    ];
     const interactionIndexes = target.name === 'desktop' ? [0, 1, 2, 3] : [0, 3];
     for (const index of interactionIndexes) {
       await records.nth(index).click();
+      await page.locator('.hiltech-work-record-stage').hover();
       await page.waitForTimeout(450);
       const pressed = await records.nth(index).getAttribute('aria-pressed');
       if (pressed !== 'true') throw new Error(`Evidence record ${index + 1} did not become active`);
+      const visibleContext = (await page.locator('.hiltech-work-record-context > div:first-child strong').innerText()).trim();
+      if (visibleContext !== expectedDisciplines[index]) {
+        throw new Error(`Evidence record ${index + 1} mismatch: expected ${expectedDisciplines[index]}, got ${visibleContext}`);
+      }
       await page.locator('.hiltech-work-record-stage').scrollIntoViewIfNeeded();
       await page.waitForTimeout(350);
       await page.screenshot({
