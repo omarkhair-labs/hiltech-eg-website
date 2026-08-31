@@ -23,6 +23,7 @@ on:
       - 'scripts/capture-company-qa.mjs'
       - 'scripts/capture-rfq-contact-qa.mjs'
       - 'scripts/capture-creative-synthesis-qa.mjs'
+      - 'scripts/capture-product-rnd-qa.mjs'
       - 'scripts/capture-public-utility-qa.mjs'
       - 'scripts/capture-closed-public-smoke.mjs'
       - '.github/workflows/creative-home-ci.yml'
@@ -82,6 +83,9 @@ jobs:
       - name: Capture public utility and Search QA
         run: node scripts/capture-public-utility-qa.mjs
 
+      - name: Capture Product visual R&D QA
+        run: node scripts/capture-product-rnd-qa.mjs
+
       - name: Capture English creative synthesis QA
         run: node scripts/capture-creative-synthesis-qa.mjs
 
@@ -118,6 +122,13 @@ jobs:
         with:
           name: hiltech-public-utility-visual-qa
           path: visual-qa-public-utility/
+          retention-days: 7
+
+      - name: Upload Product visual R&D QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiltech-product-rnd-visual-qa
+          path: visual-qa-product-rnd/
           retention-days: 7
 
       - name: Upload English creative synthesis QA
