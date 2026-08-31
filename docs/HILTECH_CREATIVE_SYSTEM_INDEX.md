@@ -94,6 +94,7 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_RFQ_CONTACT_PRODUCTION_CLOSURE.md`
 - `HILTECH_ENGLISH_CREATIVE_SYNTHESIS_AUDIT_2026-08-31.md`
 - `HILTECH_REFERENCE_RECHECK_VISUAL_PRODUCT_IA_2026-08-31.md`
+- `HILTECH_VISUAL_EXPERIENCE_RND_2026-08-31.md`
 
 These files form one system and must be read before major public-site implementation work.
 
