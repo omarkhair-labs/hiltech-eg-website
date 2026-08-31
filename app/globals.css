@@ -6100,3 +6100,32 @@ body {
     animation: none;
   }
 }
+
+
+/* Solutions QA pass 1 — long system-title fit */
+.hiltech-solution-detail {
+  overflow-x: clip;
+}
+
+.hiltech-solution-detail-hero-grid > * {
+  min-width: 0;
+}
+
+.hiltech-solution-detail.is-cctv .hiltech-solution-detail-hero-grid h1,
+.hiltech-solution-detail.is-room .hiltech-solution-detail-hero-grid h1,
+.hiltech-solution-detail.is-fiber .hiltech-solution-detail-hero-grid h1 {
+  max-width: 13.5ch;
+  font-size: clamp(3.5rem, 5.5vw, 6.9rem);
+  line-height: 0.8;
+}
+
+@media (max-width: 639px) {
+  .hiltech-solution-detail.is-cctv .hiltech-solution-detail-hero-grid h1,
+  .hiltech-solution-detail.is-room .hiltech-solution-detail-hero-grid h1,
+  .hiltech-solution-detail.is-fiber .hiltech-solution-detail-hero-grid h1 {
+    max-width: 100%;
+    font-size: clamp(2.5rem, 10.3vw, 3rem);
+    line-height: 0.84;
+    letter-spacing: -0.068em;
+  }
+}
