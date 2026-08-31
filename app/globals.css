@@ -2692,3 +2692,404 @@ body {
     min-height: calc(100svh - 4rem);
   }
 }
+
+
+/* H06 — CAPABILITIES / EXECUTION MAP */
+.hiltech-capabilities-section {
+  position: relative;
+  z-index: 5;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08)),
+    #efefe9;
+  color: #0a0e0b;
+  border-top: 1px solid rgba(10, 14, 11, 0.18);
+}
+
+.hiltech-capabilities-shell {
+  width: min(94vw, 102rem);
+  margin-inline: auto;
+  padding: clamp(5rem, 8vw, 8rem) 0 clamp(5rem, 8vw, 8rem);
+}
+
+.hiltech-capabilities-topline {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  color: #69736b;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hiltech-capabilities-topline span:first-child {
+  color: #2f6a20;
+}
+
+.hiltech-capabilities-topline span:nth-child(2) {
+  justify-self: center;
+}
+
+.hiltech-capabilities-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+  margin-top: clamp(2.8rem, 5vw, 5rem);
+  padding-bottom: clamp(3rem, 5vw, 5rem);
+  border-bottom: 1px solid rgba(10, 14, 11, 0.18);
+}
+
+.hiltech-capabilities-heading h2 {
+  font-size: clamp(4rem, 8.2vw, 9.4rem);
+  line-height: 0.82;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.hiltech-capabilities-heading h2 span {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(10, 14, 11, 0.62);
+  text-stroke: 1px rgba(10, 14, 11, 0.62);
+}
+
+.hiltech-capabilities-heading > div {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.hiltech-capabilities-heading strong {
+  color: #2e6520;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+}
+
+.hiltech-capabilities-heading p {
+  max-width: 29rem;
+  color: #566059;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.hiltech-capabilities-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2.8rem);
+  margin-top: clamp(3rem, 5vw, 5rem);
+}
+
+.hiltech-capabilities-route {
+  position: relative;
+  min-height: 100%;
+}
+
+.hiltech-capabilities-route-base,
+.hiltech-capabilities-route-progress {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.hiltech-capabilities-route-base {
+  background: rgba(10, 14, 11, 0.15);
+}
+
+.hiltech-capabilities-route-progress {
+  background: linear-gradient(#3d7a2a, #8ad95b);
+  box-shadow: 0 0 12px rgba(91, 163, 59, 0.18);
+}
+
+.hiltech-capabilities-route i {
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(10, 14, 11, 0.28);
+  background: #efefe9;
+  transform: translate(-50%, -50%);
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.hiltech-capabilities-route i.is-passed {
+  background: #6ebb46;
+  border-color: #6ebb46;
+  box-shadow: 0 0 0 5px rgba(110, 187, 70, 0.08);
+}
+
+.hiltech-capabilities-rows {
+  border-top: 1px solid rgba(10, 14, 11, 0.18);
+}
+
+.hiltech-capability-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6.2rem minmax(18rem, 0.9fr) minmax(18rem, 1.1fr);
+  gap: clamp(1.3rem, 3vw, 3.2rem);
+  align-items: start;
+  min-height: clamp(15rem, 31vh, 22rem);
+  padding: clamp(2rem, 4vw, 4rem) 0;
+  border-bottom: 1px solid rgba(10, 14, 11, 0.16);
+  color: #788279;
+  transition: color 280ms ease;
+}
+
+.hiltech-capability-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(94, 162, 61, 0.055), transparent 42%);
+  opacity: 0;
+  transition: opacity 280ms ease;
+  pointer-events: none;
+}
+
+.hiltech-capability-stage.is-active {
+  color: #0a0e0b;
+}
+
+.hiltech-capability-stage.is-active::before {
+  opacity: 1;
+}
+
+.hiltech-capability-stage-index {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.7rem;
+  color: #677269;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hiltech-capability-stage-index span {
+  color: #2d6420;
+  font-size: 0.6rem;
+}
+
+.hiltech-capability-stage-index small {
+  font-size: 0.46rem;
+}
+
+.hiltech-capability-stage-main {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.hiltech-capability-stage-main h3 {
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(2.3rem, 4.4vw, 5rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+  font-weight: 790;
+}
+
+.hiltech-capability-stage-main p {
+  margin-top: 1.2rem;
+  max-width: 34rem;
+  color: #68736b;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.hiltech-capability-stage-services {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-self: stretch;
+  border-top: 1px solid rgba(10, 14, 11, 0.12);
+}
+
+.hiltech-capability-stage-services > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(10, 14, 11, 0.1);
+}
+
+.hiltech-capability-stage-services span {
+  color: #397127;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hiltech-capability-stage-services strong {
+  color: #344039;
+  font-size: 0.73rem;
+  line-height: 1.45;
+  font-weight: 590;
+}
+
+.hiltech-capability-stage-tick {
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  width: 0;
+  height: 1px;
+  background: #4f9635;
+  transition: width 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hiltech-capability-stage.is-active .hiltech-capability-stage-tick {
+  width: min(8rem, 12%);
+}
+
+.hiltech-capabilities-foot {
+  display: grid;
+  grid-template-columns: auto minmax(18rem, 1fr) minmax(18rem, 0.9fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  align-items: start;
+  margin-top: clamp(3rem, 5vw, 5rem);
+  padding: 1.2rem 0;
+  border-top: 1px solid rgba(10, 14, 11, 0.18);
+  border-bottom: 1px solid rgba(10, 14, 11, 0.18);
+}
+
+.hiltech-capabilities-foot span {
+  color: #397127;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hiltech-capabilities-foot strong {
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.065em;
+  line-height: 1.55;
+}
+
+.hiltech-capabilities-foot p {
+  color: #657067;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .hiltech-capabilities-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-capability-stage {
+    grid-template-columns: 4.2rem minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .hiltech-capability-stage-services > div {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-capabilities-shell {
+    width: 90vw;
+    padding: 4rem 0;
+  }
+
+  .hiltech-capabilities-topline {
+    grid-template-columns: 1fr auto;
+    font-size: 0.45rem;
+  }
+
+  .hiltech-capabilities-topline span:nth-child(2) {
+    display: none;
+  }
+
+  .hiltech-capabilities-heading {
+    margin-top: 2.5rem;
+    padding-bottom: 2.6rem;
+  }
+
+  .hiltech-capabilities-heading h2 {
+    font-size: clamp(3rem, 14.8vw, 3.7rem);
+    line-height: 0.85;
+  }
+
+  .hiltech-capabilities-heading p {
+    font-size: 0.8rem;
+  }
+
+  .hiltech-capabilities-map {
+    grid-template-columns: 1.35rem minmax(0, 1fr);
+    gap: 0.85rem;
+    margin-top: 2.4rem;
+  }
+
+  .hiltech-capability-stage {
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+    gap: 0.75rem;
+    min-height: 0;
+    padding: 2.2rem 0 2.6rem;
+  }
+
+  .hiltech-capability-stage-index {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    font-size: 0.42rem;
+  }
+
+  .hiltech-capability-stage-main {
+    grid-column: 2;
+  }
+
+  .hiltech-capability-stage-main h3 {
+    font-size: clamp(2rem, 10vw, 2.5rem);
+    line-height: 0.92;
+  }
+
+  .hiltech-capability-stage-main p {
+    margin-top: 0.85rem;
+    font-size: 0.74rem;
+    line-height: 1.5;
+  }
+
+  .hiltech-capability-stage-services {
+    grid-column: 2;
+    margin-top: 0.7rem;
+  }
+
+  .hiltech-capability-stage-services > div {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 0.7rem 0;
+  }
+
+  .hiltech-capability-stage-services span {
+    font-size: 0.42rem;
+  }
+
+  .hiltech-capability-stage-services strong {
+    font-size: 0.68rem;
+  }
+
+  .hiltech-capability-stage-tick {
+    display: none;
+  }
+
+  .hiltech-capabilities-foot {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    margin-top: 2.6rem;
+  }
+}
