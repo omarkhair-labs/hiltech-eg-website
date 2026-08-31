@@ -278,7 +278,7 @@ try {
   console.log('[products-entry] desktop intent paths');
   const productEntryContext = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
-    reducedMotion: 'reduce',
+    reducedMotion: 'no-preference',
   });
   const productEntryPage = await productEntryContext.newPage();
   productEntryPage.setDefaultTimeout(15000);
@@ -311,6 +311,19 @@ try {
     fullPage: false,
     timeout: SHOT_TIMEOUT,
   });
+
+  console.log('[products-entry] world to exact-reference collapse');
+  const worldToReference = productEntryPage.locator('.hiltech-product-world-to-reference');
+  await worldToReference.scrollIntoViewIfNeeded();
+  await worldToReference.click();
+  await productEntryPage.locator('[data-world-state="collapsing-to-reference"]').waitFor();
+  await productEntryPage.locator('#exact-finding').waitFor();
+  await productEntryPage.waitForTimeout(450);
+  const collapseSearchFocused = await productEntryPage.locator('#exact-finding input').evaluate(
+    (input) => document.activeElement === input,
+  );
+  if (!collapseSearchFocused) throw new Error('world-to-reference collapse did not focus exact finding');
+
   await productEntryContext.close();
 
   const context = await browser.newContext({
