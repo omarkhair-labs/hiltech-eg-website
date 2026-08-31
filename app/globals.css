@@ -8009,6 +8009,9 @@ body {
   align-items: end;
   margin-top: clamp(4rem,7vw,7rem);
 }
+.hiltech-product-intelligence-hero-grid > * {
+  min-width: 0;
+}
 .hiltech-product-intelligence-hero-grid > div:first-child > span,
 .hiltech-product-intelligence-summary > span {
   color: #8ff257;
@@ -8376,8 +8379,16 @@ body {
 
   .hiltech-product-intelligence-hero h1 {
     max-width: 100%;
-    font-size: clamp(3rem,14vw,3.55rem);
-    line-height: 0.83;
+    font-size: clamp(2.7rem,12vw,3.25rem);
+    line-height: 0.84;
+    overflow-wrap: anywhere;
+  }
+
+  .hiltech-product-intelligence-hero-grid > div:first-child > p,
+  .hiltech-product-intelligence-summary > strong,
+  .hiltech-product-intelligence-summary > small {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .hiltech-product-intelligence-diagram-section,
