@@ -73,6 +73,7 @@ The site must never force a procurement user through cinematic interactions befo
 
 - `HILTECH_REFERENCE_RESEARCH.md`
 - `HILTECH_HOME_EXPERIENCE_SPEC.md`
+- `HILTECH_TYPOGRAPHY_HERO_DIRECTION.md`
 - `HILTECH_PRODUCTION_ARCHITECTURE.md`
 - `HILTECH_EVIDENCE_GATE.md`
 
