@@ -99,9 +99,9 @@ export default function SignalWorld({ rootId }: Props) {
       const material = isActive
         ? activeFiberMaterial
         : new THREE.MeshBasicMaterial({
-            color: index % 4 === 0 ? 0xa9c9ff : 0x6f8978,
+            color: index % 4 === 0 ? 0xa9c9ff : 0x78a384,
             transparent: true,
-            opacity: index % 4 === 0 ? 0.19 : 0.12,
+            opacity: index % 4 === 0 ? 0.3 : 0.22,
           });
 
       if (!isActive) passiveFiberMaterials.push(material);
@@ -110,7 +110,7 @@ export default function SignalWorld({ rootId }: Props) {
         new THREE.TubeGeometry(
           curve,
           compact ? 90 : 150,
-          isActive ? (compact ? 0.035 : 0.052) : (compact ? 0.012 : 0.018),
+          isActive ? (compact ? 0.052 : 0.072) : (compact ? 0.018 : 0.027),
           isActive ? 8 : 6,
           false,
         ),
@@ -137,8 +137,8 @@ export default function SignalWorld({ rootId }: Props) {
         color: 0x090e0b,
         roughness: 0.64,
         metalness: 0.58,
-        emissive: 0x061309,
-        emissiveIntensity: 0.72,
+        emissive: 0x0c2b13,
+        emissiveIntensity: 1.05,
         transparent: true,
         opacity: 0.97,
       }),
@@ -150,14 +150,54 @@ export default function SignalWorld({ rootId }: Props) {
     const terminationEdge = new THREE.LineSegments(
       new THREE.EdgesGeometry(terminationShell.geometry),
       new THREE.LineBasicMaterial({
-        color: 0x36513d,
+        color: 0x6c9f79,
         transparent: true,
-        opacity: 0.54,
+        opacity: 0.72,
       }),
     );
     terminationEdge.position.copy(terminationShell.position);
     terminationEdge.rotation.copy(terminationShell.rotation);
     terminationGroup.add(terminationEdge);
+
+    const connectorShell = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.34, 0.34, 1.6, 32, 1, false),
+      new THREE.MeshStandardMaterial({
+        color: 0x111a14,
+        roughness: 0.42,
+        metalness: 0.78,
+        emissive: 0x0b2010,
+        emissiveIntensity: 0.72,
+      }),
+    );
+    connectorShell.rotation.z = Math.PI / 2;
+    connectorShell.position.set(3.48, 0.02, -0.47);
+    terminationGroup.add(connectorShell);
+
+    const connectorCore = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.105, 0.105, 1.82, 24, 1, false),
+      new THREE.MeshStandardMaterial({
+        color: 0xbaff91,
+        emissive: 0x6dff32,
+        emissiveIntensity: 3.6,
+        roughness: 0.18,
+        metalness: 0.06,
+      }),
+    );
+    connectorCore.rotation.z = Math.PI / 2;
+    connectorCore.position.set(3.45, 0.02, -0.47);
+    terminationGroup.add(connectorCore);
+
+    const connectorRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.39, 0.035, 12, 36),
+      new THREE.MeshBasicMaterial({
+        color: 0x8ff257,
+        transparent: true,
+        opacity: 0.55,
+      }),
+    );
+    connectorRing.rotation.y = Math.PI / 2;
+    connectorRing.position.set(2.66, 0.02, -0.47);
+    terminationGroup.add(connectorRing);
 
     const portGeometry = new THREE.BoxGeometry(0.24, 0.11, 0.07);
     const portMaterial = new THREE.MeshStandardMaterial({
@@ -277,7 +317,7 @@ export default function SignalWorld({ rootId }: Props) {
         worldRoot.rotation.y = THREE.MathUtils.lerp(-0.06, 0.08, local);
         worldRoot.rotation.x = THREE.MathUtils.lerp(-0.03, 0.025, local);
 
-        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.12, 0.24, local));
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.22, 0.36, local));
         setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.94, 0.72, local));
         rackMaterial.opacity = 0;
         rackEdgeMaterial.opacity = 0;
@@ -290,7 +330,7 @@ export default function SignalWorld({ rootId }: Props) {
         camera.position.z = THREE.MathUtils.lerp(compact ? 7.5 : 6.5, compact ? 5.9 : 4.7, local);
         worldRoot.rotation.y = THREE.MathUtils.lerp(0.08, 0.23, local);
 
-        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.24, 0.34, local));
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.36, 0.44, local));
         setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.72, 0.3, local));
         rackMaterial.opacity = 0;
         rackEdgeMaterial.opacity = 0;
@@ -303,7 +343,7 @@ export default function SignalWorld({ rootId }: Props) {
         worldRoot.rotation.y = THREE.MathUtils.lerp(0.23, -0.04, local);
         worldRoot.rotation.x = THREE.MathUtils.lerp(0.025, 0.09, local);
 
-        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.34, 0.08, local));
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.44, 0.1, local));
         setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.3, 0.12, local));
         rackMaterial.opacity = THREE.MathUtils.lerp(0, 0.82, local);
         rackEdgeMaterial.opacity = THREE.MathUtils.lerp(0, 0.42, local);
