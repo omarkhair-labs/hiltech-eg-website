@@ -85,6 +85,29 @@ try {
         fullPage: false,
       });
 
+      await page.screenshot({
+        path: `visual-qa-creative-synthesis/${target.name}-${route.name}-full.png`,
+        fullPage: true,
+      });
+
+      if (target.name === 'mobile') {
+        const menuButton = page.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
+        if (await menuButton.count()) {
+          await menuButton.click();
+          const panel = page.locator('.hiltech-creative-mobile-panel');
+          await panel.waitFor();
+          const roundedMobileControls = await panel.locator('.hiltech-creative-mobile-nav-link.rounded-xl').count();
+          if (roundedMobileControls) {
+            throw new Error(`${route.name} mobile creative nav regressed to rounded route pills`);
+          }
+          await page.screenshot({
+            path: `visual-qa-creative-synthesis/mobile-${route.name}-menu.png`,
+            fullPage: false,
+          });
+          await menuButton.click();
+        }
+      }
+
       const footerText = await footer.innerText();
       if (!footerText.includes('HILTECH / PHYSICAL LAYER') || !footerText.includes('START A PROJECT')) {
         throw new Error(`${target.name} ${route.name} system footer content incomplete`);
