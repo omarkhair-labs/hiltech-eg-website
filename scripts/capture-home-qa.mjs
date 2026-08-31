@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000/';
-const chapters = ['h01', 'h02', 'h03', 'h04'];
+const chapters = ['h01', 'h02', 'h03', 'h04', 'h05'];
 const targets = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 },
@@ -74,6 +74,46 @@ try {
     await motionVideo.saveAs('visual-qa/desktop-motion.webm');
   }
   await motionContext.close();
+
+  const processContext = await browser.newContext({
+    viewport: { width: 1440, height: 1000 },
+    deviceScaleFactor: 1,
+    reducedMotion: 'no-preference',
+    recordVideo: {
+      dir: 'visual-qa/process-video-temp',
+      size: { width: 1440, height: 1000 },
+    },
+  });
+
+  const processPage = await processContext.newPage();
+  const processVideo = processPage.video();
+  await processPage.goto(baseURL, { waitUntil: 'networkidle' });
+  await processPage.waitForTimeout(700);
+
+  const processBounds = await processPage.evaluate(() => {
+    const element = document.getElementById('h05');
+    if (!element) throw new Error('Missing QA chapter: h05');
+    const top = element.getBoundingClientRect().top + window.scrollY - 64;
+    const bottom = top + element.offsetHeight - window.innerHeight + 64;
+    return { top: Math.max(0, top), bottom: Math.max(top, bottom) };
+  });
+
+  for (let index = 0; index <= 12; index += 1) {
+    const progress = index / 12;
+    const top = Math.round(
+      processBounds.top + (processBounds.bottom - processBounds.top) * progress,
+    );
+    await processPage.evaluate((scrollTop) => {
+      window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    }, top);
+    await processPage.waitForTimeout(520);
+  }
+
+  await processPage.close();
+  if (processVideo) {
+    await processVideo.saveAs('visual-qa/h05-motion.webm');
+  }
+  await processContext.close();
 } finally {
   await browser.close();
 }
