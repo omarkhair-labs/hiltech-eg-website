@@ -69,6 +69,10 @@ Two primary journeys coexist:
 
 The site must never force a procurement user through cinematic interactions before reaching a product.
 
+## Master continuation
+
+- `HILTECH_MASTER_HANDOFF_2026-08-31.md` — full current cross-lane continuation state, Product V2 reset, QA state, research buckets, mistakes/lessons, and exact next action.
+
 ## Required companion docs
 
 - `HILTECH_REFERENCE_RESEARCH.md`
