@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SignalWorld from '@/components/home/SignalWorld';
+import SystemsField from '@/components/home/SystemsField';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -133,9 +134,10 @@ export default function HomeExperience() {
   }, []);
 
   return (
-    <div id="hiltech-home-slice-1" ref={rootRef} className="hiltech-home hiltech-slice-root">
+    <div id="hiltech-home" ref={rootRef} className="hiltech-home hiltech-slice-root">
+      <div id="hiltech-opening-world" className="hiltech-opening-world-root">
       <div className="hiltech-world-sticky">
-        <SignalWorld rootId="hiltech-home-slice-1" />
+        <SignalWorld rootId="hiltech-opening-world" />
         <div className="hiltech-world-vignette" />
         <div className="hiltech-world-grid" />
       </div>
@@ -284,6 +286,9 @@ export default function HomeExperience() {
           </div>
         </section>
       </div>
+      </div>
+
+      <SystemsField />
     </div>
   );
 }
