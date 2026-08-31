@@ -134,12 +134,12 @@ export default function Header() {
 
         <div className="flex shrink-0 items-center gap-1 lg:hidden">
           <SiteSearch
-            className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-mobile-utility" : "inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"}
             onNavigate={() => setOpen(false)}
           />
           <button
             type="button"
-            className="inline-flex min-h-11 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-mobile-menu-button" : "inline-flex min-h-11 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"}
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -151,7 +151,7 @@ export default function Header() {
       </div>
 
       {open ? (
-        <div id="mobile-nav" className="border-t border-white/10 bg-slate-950/98 lg:hidden">
+        <div id="mobile-nav" className={isCreativePublic ? "hiltech-creative-mobile-panel lg:hidden" : "border-t border-white/10 bg-slate-950/98 lg:hidden"}>
           <div className="container max-h-[calc(100vh-4rem)] overflow-y-auto py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <nav aria-label={isArabic ? 'قائمة الهاتف' : 'Mobile navigation'} className="grid gap-1">
               {primaryNav.map(([label, href, arLabel]) => {
@@ -161,7 +161,10 @@ export default function Header() {
                     key={href}
                     href={localizeHref(href)}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`}
+                    className={isCreativePublic
+                      ? `hiltech-creative-mobile-nav-link ${active ? 'is-active' : ''}`
+                      : `flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`
+                    }
                   >
                     {isArabic ? arLabel : label}
                   </Link>
