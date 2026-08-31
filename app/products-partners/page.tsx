@@ -89,12 +89,12 @@ export default async function Page() {
         <div className="hiltech-products-shell">
           <div className="hiltech-products-catalog-head">
             <div>
-              <span>01 / PRODUCT WORLD</span>
-              <h2>EXPLORE THE SYSTEM.<br /><em>THEN FIND THE PART.</em></h2>
+              <span>01 / CHOOSE ENTRY</span>
+              <h2>START FROM WHAT<br /><em>YOU ALREADY KNOW.</em></h2>
             </div>
             <div>
               <p>
-                The product experience starts from physical infrastructure families, then collapses into exact reference finding. Motion and 3D explain the system; procurement controls stay fast and explicit.
+                Enter by exact reference, infrastructure system, or project scope. The physical library stays available for exploration, but an expert user never has to consume it before exact finding.
               </p>
               <Link href="/solutions/project-supply-rfq">How project supply works <span aria-hidden="true">↗</span></Link>
             </div>
