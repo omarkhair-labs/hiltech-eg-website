@@ -1,9 +1,23 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { site } from '@/content/site';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+
+const hiltechDisplay = Archivo({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-hiltech-display',
+});
+
+const hiltechMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600'],
+  variable: '--font-hiltech-mono',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
@@ -35,6 +49,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="en" className="bg-slate-950"><body className="bg-slate-950"><Header />{children}<Footer /><GoogleAnalytics /></body></html>;
+export default function RootLayout({children}:{children:React.ReactNode}) {
+  return (
+    <html lang="en" className={`bg-slate-950 ${hiltechDisplay.variable} ${hiltechMono.variable}`}>
+      <body className="bg-slate-950">
+        <Header />
+        {children}
+        <Footer />
+        <GoogleAnalytics />
+      </body>
+    </html>
+  );
 }
