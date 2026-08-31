@@ -104,7 +104,10 @@ export default function Header() {
                 href={localizeHref(href)}
                 translate="no"
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? (isCreativePublic ? 'bg-[#8ff257]/10 text-[#b8ff8c]' : 'bg-white/10 text-white') : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                className={isCreativePublic
+                  ? `hiltech-creative-nav-link ${active ? 'is-active' : ''}`
+                  : `rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`
+                }
               >
                 {isArabic ? arLabel : label}
               </Link>
@@ -113,17 +116,17 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
-          <SiteSearch className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
-          <LanguageSwitcher className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
+          <SiteSearch className={isCreativePublic ? "hiltech-creative-utility-link" : "inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"} />
+          <LanguageSwitcher className={isCreativePublic ? "hiltech-creative-utility-link" : "inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"} />
           <Link
             href={localizeHref('/rfq')}
-            className="inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-rfq-count" : "inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"}
           >
             {isArabic ? `السلة ${rfqCount}` : `RFQ ${rfqCount}`}
           </Link>
           <Link
             href={localizeHref('/rfq')}
-            className={`inline-flex min-h-10 items-center rounded-lg px-4 py-2 text-sm font-bold transition ${isCreativePublic ? 'border border-[#8ff257]/45 bg-[#8ff257]/5 text-[#a9ff79] shadow-[0_10px_28px_rgba(91,200,53,0.08)] hover:bg-[#8ff257] hover:text-[#071006]' : 'bg-orange-600 text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] hover:bg-orange-500'}`}
+            className={isCreativePublic ? "hiltech-creative-project-link" : "inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"}
           >
             {isArabic ? 'ابدأ طلب السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
           </Link>
