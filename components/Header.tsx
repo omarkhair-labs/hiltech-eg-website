@@ -18,6 +18,14 @@ const primaryNav = [
   ['Contact', '/contact', arNavigation.contact],
 ] as const;
 
+const creativeNav = [
+  ['Solutions', '/solutions', arNavigation.solutions],
+  ['Capabilities', '/services', arNavigation.services],
+  ['Products', '/products-partners', arNavigation.products],
+  ['Work', '/work', arNavigation.work],
+  ['Company', '/company', arNavigation.company],
+] as const;
+
 const secondaryNav = [
   ['Company', '/company', arNavigation.company],
   ['Resources', '/resources', 'المصادر'],
@@ -101,16 +109,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={isArabic ? 'التنقل الرئيسي' : 'Primary navigation'}>
-          {(isCreativePublic
-            ? [
-                ['Solutions', '/solutions', arNavigation.solutions],
-                ['Capabilities', '/services', arNavigation.services],
-                ['Products', '/products-partners', arNavigation.products],
-                ['Work', '/work', arNavigation.work],
-                ['Company', '/company', arNavigation.company],
-              ] as const
-            : primaryNav
-          ).map(([label, href, arLabel]) => {
+          {(isCreativePublic ? creativeNav : primaryNav).map(([label, href, arLabel]) => {
             const active = isActive(href);
             return (
               <Link
@@ -168,7 +167,7 @@ export default function Header() {
         <div id="mobile-nav" className={isCreativePublic ? "hiltech-creative-mobile-panel lg:hidden" : "border-t border-white/10 bg-slate-950/98 lg:hidden"}>
           <div className="container max-h-[calc(100vh-4rem)] overflow-y-auto py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <nav aria-label={isArabic ? 'قائمة الهاتف' : 'Mobile navigation'} className="grid gap-1">
-              {primaryNav.map(([label, href, arLabel]) => {
+              {(isCreativePublic ? creativeNav : primaryNav).map(([label, href, arLabel]) => {
                 const active = isActive(href);
                 return (
                   <Link
@@ -189,7 +188,15 @@ export default function Header() {
             <div className="my-4 h-px bg-white/10" />
 
             <nav aria-label={isArabic ? 'روابط إضافية' : 'Secondary navigation'} className="grid grid-cols-2 gap-1">
-              {secondaryNav.map(([label, href, arLabel]) => (
+              {(isCreativePublic
+                ? [
+                    ['Contact', '/contact', arNavigation.contact],
+                    ['Resources', '/resources', 'المصادر'],
+                    ['Track RFQ', '/track', arNavigation.trackRfq],
+                    ['Scope Finder', '/scope-finder', 'مساعد تحديد النطاق'],
+                  ] as const
+                : secondaryNav
+              ).map(([label, href, arLabel]) => (
                 <Link key={href} href={localizeHref(href)} className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"}>
                   {isArabic ? arLabel : label}
                 </Link>
