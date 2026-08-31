@@ -312,11 +312,32 @@ try {
     timeout: SHOT_TIMEOUT,
   });
 
+  console.log('[products-world] persistent route state');
+  const productWorld = productEntryPage.locator('#physical-library');
+  await productWorld.scrollIntoViewIfNeeded();
+  const firstFamily = productEntryPage.locator('[data-product-family]').first();
+  await firstFamily.click();
+  await productEntryPage.waitForTimeout(160);
+  const worldFamily = await productEntryPage.locator('.hiltech-product-world-canvas').getAttribute('data-product-world-family');
+  if (!worldFamily || worldFamily === 'all') {
+    throw new Error('product world family state did not change');
+  }
+  await productEntryPage.screenshot({
+    path: 'visual-qa-creative-synthesis/desktop-product-world-persistent-route.png',
+    fullPage: false,
+    timeout: SHOT_TIMEOUT,
+  });
+
   console.log('[products-entry] world to exact-reference collapse');
   const worldToReference = productEntryPage.locator('.hiltech-product-world-to-reference');
   await worldToReference.scrollIntoViewIfNeeded();
   await worldToReference.click();
   await productEntryPage.locator('[data-world-state="collapsing-to-reference"]').waitFor();
+  await productEntryPage.screenshot({
+    path: 'visual-qa-creative-synthesis/desktop-product-world-collapse-state.png',
+    fullPage: false,
+    timeout: SHOT_TIMEOUT,
+  });
   await productEntryPage.locator('#exact-finding').waitFor();
   await productEntryPage.waitForTimeout(450);
   const collapseSearchFocused = await productEntryPage.locator('#exact-finding input').evaluate(
@@ -331,6 +352,12 @@ try {
   await firstTransitionLink.click();
   const transitionOverlay = productEntryPage.locator('[data-product-route-transition]');
   await transitionOverlay.waitFor();
+  await productEntryPage.waitForTimeout(90);
+  await productEntryPage.screenshot({
+    path: 'visual-qa-creative-synthesis/desktop-product-reference-handoff.png',
+    fullPage: false,
+    timeout: SHOT_TIMEOUT,
+  });
   await productEntryPage.waitForURL(/\/products-partners\/[^/?#]+$/, { timeout: NAV_TIMEOUT });
   await productEntryPage.locator('[data-product-object]').waitFor();
   await transitionOverlay.waitFor({ state: 'detached', timeout: 4000 });
