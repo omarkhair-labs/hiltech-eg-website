@@ -275,6 +275,44 @@ try {
 
     await mobileContext.close();
   }
+  console.log('[products-entry] desktop intent paths');
+  const productEntryContext = await browser.newContext({
+    viewport: { width: 1440, height: 1000 },
+    reducedMotion: 'reduce',
+  });
+  const productEntryPage = await productEntryContext.newPage();
+  productEntryPage.setDefaultTimeout(15000);
+  productEntryPage.setDefaultNavigationTimeout(NAV_TIMEOUT);
+
+  const productEntryCases = [
+    ['I KNOW THE REFERENCE', '#exact-finding'],
+    ['I KNOW THE SYSTEM', '#physical-library'],
+    ['I KNOW THE PROJECT', '#project-scope'],
+  ];
+
+  for (const [label, target] of productEntryCases) {
+    const response = await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
+    if (!response || !response.ok()) throw new Error(`product quick entry route failed for ${label}`);
+    const entry = productEntryPage.locator('[data-product-quick-entry] button').filter({ hasText: label });
+    await entry.waitFor();
+    await entry.click();
+    await productEntryPage.locator(target).waitFor();
+    if (label === 'I KNOW THE REFERENCE') {
+      const searchFocused = await productEntryPage.locator('#exact-finding input').evaluate(
+        (input) => document.activeElement === input,
+      );
+      if (!searchFocused) throw new Error('reference quick entry did not focus exact finding');
+    }
+  }
+
+  await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
+  await productEntryPage.screenshot({
+    path: 'visual-qa-creative-synthesis/desktop-products-quick-entry.png',
+    fullPage: false,
+    timeout: SHOT_TIMEOUT,
+  });
+  await productEntryContext.close();
+
   const context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
     reducedMotion: 'reduce',
