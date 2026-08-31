@@ -22,6 +22,7 @@ on:
       - 'scripts/capture-work-qa.mjs'
       - 'scripts/capture-company-qa.mjs'
       - 'scripts/capture-rfq-contact-qa.mjs'
+      - 'scripts/capture-creative-synthesis-qa.mjs'
       - 'scripts/capture-closed-public-smoke.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
@@ -68,17 +69,30 @@ jobs:
       - name: Capture closed public regression smoke
         run: node scripts/capture-closed-public-smoke.mjs
 
+      - name: Capture Work visual and interaction QA
+        run: node scripts/capture-work-qa.mjs
+
       - name: Capture Company visual and interaction QA
         run: node scripts/capture-company-qa.mjs
 
       - name: Capture RFQ and Contact visual and interaction QA
         run: node scripts/capture-rfq-contact-qa.mjs
 
+      - name: Capture English creative synthesis QA
+        run: node scripts/capture-creative-synthesis-qa.mjs
+
       - name: Upload closed public regression smoke
         uses: actions/upload-artifact@v4
         with:
           name: hiltech-closed-public-regression-smoke
           path: visual-qa-closed-public-smoke/
+          retention-days: 7
+
+      - name: Upload Work visual QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiltech-work-visual-qa
+          path: visual-qa-work/
           retention-days: 7
 
       - name: Upload Company visual QA
@@ -93,6 +107,13 @@ jobs:
         with:
           name: hiltech-rfq-contact-visual-qa
           path: visual-qa-rfq-contact/
+          retention-days: 7
+
+      - name: Upload English creative synthesis QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiltech-creative-synthesis-visual-qa
+          path: visual-qa-creative-synthesis/
           retention-days: 7
 
       - name: Stop production server
