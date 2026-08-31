@@ -232,7 +232,7 @@ export default function SystemsField() {
           </div>
         </div>
 
-        <Link href="/solutions/network-testing" className="hiltech-validation-band">
+        <Link href="/solutions/network-testing" className="hiltech-validation-band" data-allow-mobile-overflow="true">
           <span className="hiltech-validation-band-label">VALIDATION LAYER</span>
           <strong>{validation.shortTitle}</strong>
           <p>{validation.intro}</p>
