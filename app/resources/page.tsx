@@ -1,16 +1,132 @@
-import Image from 'next/image';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CTAButton, PremiumCard, SectionShell } from '@/components/ui/primitives';
 import { onePagers } from '@/content/sales-materials';
 import { site } from '@/content/site';
 
 export const metadata: Metadata = {
   title: 'Sales & Project Resources | HILTECH',
-  description: 'Public-facing resources for company profile, solution one-pagers, RFQ preparation guidance, and launch-ready sales copy.',
-  alternates: { canonical: `${site.siteUrl}/resources` },
-  openGraph: { title: 'Sales & Project Resources | HILTECH', description: 'PDF-ready content and sales materials prepared for client communication.', url: `${site.siteUrl}/resources`, images: [site.ogImage] },
+  description:
+    'Public-facing resources for company profile, solution one-pagers, RFQ preparation guidance, and project planning.',
+  alternates: { canonical: site.siteUrl + '/resources' },
+  openGraph: {
+    title: 'Sales & Project Resources | HILTECH',
+    description: 'Project planning references, RFQ preparation, company information, and scope tools.',
+    url: site.siteUrl + '/resources',
+    images: [site.ogImage],
+  },
   twitter: { card: 'summary_large_image', images: [site.ogImage] },
 };
 
-export default function ResourcesPage() { return <main className="bg-slate-950 text-slate-200"><SectionShell><section className="rounded-2xl border border-white/15 bg-gradient-to-br from-slate-900 to-slate-950 p-6"><p className="text-xs font-semibold uppercase tracking-wider text-orange-300">Public resource hub</p><h1 className="mt-2 text-3xl font-bold text-white">Resources for Planning and RFQ Preparation</h1><p className="mt-3 text-slate-300">Use this library to prepare scope, submit RFQs, and share project-ready references.</p></section><section className="mt-8 grid items-start gap-4 md:grid-cols-2"><PremiumCard><p className="text-xs font-semibold uppercase tracking-wide text-orange-300">Company Profile</p><h2 className="mt-2 text-xl font-semibold text-white">Company Overview & Capabilities</h2><div className="mt-3 overflow-hidden rounded-lg border border-white/15 bg-white/5 p-3"><div className="relative mx-auto aspect-[16/10] w-full max-w-2xl"><Image src="/company-profile-cover.jpg" alt="Cover preview of HILTECH company profile" fill className="object-contain" /></div></div><p className="mt-3 text-sm text-slate-300">Request or view company profile content for service scope, proof points, and contact references.</p><div className="mt-4 flex flex-wrap gap-2"><CTAButton href="/resources/company-profile" variant="secondary">View Company Profile Content</CTAButton><CTAButton href="/contact">Contact HILTECH</CTAButton></div></PremiumCard><PremiumCard><p className="text-xs font-semibold uppercase tracking-wide text-orange-300">RFQ Preparation</p><h2 className="mt-2 text-xl font-semibold text-white">Prepare and Submit Faster</h2><p className="mt-2 text-sm text-slate-300">Follow RFQ preparation steps, then submit via the real RFQ workflow.</p><div className="mt-4 flex flex-wrap gap-2"><CTAButton href="/resources/rfq-guide" variant="secondary">Open RFQ Guide</CTAButton><CTAButton href="/rfq">Start RFQ</CTAButton></div></PremiumCard></section><section className="mt-8"><h2 className="text-2xl font-bold text-white">Solution One-Pagers</h2><p className="mt-2 text-sm text-slate-400">Prepared for scope-based client conversations.</p><div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{onePagers.map((item) => <PremiumCard key={item.slug} className="flex flex-col"><h3 className="font-semibold text-white">{item.title}</h3><p className="mt-2 text-sm text-slate-300">{item.shortIntro}</p><Link href={`/resources/one-pagers/${item.slug}`} className="mt-4 text-sm font-semibold text-orange-300 underline">Open one-pager</Link></PremiumCard>)}</div></section><section className="mt-8 rounded-2xl border border-white/15 bg-white/5 p-5"><p className="text-xs font-semibold uppercase tracking-wide text-orange-300">Project Tools</p><h2 className="mt-2 text-lg font-bold text-white">Scope Finder & RFQ Tracking</h2><p className="mt-2 text-sm text-slate-300">Use project tools to define initial requirements and track submitted RFQs.</p><div className="mt-3 flex flex-wrap gap-2"><CTAButton href="/scope-finder" variant="secondary">Open Scope Finder</CTAButton><CTAButton href="/track" variant="secondary">Track RFQ</CTAButton><CTAButton href="/work" variant="secondary">Field Work & References</CTAButton></div></section><section className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-5"><h2 className="text-lg font-bold text-white">Communication Templates (Optional)</h2><p className="mt-2 text-sm text-slate-300">Client communication templates for launch announcements and outreach alignment.</p><div className="mt-3"><CTAButton href="/resources/launch-copy" variant="link">Open Client Communication Templates</CTAButton></div></section></SectionShell></main>; }
+export default function ResourcesPage() {
+  return (
+    <main className="hiltech-utility-page">
+      <div className="hiltech-utility-shell">
+        <section className="hiltech-utility-hero">
+          <div className="hiltech-utility-topline">
+            <span>RESOURCES / PROJECT INTELLIGENCE</span>
+            <span>PUBLIC / VERIFIED ROUTES</span>
+          </div>
+
+          <div className="hiltech-utility-hero-grid">
+            <div className="hiltech-utility-hero-copy">
+              <span>PLANNING / SCOPE / RFQ</span>
+              <h1>
+                READ WHAT<br />
+                <em>THE PROJECT NEEDS.</em>
+              </h1>
+              <p>
+                Company context, scope preparation, solution one-pagers, and request tools live here.
+                Resources support a project decision; they do not replace technical review.
+              </p>
+            </div>
+
+            <div className="hiltech-utility-hero-state">
+              <div><span>01</span><strong>COMPANY PROFILE</strong><small>POSITION / CAPABILITY</small></div>
+              <div><span>02</span><strong>RFQ GUIDE</strong><small>INPUT / PREPARATION</small></div>
+              <div><span>03</span><strong>{onePagers.length} ONE-PAGERS</strong><small>SOLUTION / CLIENT CONTEXT</small></div>
+              <div><span>04</span><strong>PROJECT TOOLS</strong><small>SCOPE / TRACK</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="hiltech-utility-section">
+          <div className="hiltech-utility-section-label">
+            <span>01 / CORE RESOURCES</span>
+            <strong>OPEN ONLY THE DEPTH YOU NEED</strong>
+          </div>
+
+          <div className="hiltech-utility-route-index">
+            <Link href="/resources/company-profile" className="hiltech-utility-route-row">
+              <span>01</span>
+              <strong>Company Profile</strong>
+              <p>Positioning, capabilities, solution areas, procurement model, and RFQ workflow.</p>
+              <em>OPEN ↗</em>
+            </Link>
+            <Link href="/resources/rfq-guide" className="hiltech-utility-route-row">
+              <span>02</span>
+              <strong>RFQ Preparation Guide</strong>
+              <p>What to prepare before quotation review so quantities, site context, and constraints are visible.</p>
+              <em>PREPARE ↗</em>
+            </Link>
+            <Link href="/scope-finder" className="hiltech-utility-route-row">
+              <span>03</span>
+              <strong>Scope Finder</strong>
+              <p>Turn an early project description into a preliminary system direction and RFQ starter context.</p>
+              <em>DEFINE ↗</em>
+            </Link>
+            <Link href="/track" className="hiltech-utility-route-row">
+              <span>04</span>
+              <strong>Track RFQ</strong>
+              <p>Use the request reference and matching contact detail to read the current request state.</p>
+              <em>TRACK ↗</em>
+            </Link>
+          </div>
+        </section>
+
+        <section className="hiltech-utility-section is-dark">
+          <div className="hiltech-utility-section-label is-dark">
+            <span>02 / SOLUTION ONE-PAGERS</span>
+            <strong>CLIENT CONTEXT / NOT A SUBSTITUTE FOR SCOPE REVIEW</strong>
+          </div>
+
+          <div className="hiltech-utility-route-index">
+            {onePagers.map((item, index) => (
+              <Link
+                href={'/resources/one-pagers/' + item.slug}
+                key={item.slug}
+                className="hiltech-utility-route-row"
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{item.title}</strong>
+                <p>{item.shortIntro}</p>
+                <em>READ ↗</em>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="hiltech-utility-section">
+          <div className="hiltech-utility-section-label">
+            <span>03 / PROJECT ENTRY</span>
+            <strong>REFERENCE / SCOPE / CONTACT</strong>
+          </div>
+
+          <div className="hiltech-utility-actions">
+            <Link href="/rfq">START A PROJECT <span aria-hidden="true">↗</span></Link>
+            <Link href="/products-partners">FIND A REFERENCE <span aria-hidden="true">↗</span></Link>
+            <Link href="/contact">CONTACT HILTECH <span aria-hidden="true">↗</span></Link>
+          </div>
+
+          <div className="hiltech-utility-route-index">
+            <Link href="/resources/launch-copy" className="hiltech-utility-route-row">
+              <span>04</span>
+              <strong>Communication Templates</strong>
+              <p>Optional launch and outreach copy retained as a utility resource, separate from technical project content.</p>
+              <em>OPEN ↗</em>
+            </Link>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
