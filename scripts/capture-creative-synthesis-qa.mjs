@@ -357,6 +357,17 @@ try {
     await assertNoHorizontalOverflow(page, `reduced-motion ${route}`);
   }
 
+  console.log('[reduced-motion] product detail remains direct');
+  await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
+  const reducedProductLink = page.locator('[data-product-card] .hiltech-product-reference-media-link').first();
+  await reducedProductLink.scrollIntoViewIfNeeded();
+  await reducedProductLink.click();
+  await page.waitForURL(/\/products-partners\/[^/?#]+$/, { timeout: NAV_TIMEOUT });
+  await page.locator('[data-product-object]').waitFor();
+  if (await page.locator('[data-product-route-transition]').count()) {
+    throw new Error('reduced-motion product navigation rendered transition overlay');
+  }
+
   await context.close();
 } finally {
   await browser.close();
