@@ -14,7 +14,7 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const representativeIds: Record<ProductCategory, string> = {
+const representativeIds: Partial<Record<ProductCategory, string>> = {
   'Fiber Optic Systems': 'panduit-nkfpx1bn3nnm001-om3-sc-fiber-optic-cable-1m',
   'Copper / CAT6 Cabling': 'legrand-category-6-uutp-lszh-cable-305m-blue',
   'Patch Cords & Connectivity': 'commscope-fdxlclc42-mxf010-om4-lc-lc-duplex-fiber-patch-cord-10ft',
@@ -22,7 +22,7 @@ const representativeIds: Record<ProductCategory, string> = {
   'Cabinets / Racks / PDU': 'كابينة-شنايدر-إلكتريك-schneider-electric-enclosure-700-gvbc7',
 };
 
-const categoryShort: Record<ProductCategory, string> = {
+const categoryShort: Partial<Record<ProductCategory, string>> = {
   'Fiber Optic Systems': 'FIBER',
   'Copper / CAT6 Cabling': 'COPPER',
   'Patch Cords & Connectivity': 'PATCHING',
@@ -45,7 +45,7 @@ export default function CatalogBridge() {
     () =>
       productCategories.map((category) => ({
         category,
-        short: categoryShort[category],
+        short: categoryShort[category] ?? category,
         count: products.filter((product) => product.category === category).length,
         representative: findRepresentative(category),
       })),
