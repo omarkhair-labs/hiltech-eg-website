@@ -324,6 +324,23 @@ try {
   );
   if (!collapseSearchFocused) throw new Error('world-to-reference collapse did not focus exact finding');
 
+  console.log('[products-transition] reference to detail continuity');
+  await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
+  const firstTransitionLink = productEntryPage.locator('[data-product-card] .hiltech-product-reference-media-link').first();
+  await firstTransitionLink.scrollIntoViewIfNeeded();
+  await firstTransitionLink.click();
+  const transitionOverlay = productEntryPage.locator('[data-product-route-transition]');
+  await transitionOverlay.waitFor();
+  await productEntryPage.waitForURL(/\/products-partners\/[^/?#]+$/, { timeout: NAV_TIMEOUT });
+  await productEntryPage.locator('[data-product-object]').waitFor();
+  await transitionOverlay.waitFor({ state: 'detached', timeout: 4000 });
+  await assertNoHorizontalOverflow(productEntryPage, 'product detail route transition');
+  await productEntryPage.screenshot({
+    path: 'visual-qa-creative-synthesis/desktop-product-detail-after-transition.png',
+    fullPage: false,
+    timeout: SHOT_TIMEOUT,
+  });
+
   await productEntryContext.close();
 
   const context = await browser.newContext({
