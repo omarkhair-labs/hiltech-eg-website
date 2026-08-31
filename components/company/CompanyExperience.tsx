@@ -126,7 +126,7 @@ export default function CompanyExperience() {
       const systemMapTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: '.hiltech-company-system-stage',
-          start: 'top 88%',
+          start: 'top 72%',
           once: true,
         },
       });
