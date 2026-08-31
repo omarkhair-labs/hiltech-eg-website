@@ -184,6 +184,7 @@ export default function ProductsClient({
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
   const [catalogMode, setCatalogMode] = useState<'browse' | 'project'>('browse');
   const [addedStarterBundles, setAddedStarterBundles] = useState<string[]>([]);
+  const [worldTransitioning, setWorldTransitioning] = useState(false);
 
   useEffect(() => setItems(readRFQItems()), []);
   useEffect(() => writeRFQItems(items), [items]);
@@ -427,6 +428,25 @@ export default function ProductsClient({
     scrollToEntryTarget(mode === 'reference' ? 'exact-finding' : 'physical-library', mode === 'reference');
   };
 
+  const collapseWorldToReferences = () => {
+    trackEvent('product_world_to_reference', {
+      family: currentWorld.family,
+      category: activeCategory,
+    });
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      scrollToEntryTarget('exact-finding', true);
+      return;
+    }
+
+    setWorldTransitioning(true);
+    window.setTimeout(() => {
+      scrollToEntryTarget('exact-finding', true);
+      setWorldTransitioning(false);
+    }, 380);
+  };
+
   const quickEntry = isArabic
     ? [
         ['reference', '01 / أعرف المرجع', 'ابحث بالكود مباشرة', 'انتقل إلى البحث الدقيق عن الكود أو المواصفة.'],
@@ -481,7 +501,12 @@ export default function ProductsClient({
 
       {catalogMode === 'browse' ? (
         <>
-          <section id="physical-library" className="hiltech-product-world" data-product-world>
+          <section
+            id="physical-library"
+            className={`hiltech-product-world${worldTransitioning ? ' is-collapsing' : ''}`}
+            data-product-world
+            data-world-state={worldTransitioning ? 'collapsing-to-reference' : 'explore'}
+          >
             <div className="hiltech-product-world-topline">
               <span>02 / PHYSICAL LIBRARY</span>
               <strong>{currentWorld.code}</strong>
@@ -531,6 +556,15 @@ export default function ProductsClient({
                     <span>{currentWorldStats.count} CURRENT REFERENCES</span>
                     <span>{currentWorldStats.brands.length} BRAND LABELS</span>
                   </div>
+                  <button
+                    type="button"
+                    className="hiltech-product-world-to-reference"
+                    onClick={collapseWorldToReferences}
+                  >
+                    <span>{isArabic ? 'المراجع الدقيقة' : 'EXACT REFERENCES'}</span>
+                    <strong>{isArabic ? 'انتقل من النظام إلى الكود' : 'COLLAPSE TO THE INDEX'}</strong>
+                    <em aria-hidden="true">↓</em>
+                  </button>
                 </div>
               </div>
             </div>
