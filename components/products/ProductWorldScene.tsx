@@ -5,6 +5,7 @@ import * as THREE from 'three';
 
 type Props = {
   family:
+    | 'all'
     | 'fiber'
     | 'copper'
     | 'connectivity'
@@ -91,6 +92,106 @@ export default function ProductWorldScene({ family }: Props) {
       transparent: true,
       opacity: 0.55,
     });
+
+    if (family === 'all') {
+      const rack = new THREE.Mesh(new THREE.BoxGeometry(2.2, 4.6, 1.8), darkMaterial.clone());
+      rack.position.set(2.9, 0.15, -1.15);
+      root.add(rack);
+      const rackEdges = new THREE.LineSegments(new THREE.EdgesGeometry(rack.geometry), lineMaterial);
+      rackEdges.position.copy(rack.position);
+      root.add(rackEdges);
+
+      for (let unit = 0; unit < 9; unit += 1) {
+        const active = unit === 5;
+        const bar = new THREE.Mesh(
+          new THREE.BoxGeometry(1.7, 0.13, 0.12),
+          active ? signalMaterial : new THREE.MeshBasicMaterial({ color: 0x475c4e }),
+        );
+        bar.position.set(2.9, -1.55 + unit * 0.38, -0.2);
+        root.add(bar);
+      }
+
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.15, 0.45), darkMaterial.clone());
+      panel.position.set(-0.05, 0.65, -0.7);
+      root.add(panel);
+      const panelEdges = new THREE.LineSegments(new THREE.EdgesGeometry(panel.geometry), lineMaterial);
+      panelEdges.position.copy(panel.position);
+      root.add(panelEdges);
+
+      for (let col = 0; col < 6; col += 1) {
+        const port = new THREE.Mesh(
+          new THREE.BoxGeometry(0.28, 0.22, 0.12),
+          col === 3 ? signalMaterial : darkMaterial.clone(),
+        );
+        port.position.set(-1.05 + col * 0.42, 0.66, -0.43);
+        root.add(port);
+      }
+
+      const source = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 0.5), darkMaterial.clone());
+      source.position.set(-4.3, 0.8, -0.4);
+      root.add(source);
+      const sourceEdges = new THREE.LineSegments(new THREE.EdgesGeometry(source.geometry), lineMaterial);
+      sourceEdges.position.copy(source.position);
+      root.add(sourceEdges);
+
+      const endpoint = new THREE.Mesh(
+        new THREE.BoxGeometry(1.35, 1.35, 0.42),
+        new THREE.MeshStandardMaterial({ color: 0xdfe7df, roughness: 0.76, metalness: 0.02 }),
+      );
+      endpoint.position.set(-3.7, -1.55, -0.8);
+      root.add(endpoint);
+      const endpointPort = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.42, 0.18), signalMaterial);
+      endpointPort.position.set(-3.7, -1.55, -0.56);
+      root.add(endpointPort);
+
+      const fiberCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-5.8, 1.15, 0.25),
+        new THREE.Vector3(-4.3, 0.8, 0),
+        new THREE.Vector3(-1.45, 0.7, -0.25),
+        new THREE.Vector3(-0.1, 0.65, -0.45),
+        new THREE.Vector3(2.0, 0.45, -0.5),
+        new THREE.Vector3(2.9, 0.15, -0.4),
+      ]);
+      root.add(new THREE.Mesh(new THREE.TubeGeometry(fiberCurve, 120, 0.05, 8, false), signalMaterial));
+      const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), signalMaterial);
+      pulse.userData.curve = fiberCurve;
+      pulse.userData.motion = 'curve';
+      root.add(pulse);
+
+      for (let pair = 0; pair < 3; pair += 1) {
+        const y = -0.45 - pair * 0.28;
+        const route = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(-5.2, y, 0.1),
+          new THREE.Vector3(-2.8, y + 0.12, -0.05),
+          new THREE.Vector3(-0.6, 0.35 - pair * 0.08, -0.25),
+          new THREE.Vector3(1.4, 0.22 - pair * 0.05, -0.42),
+          new THREE.Vector3(2.9, 0.05 - pair * 0.04, -0.36),
+        ]);
+        root.add(
+          new THREE.Mesh(
+            new THREE.TubeGeometry(route, 90, 0.022, 6, false),
+            new THREE.MeshBasicMaterial({
+              color: pair === 1 ? palette.cool : 0x6b8873,
+              transparent: true,
+              opacity: pair === 1 ? 0.58 : 0.38,
+            }),
+          ),
+        );
+      }
+
+      const endpointRoute = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-3.7, -1.55, -0.45),
+        new THREE.Vector3(-2.2, -1.25, -0.25),
+        new THREE.Vector3(-0.45, 0.1, -0.4),
+        new THREE.Vector3(2.9, -0.25, -0.45),
+      ]);
+      root.add(
+        new THREE.Mesh(
+          new THREE.TubeGeometry(endpointRoute, 90, 0.026, 6, false),
+          new THREE.MeshBasicMaterial({ color: 0x7a9380, transparent: true, opacity: 0.48 }),
+        ),
+      );
+    }
 
     if (family === 'fiber') {
       const curves: THREE.CatmullRomCurve3[] = [];
