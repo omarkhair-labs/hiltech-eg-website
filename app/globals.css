@@ -223,3 +223,555 @@ body {
 [dir='rtl'] {
   text-align: right;
 }
+
+
+/* HILTECH 2026 CREATIVE SYSTEM — production homepage slices */
+.hiltech-home {
+  --hiltech-bg: #050806;
+  --hiltech-panel: rgba(8, 13, 10, 0.78);
+  --hiltech-panel-strong: rgba(7, 11, 9, 0.94);
+  --hiltech-ink: #f5f7f5;
+  --hiltech-muted: #a1aca5;
+  --hiltech-dim: #657169;
+  --hiltech-border: rgba(210, 236, 220, 0.12);
+  --hiltech-signal: #8ff257;
+  --hiltech-signal-soft: rgba(143, 242, 87, 0.14);
+  --hiltech-signal-line: rgba(143, 242, 87, 0.42);
+  --hiltech-grid: rgba(180, 220, 193, 0.055);
+  background: var(--hiltech-bg);
+  color: var(--hiltech-ink);
+  isolation: isolate;
+}
+
+.hiltech-slice-root {
+  position: relative;
+  min-height: 300svh;
+  overflow: clip;
+}
+
+.hiltech-world-sticky {
+  position: sticky;
+  top: 4rem;
+  z-index: 0;
+  height: calc(100svh - 4rem);
+  margin-bottom: calc(-100svh + 4rem);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 65% 38%, rgba(100, 255, 121, 0.08), transparent 32%),
+    radial-gradient(circle at 35% 75%, rgba(77, 128, 255, 0.05), transparent 30%),
+    var(--hiltech-bg);
+}
+
+.hiltech-world-canvas,
+.hiltech-world-canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hiltech-world-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(5, 8, 6, 0.96) 0%, rgba(5, 8, 6, 0.72) 31%, rgba(5, 8, 6, 0.08) 64%, rgba(5, 8, 6, 0.55) 100%),
+    linear-gradient(180deg, rgba(5, 8, 6, 0.18), rgba(5, 8, 6, 0.08) 52%, rgba(5, 8, 6, 0.86));
+}
+
+.hiltech-world-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--hiltech-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hiltech-grid) 1px, transparent 1px);
+  background-size: 8.333vw 8.333vw;
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.86) 70%, transparent 100%);
+}
+
+.hiltech-slice-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hiltech-chapter {
+  min-height: calc(100svh - 4rem);
+  display: grid;
+  align-items: center;
+  border-bottom: 1px solid var(--hiltech-border);
+}
+
+.hiltech-chapter-inner {
+  width: min(94vw, 92rem);
+  margin-inline: auto;
+  padding: clamp(3.5rem, 7vw, 7rem) 0;
+}
+
+.hiltech-chapter-hero .hiltech-chapter-inner {
+  position: relative;
+  min-height: calc(100svh - 4rem);
+  display: flex;
+  align-items: center;
+}
+
+.hiltech-hero-copy {
+  width: min(48rem, 64vw);
+}
+
+.hiltech-kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--hiltech-muted);
+}
+
+.hiltech-index {
+  color: var(--hiltech-signal);
+}
+
+.hiltech-rule {
+  width: 2.4rem;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+}
+
+.hiltech-system-label {
+  white-space: nowrap;
+}
+
+.hiltech-hero-title {
+  margin-top: 1.55rem;
+  font-size: clamp(3.2rem, 7.3vw, 8.8rem);
+  line-height: 0.88;
+  font-weight: 780;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
+}
+
+.hiltech-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.hiltech-line-mask > span {
+  display: block;
+}
+
+.hiltech-signal-line {
+  color: var(--hiltech-signal);
+}
+
+.hiltech-lede {
+  margin-top: 1.75rem;
+  max-width: 38rem;
+  color: var(--hiltech-muted);
+  font-size: clamp(1rem, 1.45vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.hiltech-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hiltech-action {
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid var(--hiltech-border);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.hiltech-action-primary {
+  border-color: var(--hiltech-signal-line);
+  color: var(--hiltech-signal);
+  background: rgba(143, 242, 87, 0.035);
+}
+
+.hiltech-action-primary:hover {
+  background: var(--hiltech-signal);
+  color: #071006;
+}
+
+.hiltech-action-quiet {
+  color: #d7ddd8;
+  background: rgba(255,255,255,0.015);
+}
+
+.hiltech-action-quiet:hover {
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.05);
+}
+
+.hiltech-play {
+  font-size: 0.55rem;
+  color: var(--hiltech-signal);
+}
+
+.hiltech-status-panel {
+  position: absolute;
+  top: clamp(2rem, 7vw, 6rem);
+  right: 0;
+  width: min(18rem, 26vw);
+  border: 1px solid var(--hiltech-border);
+  background: var(--hiltech-panel);
+  backdrop-filter: blur(14px);
+  padding: 1rem;
+}
+
+.hiltech-status-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--hiltech-dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+}
+
+.hiltech-live-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--hiltech-signal);
+  box-shadow: 0 0 18px rgba(143,242,87,0.82);
+}
+
+.hiltech-status-panel > strong {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--hiltech-signal);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+}
+
+.hiltech-status-panel dl {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.hiltech-status-panel dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--hiltech-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+}
+
+.hiltech-status-panel dd {
+  color: #e2e8e3;
+}
+
+.hiltech-scroll-cue {
+  position: absolute;
+  left: 0;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  color: var(--hiltech-dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.hiltech-scroll-line {
+  width: 1px;
+  height: 2.3rem;
+  background: linear-gradient(var(--hiltech-signal), transparent);
+}
+
+.hiltech-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(3rem, 8vw, 8rem);
+  align-items: center;
+}
+
+.hiltech-section-copy {
+  max-width: 34rem;
+}
+
+.hiltech-section-title {
+  margin-top: 1.3rem;
+  font-size: clamp(2.8rem, 5.2vw, 6.3rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  font-weight: 760;
+}
+
+.hiltech-section-title > span {
+  color: var(--hiltech-muted);
+}
+
+.hiltech-trace-card {
+  justify-self: end;
+  width: min(100%, 44rem);
+  border: 1px solid var(--hiltech-border);
+  background:
+    linear-gradient(180deg, rgba(5,9,6,0.26), rgba(5,9,6,0.82)),
+    var(--hiltech-panel);
+  backdrop-filter: blur(12px);
+  padding: clamp(1.1rem, 2vw, 1.65rem);
+}
+
+.hiltech-trace-head,
+.hiltech-trace-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--hiltech-dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+}
+
+.hiltech-trace-line {
+  position: relative;
+  height: 10rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border-block: 1px solid rgba(255,255,255,0.05);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+.hiltech-trace-line::before {
+  content: '';
+  position: absolute;
+  inset: 49% -8% auto;
+  height: 1px;
+  background: var(--hiltech-signal);
+  box-shadow: 0 0 18px rgba(143,242,87,0.4);
+  transform: rotate(-3deg);
+}
+
+.hiltech-trace-line span {
+  position: absolute;
+  top: calc(50% - 0.28rem);
+  width: 0.56rem;
+  height: 0.56rem;
+  border: 1px solid var(--hiltech-signal);
+  border-radius: 50%;
+  background: #071006;
+  box-shadow: 0 0 16px rgba(143,242,87,0.42);
+}
+.hiltech-trace-line span:nth-child(1) { left: 10%; }
+.hiltech-trace-line span:nth-child(2) { left: 36%; top: 40%; }
+.hiltech-trace-line span:nth-child(3) { left: 66%; top: 53%; }
+.hiltech-trace-line span:nth-child(4) { left: 88%; top: 44%; }
+
+.hiltech-chapter-scale {
+  align-items: end;
+}
+
+.hiltech-scale-heading {
+  max-width: 54rem;
+}
+
+.hiltech-scale-steps {
+  margin-top: clamp(3rem, 6vw, 6rem);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-top: 1px solid var(--hiltech-border);
+  border-bottom: 1px solid var(--hiltech-border);
+}
+
+.hiltech-scale-step {
+  min-height: 12rem;
+  padding: 1.1rem;
+  border-right: 1px solid var(--hiltech-border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.025));
+}
+.hiltech-scale-step:last-child { border-right: 0; }
+
+.hiltech-step-number {
+  color: var(--hiltech-signal);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+}
+
+.hiltech-scale-step h3 {
+  margin-top: 3.2rem;
+  font-size: 1rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.hiltech-scale-step p {
+  margin-top: 0.55rem;
+  color: var(--hiltech-dim);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.hiltech-slice-next {
+  margin-top: 2rem;
+  max-width: 42rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--hiltech-signal-line);
+  color: var(--hiltech-muted);
+}
+.hiltech-slice-next span {
+  display: block;
+  color: var(--hiltech-signal);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+}
+.hiltech-slice-next strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--hiltech-ink);
+  letter-spacing: -0.01em;
+}
+.hiltech-slice-next p {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .hiltech-world-vignette {
+    background:
+      linear-gradient(180deg, rgba(5,8,6,0.48), rgba(5,8,6,0.78)),
+      linear-gradient(90deg, rgba(5,8,6,0.88), rgba(5,8,6,0.14));
+  }
+
+  .hiltech-chapter-inner {
+    width: min(91vw, 46rem);
+  }
+
+  .hiltech-hero-copy {
+    width: min(100%, 38rem);
+  }
+
+  .hiltech-status-panel {
+    top: auto;
+    right: 0;
+    bottom: 2rem;
+    width: min(15rem, 40vw);
+  }
+
+  .hiltech-split-layout {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 3rem;
+  }
+
+  .hiltech-trace-card {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .hiltech-scale-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hiltech-scale-step:nth-child(3) { border-right: 0; }
+  .hiltech-scale-step:nth-child(-n+3) { border-bottom: 1px solid var(--hiltech-border); }
+}
+
+@media (max-width: 639px) {
+  .hiltech-slice-root { min-height: 300svh; }
+  .hiltech-world-sticky {
+    top: 4rem;
+    height: calc(100svh - 4rem);
+    margin-bottom: calc(-100svh + 4rem);
+  }
+
+  .hiltech-chapter {
+    min-height: calc(100svh - 4rem);
+  }
+
+  .hiltech-chapter-inner {
+    width: min(90vw, 34rem);
+    padding: 3.1rem 0;
+  }
+
+  .hiltech-hero-title {
+    font-size: clamp(3rem, 17vw, 5rem);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+  }
+
+  .hiltech-kicker-row {
+    font-size: 0.57rem;
+    gap: 0.55rem;
+  }
+
+  .hiltech-rule { width: 1.35rem; }
+
+  .hiltech-lede {
+    max-width: 29rem;
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  .hiltech-status-panel {
+    display: none;
+  }
+
+  .hiltech-scroll-cue {
+    bottom: 1rem;
+  }
+
+  .hiltech-section-title {
+    font-size: clamp(2.7rem, 13vw, 4.4rem);
+  }
+
+  .hiltech-trace-meta {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .hiltech-scale-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hiltech-scale-step,
+  .hiltech-scale-step:nth-child(3) {
+    min-height: 9.6rem;
+    border-right: 1px solid var(--hiltech-border);
+    border-bottom: 1px solid var(--hiltech-border);
+  }
+
+  .hiltech-scale-step:nth-child(even) { border-right: 0; }
+  .hiltech-scale-step:nth-last-child(-n+2) { border-bottom: 0; }
+
+  .hiltech-scale-step h3 {
+    margin-top: 1.65rem;
+  }
+
+  .hiltech-world-grid {
+    background-size: 20vw 20vw;
+    opacity: 0.32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hiltech-world-canvas canvas {
+    opacity: 0.72;
+  }
+}
