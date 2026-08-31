@@ -52,8 +52,20 @@ async function assertMobileTextFits(page, label, expectedWidth) {
       const rect = element.getBoundingClientRect();
       const text = (element.innerText || element.textContent || '').trim();
       if (!text || style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0 || rect.width < 2 || rect.height < 2) continue;
+      let scrollParent = element.parentElement;
+      let insideHorizontalScroller = false;
+      while (scrollParent && scrollParent !== document.body) {
+        const parentStyle = getComputedStyle(scrollParent);
+        const isScrollableX = parentStyle.overflowX === 'auto' || parentStyle.overflowX === 'scroll';
+        if (isScrollableX && scrollParent.scrollWidth > scrollParent.clientWidth + 2) {
+          insideHorizontalScroller = true;
+          break;
+        }
+        scrollParent = scrollParent.parentElement;
+      }
+
       const internalClip = element.dataset.allowMobileOverflow !== 'true' && element.clientWidth > 0 && element.scrollWidth > element.clientWidth + 2 && style.overflowX !== 'visible';
-      const viewportClip = rect.left < -2 || rect.right > viewportWidth + 2;
+      const viewportClip = !insideHorizontalScroller && (rect.left < -2 || rect.right > viewportWidth + 2);
       if (internalClip || viewportClip) {
         result.push({ tag: element.tagName, text: text.slice(0, 90), left: Math.round(rect.left), right: Math.round(rect.right), clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, overflowX: style.overflowX });
       }
