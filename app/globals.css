@@ -4844,3 +4844,35 @@ body {
     animation: none;
   }
 }
+
+
+/* FINAL HOME QA — typography fit corrections */
+.hiltech-final-title .is-outline {
+  font-size: 0.88em;
+  margin-left: 10%;
+}
+
+.hiltech-validation-heading h2 {
+  padding-bottom: 0.12em;
+}
+
+@media (max-width: 639px) {
+  .hiltech-validation-heading h2 {
+    max-width: 100%;
+    font-size: clamp(2.75rem, 12.8vw, 3.2rem);
+    line-height: 0.87;
+    letter-spacing: -0.064em;
+  }
+
+  .hiltech-certainty-heading h2 {
+    max-width: 100%;
+    font-size: clamp(3.35rem, 15.2vw, 3.8rem);
+    line-height: 0.82;
+    letter-spacing: -0.068em;
+  }
+
+  .hiltech-final-title .is-outline {
+    font-size: 1em;
+    margin-left: 0;
+  }
+}
