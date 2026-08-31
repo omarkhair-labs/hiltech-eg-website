@@ -8,6 +8,7 @@ import { productVisuals } from '@/content/product-visuals';
 import { site } from '@/content/site';
 import { absoluteSiteUrl, buildProductJsonLd, getProductSeoDescription, serializeJsonLd } from '@/lib/seo/product';
 import { getPublicProducts } from '@/lib/server/products-public';
+import { normalizeProductCode, productDetailPath } from '@/lib/products/product-code';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -17,8 +18,9 @@ interface Params { productCode: string }
 const visualsByProductId = new Map(productVisuals.map((visual) => [visual.productId, visual]));
 
 async function getProduct(productCode: string) {
+  const normalizedCode = normalizeProductCode(productCode);
   const { products } = await getPublicProducts();
-  const product = products.find((item) => item.id === productCode);
+  const product = products.find((item) => normalizeProductCode(item.id) === normalizedCode);
   return { products, product };
 }
 
@@ -251,7 +253,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               const image = item.image || relatedVisual?.imagePath;
 
               return (
-                <Link key={item.id} href={`/products-partners/${item.id}`}>
+                <Link key={item.id} href={productDetailPath(item.id)}>
                   <div className="hiltech-product-detail-related-media">
                     {image ? (
                       <Image
