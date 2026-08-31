@@ -18,10 +18,10 @@ export default function FinalProjectCTA() {
 
     const context = gsap.context(() => {
       gsap.from('[data-h12-line]', {
-        clipPath: 'inset(0 100% 0 0)',
-        xPercent: -3,
-        duration: 0.95,
-        stagger: 0.08,
+        opacity: 0,
+        xPercent: -2.5,
+        duration: 0.82,
+        stagger: 0.07,
         ease: 'power4.out',
         scrollTrigger: {
           trigger: root,
