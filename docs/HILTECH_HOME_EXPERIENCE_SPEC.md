@@ -75,18 +75,31 @@ This is one of the main real-time 3D scenes.
 
 ## H04 — What We Build
 
-Primary solution environments:
-- Networks
-- Fiber
-- Data Centers
-- Assurance
+Reality-backed built systems:
+- Structured Cabling
+- Fiber Backbone
+- Data Rooms
+- CCTV Infrastructure
+
+Cross-system validation layer:
+- Network Testing & Validation
+
+Procurement remains a separate path:
+- Project Supply & RFQ
 
 Purpose:
 - first explicit business explanation after the audience understands the system
+- translate the physical-layer thesis into HILTECH’s real solution families
 
 Visual:
-- each environment gets one strong visual state
+- light technical-document field after the dark cinematic opening
+- one sticky system diagram changes state as the solution index advances
+- large editorial solution typography, not cards
+- Network Testing & Validation crosses the built systems as a verification layer
 - reduce cinematic intensity versus H01–H03
+
+Reality rule:
+Do not rename Data Rooms to “Data Centers” or collapse Structured Cabling into generic “Networks” unless HILTECH evidence supports the broader claim.
 
 ## H05 — Build → Route → Test → Prove
 
