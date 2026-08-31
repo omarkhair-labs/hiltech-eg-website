@@ -161,8 +161,11 @@ export default function SignalWorld({ rootId }: Props) {
 
     const grid = new THREE.GridHelper(22, 42, 0x1d3823, 0x0d1711);
     grid.position.y = -2.2;
-    grid.material.transparent = true;
-    grid.material.opacity = 0.36;
+    const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
+    gridMaterials.forEach((material) => {
+      material.transparent = true;
+      material.opacity = 0.36;
+    });
     world.add(grid);
 
     const progress = { value: 0 };
@@ -238,11 +241,13 @@ export default function SignalWorld({ rootId }: Props) {
       if (frame) window.cancelAnimationFrame(frame);
 
       world.traverse((object) => {
-        if (object instanceof THREE.Mesh) {
-          object.geometry.dispose();
-          if (Array.isArray(object.material)) object.material.forEach((material) => material.dispose());
-          else object.material.dispose();
-        }
+        const renderable = object as THREE.Object3D & {
+          geometry?: THREE.BufferGeometry;
+          material?: THREE.Material | THREE.Material[];
+        };
+        renderable.geometry?.dispose();
+        if (Array.isArray(renderable.material)) renderable.material.forEach((material) => material.dispose());
+        else renderable.material?.dispose();
       });
 
       renderer.dispose();
