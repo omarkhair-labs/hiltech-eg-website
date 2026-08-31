@@ -3093,3 +3093,535 @@ body {
     margin-top: 2.6rem;
   }
 }
+
+
+/* H07 — REAL CATALOG / PROCUREMENT BRIDGE */
+.hiltech-catalog-bridge {
+  position: relative;
+  z-index: 6;
+  background:
+    radial-gradient(circle at 18% 44%, rgba(91, 164, 61, 0.07), transparent 28%),
+    #080c09;
+  color: #edf2ed;
+  border-top: 1px solid rgba(143, 242, 87, 0.1);
+}
+
+.hiltech-catalog-shell {
+  width: min(94vw, 102rem);
+  margin-inline: auto;
+  padding: clamp(5rem, 8vw, 8rem) 0 clamp(4.5rem, 7vw, 7rem);
+}
+
+.hiltech-catalog-topline {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  color: #647168;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-topline span:first-child {
+  color: #8ff257;
+}
+
+.hiltech-catalog-topline span:nth-child(2) {
+  justify-self: center;
+}
+
+.hiltech-catalog-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+  margin-top: clamp(2.8rem, 5vw, 5rem);
+  padding-bottom: clamp(3rem, 5vw, 5rem);
+  border-bottom: 1px solid rgba(224, 241, 228, 0.13);
+}
+
+.hiltech-catalog-heading > div > span {
+  display: block;
+  margin-bottom: 1.1rem;
+  color: #7d8a80;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-heading h2 {
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.8;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+  font-weight: 860;
+}
+
+.hiltech-catalog-heading p {
+  max-width: 28rem;
+  color: #99a59d;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.hiltech-catalog-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  margin-top: clamp(3rem, 5vw, 5rem);
+  align-items: stretch;
+}
+
+.hiltech-catalog-media {
+  position: relative;
+  min-width: 0;
+  min-height: clamp(30rem, 54vw, 42rem);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(10,14,11,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,14,11,0.035) 1px, transparent 1px),
+    #e9ede8;
+  background-size: 3.5rem 3.5rem;
+  color: #0b0f0c;
+  border: 1px solid rgba(224, 241, 228, 0.13);
+}
+
+.hiltech-catalog-media::before,
+.hiltech-catalog-media::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 4.2rem;
+  height: 4.2rem;
+  pointer-events: none;
+}
+
+.hiltech-catalog-media::before {
+  left: 1.2rem;
+  top: 3.7rem;
+  border-left: 1px solid rgba(43, 93, 31, 0.55);
+  border-top: 1px solid rgba(43, 93, 31, 0.55);
+}
+
+.hiltech-catalog-media::after {
+  right: 1.2rem;
+  bottom: 3.7rem;
+  border-right: 1px solid rgba(43, 93, 31, 0.55);
+  border-bottom: 1px solid rgba(43, 93, 31, 0.55);
+}
+
+.hiltech-catalog-media-meta {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(10, 14, 11, 0.14);
+  color: #5f6b62;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-image-swap {
+  position: absolute;
+  inset: 3.2rem 1.5rem 3rem;
+  animation: hiltech-catalog-image-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hiltech-catalog-image-swap img {
+  padding: clamp(2rem, 4vw, 4.5rem);
+  filter: drop-shadow(0 22px 30px rgba(10, 14, 11, 0.12));
+}
+
+@keyframes hiltech-catalog-image-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.hiltech-catalog-image-fallback {
+  height: 100%;
+  display: grid;
+  place-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hiltech-catalog-image-fallback span {
+  color: #3c6e2d;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-catalog-image-fallback strong {
+  max-width: 25rem;
+  font-size: 1rem;
+}
+
+.hiltech-catalog-media-axis {
+  position: absolute;
+  z-index: 3;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.85rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
+  gap: 0.55rem;
+  align-items: center;
+  color: #69746b;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.46rem;
+  letter-spacing: 0.06em;
+}
+
+.hiltech-catalog-media-axis i {
+  height: 1px;
+  background: rgba(10, 14, 11, 0.16);
+}
+
+.hiltech-catalog-spec {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  border-top: 1px solid rgba(224, 241, 228, 0.14);
+  border-bottom: 1px solid rgba(224, 241, 228, 0.14);
+  padding: clamp(1.6rem, 3vw, 3rem) 0;
+}
+
+.hiltech-catalog-spec-index {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #627066;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-catalog-spec-index span {
+  color: #8ff257;
+}
+
+.hiltech-catalog-spec-swap {
+  margin-top: clamp(2rem, 4vw, 4rem);
+  animation: hiltech-catalog-spec-in 360ms ease both;
+}
+
+@keyframes hiltech-catalog-spec-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+
+.hiltech-catalog-spec-swap small {
+  color: #78867c;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-spec-swap h3 {
+  margin-top: 0.8rem;
+  font-size: clamp(3.3rem, 5.7vw, 6.8rem);
+  line-height: 0.82;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  font-weight: 820;
+}
+
+.hiltech-catalog-spec-swap dl {
+  margin-top: clamp(2rem, 3.6vw, 3.4rem);
+  border-top: 1px solid rgba(224, 241, 228, 0.12);
+}
+
+.hiltech-catalog-spec-swap dl > div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(224, 241, 228, 0.09);
+}
+
+.hiltech-catalog-spec-swap dt {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.47rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-catalog-spec-swap dd {
+  color: #aab5ad;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.hiltech-catalog-category-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  margin-top: 1.4rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(143, 242, 87, 0.4);
+  color: #a8ff79;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: gap 180ms ease, color 180ms ease;
+}
+
+.hiltech-catalog-category-link:hover {
+  gap: 1rem;
+  color: #d2ffba;
+}
+
+.hiltech-catalog-category-rail {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+  border-top: 1px solid rgba(224, 241, 228, 0.13);
+  border-bottom: 1px solid rgba(224, 241, 228, 0.13);
+}
+
+.hiltech-catalog-category-rail button {
+  position: relative;
+  min-width: 0;
+  min-height: 7rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.65rem;
+  align-items: end;
+  padding: 0.85rem;
+  border-right: 1px solid rgba(224, 241, 228, 0.08);
+  color: #5f6c63;
+  text-align: left;
+  transition: color 220ms ease, background 220ms ease;
+}
+
+.hiltech-catalog-category-rail button:last-child {
+  border-right: 0;
+}
+
+.hiltech-catalog-category-rail button::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #8ff257;
+  transition: width 260ms ease;
+}
+
+.hiltech-catalog-category-rail button.is-active,
+.hiltech-catalog-category-rail button:hover,
+.hiltech-catalog-category-rail button:focus-visible {
+  color: #eef3ee;
+  background: rgba(255,255,255,0.018);
+}
+
+.hiltech-catalog-category-rail button.is-active::before,
+.hiltech-catalog-category-rail button:hover::before,
+.hiltech-catalog-category-rail button:focus-visible::before {
+  width: 100%;
+}
+
+.hiltech-catalog-category-rail span,
+.hiltech-catalog-category-rail small {
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.46rem;
+  letter-spacing: 0.07em;
+}
+
+.hiltech-catalog-category-rail strong {
+  min-width: 0;
+  font-size: clamp(0.78rem, 1vw, 1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hiltech-catalog-category-rail small {
+  color: #89d85e;
+}
+
+.hiltech-catalog-foot {
+  display: grid;
+  grid-template-columns: minmax(18rem, 1fr) auto auto;
+  gap: 1rem;
+  align-items: end;
+  padding-top: 1.2rem;
+}
+
+.hiltech-catalog-foot > div {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.hiltech-catalog-foot > div > span {
+  color: #68766c;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-foot p {
+  max-width: 42rem;
+  color: #7f8c82;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.hiltech-catalog-foot > a {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(224, 241, 228, 0.18);
+  color: #c4cdc6;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.hiltech-catalog-foot > a:last-child {
+  color: #a8ff79;
+  border-color: rgba(143, 242, 87, 0.38);
+}
+
+@media (max-width: 900px) {
+  .hiltech-catalog-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-catalog-stage {
+    grid-template-columns: minmax(0, 1.05fr) minmax(17rem, 0.95fr);
+    gap: 1.6rem;
+  }
+
+  .hiltech-catalog-category-rail {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hiltech-catalog-category-rail button:nth-child(3) {
+    border-right: 0;
+  }
+
+  .hiltech-catalog-category-rail button:nth-child(-n+3) {
+    border-bottom: 1px solid rgba(224, 241, 228, 0.08);
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-catalog-shell {
+    width: 90vw;
+    padding: 4rem 0;
+  }
+
+  .hiltech-catalog-topline {
+    grid-template-columns: 1fr auto;
+    font-size: 0.44rem;
+  }
+
+  .hiltech-catalog-topline span:nth-child(2) {
+    display: none;
+  }
+
+  .hiltech-catalog-heading {
+    margin-top: 2.4rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hiltech-catalog-heading h2 {
+    font-size: clamp(3rem, 14.8vw, 3.7rem);
+    line-height: 0.84;
+  }
+
+  .hiltech-catalog-heading p {
+    font-size: 0.8rem;
+  }
+
+  .hiltech-catalog-stage {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    margin-top: 2.2rem;
+  }
+
+  .hiltech-catalog-media {
+    min-height: 24rem;
+  }
+
+  .hiltech-catalog-media-meta {
+    font-size: 0.4rem;
+  }
+
+  .hiltech-catalog-image-swap {
+    inset: 2.7rem 0.9rem 2.6rem;
+  }
+
+  .hiltech-catalog-image-swap img {
+    padding: 1.8rem;
+  }
+
+  .hiltech-catalog-spec {
+    padding: 1.2rem 0;
+  }
+
+  .hiltech-catalog-spec-swap {
+    margin-top: 1.5rem;
+  }
+
+  .hiltech-catalog-spec-swap h3 {
+    font-size: clamp(3rem, 14vw, 3.5rem);
+  }
+
+  .hiltech-catalog-category-rail {
+    grid-template-columns: 1fr;
+    margin-top: 2.2rem;
+  }
+
+  .hiltech-catalog-category-rail button,
+  .hiltech-catalog-category-rail button:nth-child(3) {
+    min-height: 4.5rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(224, 241, 228, 0.08);
+  }
+
+  .hiltech-catalog-category-rail button:last-child {
+    border-bottom: 0;
+  }
+
+  .hiltech-catalog-category-rail strong {
+    font-size: 0.82rem;
+  }
+
+  .hiltech-catalog-foot {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .hiltech-catalog-foot > a {
+    width: fit-content;
+  }
+}
