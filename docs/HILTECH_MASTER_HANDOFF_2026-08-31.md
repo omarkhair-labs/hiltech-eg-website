@@ -1,3 +1,5 @@
+> **SUPERSEDED FOR CURRENT CONTINUATION:** read `docs/HILTECH_FINAL_MASTER_CONTINUATION_HANDOFF_2026-08-31.md` first. This older handoff remains useful for historical lane reasoning, but several status/CI fields below are stale.
+
 # HILTECH Master Continuation / Production Handoff
 
 Status: ACTIVE — PUBLIC SITE REDESIGN IN PROGRESS
