@@ -246,7 +246,7 @@ export default function RFQReviewClient({
               .filter((message: string | undefined): message is string => Boolean(message))
           : [];
         throw new Error(
-          details.length ? \`\${t.serverValidationPrefix} \${details.join(' ')}\` : t.submitError,
+          details.length ? `${t.serverValidationPrefix} ${details.join(' ')}` : t.submitError,
         );
       }
 
@@ -336,7 +336,7 @@ export default function RFQReviewClient({
             <small>USE THIS CODE WITH THE SAME PHONE OR EMAIL TO TRACK THE REQUEST.</small>
           </div>
           <nav>
-            <Link href={\`\${trackHrefBase}?request_code=\${encodeURIComponent(submitState.requestCode)}\`}>
+            <Link href={`${trackHrefBase}?request_code=${encodeURIComponent(submitState.requestCode)}`}>
               {t.trackThisRFQ} <span aria-hidden="true">↗</span>
             </Link>
             <Link href={productsHref}>{t.backToProducts} <span aria-hidden="true">↗</span></Link>
@@ -419,7 +419,7 @@ export default function RFQReviewClient({
                       value={item.notes}
                       onChange={(event) => updateItem(item.id, { notes: event.target.value })}
                       placeholder="Item note / variant / location"
-                      aria-label={\`\${item.name} item note\`}
+                      aria-label={`${item.name} item note`}
                     />
 
                     <button
