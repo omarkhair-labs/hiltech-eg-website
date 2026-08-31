@@ -91,7 +91,11 @@ function CompanySystemMap() {
         [420, 356, 'FIELD', '06'],
         [670, 390, 'HANDOVER', '07'],
       ].map(([x, y, label, index]) => (
-        <g key={String(label)} transform={'translate(' + x + ' ' + y + ')'}>
+        <g
+          key={String(label)}
+          data-company-system-node
+          transform={'translate(' + x + ' ' + y + ')'}
+        >
           <circle r="8" fill={label === 'VERIFY' ? '#8ff257' : '#0b140d'} stroke="#8ff257" strokeWidth="1.4" />
           <circle r="2.5" fill={label === 'VERIFY' ? '#071006' : '#8ff257'} />
           <text x="14" y="-7" fill="#8ff257" fontSize="9" fontFamily="monospace" letterSpacing="1">{index}</text>
@@ -119,13 +123,27 @@ export default function CompanyExperience() {
         ease: 'power3.out',
       });
 
-      gsap.from('[data-company-system-line]', {
-        strokeDasharray: 900,
-        strokeDashoffset: 900,
-        duration: 1.35,
-        delay: 0.18,
-        ease: 'power2.out',
+      const systemMapTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.hiltech-company-system-stage',
+          start: 'top 88%',
+          once: true,
+        },
       });
+
+      systemMapTimeline
+        .from('[data-company-system-line]', {
+          strokeDasharray: 900,
+          strokeDashoffset: 900,
+          duration: 1.35,
+          ease: 'power2.out',
+        })
+        .from('[data-company-system-node]', {
+          opacity: 0,
+          duration: 0.3,
+          stagger: 0.065,
+          ease: 'power2.out',
+        }, '-=0.72');
 
       gsap.utils.toArray<HTMLElement>('[data-company-reveal]').forEach((element) => {
         gsap.from(element, {
