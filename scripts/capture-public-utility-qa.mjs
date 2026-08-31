@@ -136,6 +136,27 @@ try {
       throw new Error(target.name + ' search did not close with Escape');
     }
 
+    if (target.name === 'mobile') {
+      await page.goto(baseURL + '/resources', { waitUntil: 'networkidle' });
+      const menuButton = page.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
+      await menuButton.click();
+      const mobilePanel = page.locator('.hiltech-creative-mobile-panel');
+      await mobilePanel.waitFor();
+      const primaryLabels = await mobilePanel.locator('.hiltech-creative-mobile-nav-link').allInnerTexts();
+      const expected = ['Solutions', 'Capabilities', 'Products', 'Work', 'Company'];
+      for (const label of expected) {
+        if (!primaryLabels.some((value) => value.trim() === label)) {
+          throw new Error('mobile creative navigation missing primary route: ' + label);
+        }
+      }
+      await page.screenshot({
+        path: 'visual-qa-public-utility/mobile-navigation-open.png',
+        fullPage: false,
+        timeout: 15000,
+      });
+      await menuButton.click();
+    }
+
     await page.goto(baseURL + '/track', { waitUntil: 'networkidle' });
     const trackForm = page.locator('[data-track-form]');
     await trackForm.waitFor();
