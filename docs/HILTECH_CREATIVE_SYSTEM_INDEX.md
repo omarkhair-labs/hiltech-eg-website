@@ -65,7 +65,7 @@ HILTECH is treated as:
 Two primary journeys coexist:
 
 - Project journey: Home → Solution → Capability → Evidence → Start a Project / RFQ
-- Procurement journey: Products → Category → Product → Specs → Buy / Request Quote
+- Procurement journey: Products → System / Family → Exact Reference → Project Fit → RFQ
 
 The site must never force a procurement user through cinematic interactions before reaching a product.
 
@@ -85,5 +85,7 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_SOLUTIONS_PRODUCTION_CLOSURE.md`
 - `HILTECH_SERVICES_PRODUCTION_SPEC.md`
 - `HILTECH_SERVICES_PRODUCTION_CLOSURE.md`
+- `HILTECH_PRODUCTS_PRODUCTION_SPEC.md`
+- `HILTECH_PRODUCTS_PRODUCTION_CLOSURE.md`
 
 These files form one system and must be read before major public-site implementation work.
