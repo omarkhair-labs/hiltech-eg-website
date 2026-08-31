@@ -680,3 +680,159 @@ Do not force users through three cinematic gates.
    - evidence rules.
 
 PR #183 remains **WIP / DO NOT MERGE** until this synthesis pass and deferred gates are complete.
+
+
+---
+
+## 13. HILTECH vs reference bar — gap matrix
+
+This matrix is a synthesis of the current repo, the original reference set, and the 2026 recheck.
+
+| Dimension | Current HILTECH | Reference bar | Decision |
+| --- | --- | --- | --- |
+| Governing idea | Strong: Physical Layer / BUILD → ROUTE → TEST → PROVE | PX PUSH / Integrated Reasoning show one idea governing many surfaces | KEEP. This is one of HILTECH's strongest assets. |
+| Home hero | Strong, ownable proposition + signal world | HackFirst / Cerebrium / The Spark use behavior and atmosphere as story | KEEP hero thesis; deepen signal behavior only if it explains routing/state. |
+| Page composition | Now differentiated after Work/Company synthesis | MERSI / Chems show shared system with different tempo | KEEP lane-specific grammar; reject repeated big-type/photo chapters. |
+| Motion | Strongest on Home; useful local lane motion elsewhere | Cerebrium / Garden Eight / Podium make motion carry meaning/continuity | NEXT GAP: coherent state/transition language across routes. |
+| 3D/WebGL | Semantic Home + Product worlds; selective elsewhere | Crosswire / Cerebrium / Ferrumpipe use 3D as product/system explanation | KEEP selective. Improve continuity before adding more scenes. |
+| Navigation | Clear top-level IA; creative shell now flatter | strongest references integrate nav with the governing concept | NEXT R&D: active route as signal/path, without reducing usability. |
+| Page transitions | Mostly conventional route changes | Podium / MERSI use selected content as transition object | OPTIONAL HIGH-VALUE R&D: one transition prototype first. |
+| Product discovery | System world + finder + exact index + project mode | Corning / Panduit / Leviton prove layered technical finding; direct paths remain necessary | KEEP layers, add obvious quick-entry modes. |
+| Product detail | Object → system → decision → RFQ | Ferrumpipe / Kelvin Zero show product object can lead storytelling | KEEP. Do not bury exact details behind extra guide pages. |
+| Mobile | Native-first + compact Three.js + strict QA | Ferrumpipe / Kelvin Zero craft dedicated lightweight/mobile scenes; PX PUSH disables smooth scroll on mobile | KEEP native-first. Do not mirror desktop cinematic weight blindly. |
+| Evidence/trust | unusually disciplined evidence gate | enterprise references are confident but often rely on larger verified proof libraries | KEEP restraint; never fabricate proof to match reference density. |
+| Footer / shell | recently rebuilt as engineering endplate | best references close with one consistent system rather than legacy corporate footer | KEEP and validate in final artifacts. |
+
+### Current strongest areas
+
+1. governing idea / identity thesis
+2. Home art direction
+3. Product semantic physical-world concept
+4. exact finding + RFQ truth
+5. evidence discipline
+6. lane differentiation after Work / Company correction
+
+### Current gaps against the strongest references
+
+1. **cross-route continuity**
+2. **motion as one site-wide state language**
+3. **Product expert-entry speed at the top**
+4. **some explanation can still become interaction/state**
+5. **transition from semantic Product World to exact reference still feels more like adjacent sections than one collapsing system**
+
+These gaps do **not** justify a redesign from zero.
+
+They define the next R&D layer.
+
+---
+
+## 14. Additional current references from the recheck
+
+### The Spark — story-first experience
+
+Codrops:
+https://tympanus.net/codrops/2026/01/09/the-spark-engineering-an-immersive-story-first-web-experience/
+
+Useful principle:
+
+The experience was designed as a story first, with scroll ranges, motion, media, and technical loading strategy serving that story. Only one heavy scene is active at a time.
+
+HILTECH interpretation:
+
+If HILTECH adds a more immersive layer:
+- sequence must have a narrative job,
+- scenes should not remain alive off-screen,
+- loading/performance architecture is part of art direction,
+- “more 3D” is not the target.
+
+### Podium — continuity instead of disconnected pages
+
+Codrops:
+https://tympanus.net/codrops/2026/06/23/podium-building-a-website-where-running-becomes-storytelling/
+
+Useful principle:
+
+The selected project media itself becomes the page-transition object, preserving continuity instead of adding an unrelated transition effect.
+
+HILTECH interpretation:
+
+A future experiment could carry:
+- selected Product object / family node,
+- selected Solution route,
+- selected Work evidence frame
+
+into the next route.
+
+Only promote this if it remains:
+- fast,
+- keyboard-safe,
+- reduced-motion safe,
+- direct-link safe,
+- mobile-safe.
+
+### Ferrumpipe — direct Product creative analogy
+
+Cuberto:
+https://cuberto.com/projects/ferrumpipe/
+
+Important findings:
+- industrial competitors looked massive / conventional,
+- product form became the visual material,
+- 3D was chosen specifically to show product details in the needed view,
+- a separate lightweight smartphone treatment was created.
+
+HILTECH interpretation:
+
+This remains one of the strongest reasons to keep Product World / object storytelling.
+
+It is **not** a reason to delay exact product finding.
+
+### Corning / Panduit / Leviton — technical hierarchy evidence
+
+Corning:
+https://www.corning.com/optical-communications/emea/en/home/products/fiber-optic-connectivity.html
+
+Corning eCatalog example:
+https://ecatalog.corning.com/optical-communications/US/en/Fiber-Optic-Connectivity/Connectors/Field-Installable/UniCam%C2%AE-Connectors/p/unicam-connectors
+
+Panduit:
+https://www.panduit.com/en/products/fiber-optic-systems.html
+
+Leviton:
+https://leviton.com/products/network-solutions/copper-systems
+
+These confirm that real network-infrastructure catalogs commonly move through:
+
+`SYSTEM → CATEGORY → SUBCATEGORY / FAMILY → PRODUCT FAMILY → EXACT CODE`
+
+The exact depth varies.
+
+The lesson is not “add more levels.”
+
+The lesson is:
+
+> technical context before a SKU is normal when the context helps selection.
+
+### Baymard — the boundary condition
+
+Research:
+https://baymard.com/learn/ecommerce-category-page
+https://baymard.com/blog/mobile-ecommerce-search-and-navigation
+
+Useful boundary:
+
+- intermediary category pages can occupy the first 1–3 hierarchy levels in large catalogs,
+- very deep mandatory category selection creates detours and abandonment,
+- users who already know what they need require a fast path.
+
+HILTECH is not consumer ecommerce, but this principle is still useful:
+
+> **context may be deep; access must remain shallow.**
+
+---
+
+## 15. Product IA verdict in one sentence
+
+> **HILTECH may legitimately be three or more semantic layers deep, but it must be one action away from exact finding for an expert user.**
+
+That is the target architecture for the next Product refinement.
