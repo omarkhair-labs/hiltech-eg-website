@@ -45,13 +45,13 @@ export default async function Page() {
 
           <div className="hiltech-products-hero-grid">
             <div>
-              <span className="hiltech-products-kicker">TECHNICAL COMMERCE / RFQ FIRST</span>
+              <span className="hiltech-products-kicker">PHYSICAL INFRASTRUCTURE LIBRARY / PROCUREMENT SYSTEM</span>
               <h1>
-                FIND THE EXACT<br />
-                <em>REFERENCE.</em>
+                ENTER THE<br />
+                <em>PHYSICAL LIBRARY.</em>
               </h1>
               <p>
-                Search by product code, brand, category, specification, or use case. Build the project request from exact references, then confirm availability, compatibility, and quotation through RFQ review.
+                Every network system resolves into physical references: cable, connector, rack, pathway, endpoint, power, camera. Explore the system first, then move from family to exact code and into one structured RFQ.
               </p>
             </div>
 
@@ -67,17 +67,17 @@ export default async function Page() {
                 <small>INFRASTRUCTURE FAMILIES</small>
               </div>
               <div>
-                <span>PRIMARY ACTION</span>
+                <span>PROCUREMENT STATE</span>
                 <strong>RFQ</strong>
-                <small>QUOTE / AVAILABILITY / COMPATIBILITY</small>
+                <small>REFERENCE → SCOPE → CONFIRMATION</small>
               </div>
             </div>
           </div>
 
           <div className="hiltech-products-hero-rail">
-            <span>PRODUCT CODE</span><i />
-            <span>BRAND</span><i />
-            <span>SPEC</span><i />
+            <span>SYSTEM</span><i />
+            <span>FAMILY</span><i />
+            <span>REFERENCE</span><i />
             <span>PROJECT FIT</span><i />
             <span>RFQ</span>
           </div>
@@ -88,12 +88,12 @@ export default async function Page() {
         <div className="hiltech-products-shell">
           <div className="hiltech-products-catalog-head">
             <div>
-              <span>01 / FIND & BUILD</span>
-              <h2>SEARCH THE CATALOG.<br /><em>BUILD THE REQUEST.</em></h2>
+              <span>01 / PRODUCT WORLD</span>
+              <h2>EXPLORE THE SYSTEM.<br /><em>THEN FIND THE PART.</em></h2>
             </div>
             <div>
               <p>
-                The catalog is optimized for technical finding, not browsing theater. Exact reference, specification context, and RFQ state take priority over decorative motion.
+                The product experience starts from physical infrastructure families, then collapses into exact reference finding. Motion and 3D explain the system; procurement controls stay fast and explicit.
               </p>
               <Link href="/solutions/project-supply-rfq">How project supply works <span aria-hidden="true">↗</span></Link>
             </div>
