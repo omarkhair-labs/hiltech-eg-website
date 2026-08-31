@@ -93,6 +93,7 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_RFQ_CONTACT_PRODUCTION_SPEC.md`
 - `HILTECH_RFQ_CONTACT_PRODUCTION_CLOSURE.md`
 - `HILTECH_ENGLISH_CREATIVE_SYNTHESIS_AUDIT_2026-08-31.md`
+- `HILTECH_REFERENCE_RECHECK_VISUAL_PRODUCT_IA_2026-08-31.md`
 
 These files form one system and must be read before major public-site implementation work.
 
@@ -160,5 +161,29 @@ Current synthesis order:
 6. stop
 
 Arabic parity and final whole-site closure remain intentionally deferred.
+
+PR #183 remains **WIP / DO NOT MERGE**.
+
+
+## 2026 reference recheck / Product IA verdict
+
+Current research record:
+
+- `HILTECH_REFERENCE_RECHECK_VISUAL_PRODUCT_IA_2026-08-31.md`
+
+Locked findings:
+
+- technical Product hierarchy may legitimately be several semantic layers deep;
+- HILTECH must not force an expert user through every layer;
+- current Product architecture remains `SYSTEM → FAMILY → REFERENCE → PROJECT FIT → RFQ`;
+- exact reference finding must remain a fast lane;
+- next Product refinement should make three entry intents explicit:
+  - known reference,
+  - known system,
+  - known project;
+- stronger visual R&D should focus on continuity and interaction-as-explanation, not indiscriminate WebGL or new animation dependencies;
+- current GSAP + Three.js stack is sufficient for the next experiment.
+
+This research does not reopen Product business logic or justify rebuilding the site from zero.
 
 PR #183 remains **WIP / DO NOT MERGE**.
