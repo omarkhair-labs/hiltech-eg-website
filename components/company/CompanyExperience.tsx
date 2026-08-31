@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
@@ -41,7 +40,6 @@ const technicalTruths = [
     code: 'ROUTE / 01',
     title: 'ROUTES',
     body: 'Infrastructure begins as a physical path through ceilings, risers, rooms, pathways, cabinets, and endpoint zones.',
-    image: '/copper-cable-tray.jpg',
     href: '/services',
     link: 'CAPABILITIES',
   },
@@ -49,7 +47,6 @@ const technicalTruths = [
     code: 'TERMINATE / 02',
     title: 'TERMINATIONS',
     body: 'Fiber, copper, patching, and endpoint interfaces turn routes into usable network connections.',
-    image: '/fiber-splicing-workbench.jpg',
     href: '/solutions',
     link: 'SOLUTIONS',
   },
@@ -57,7 +54,6 @@ const technicalTruths = [
     code: 'SPACE / 03',
     title: 'TECHNICAL SPACES',
     body: 'Racks, power, patching, cable management, and access discipline determine whether the system remains serviceable.',
-    image: '/rack-data-room.jpg',
     href: '/products-partners',
     link: 'PRODUCTS',
   },
@@ -65,11 +61,50 @@ const technicalTruths = [
     code: 'VERIFY / 04',
     title: 'VERIFICATION',
     body: 'Testing tools and field checks make the transition from installed infrastructure toward a documented handover.',
-    image: '/testing-field-device.jpg',
     href: '/work',
     link: 'FIELD EVIDENCE',
   },
 ] as const;
+
+function CompanySystemMap() {
+  return (
+    <svg
+      className="hiltech-company-system-map"
+      viewBox="0 0 760 520"
+      role="img"
+      aria-label="Illustrative HILTECH operating map from project scope through handover"
+    >
+      <rect width="760" height="520" fill="#08100a" />
+      <path d="M0 104H760M0 260H760M0 416H760M152 0V520M380 0V520M608 0V520" stroke="#dce8df" strokeOpacity=".05" />
+      <g className="hiltech-company-map-route">
+        <path data-company-system-line d="M74 122 H224 V218 H380 V154 H548 V286 H690" fill="none" stroke="#8ff257" strokeWidth="2.5" />
+        <path d="M224 218 V356 H420" fill="none" stroke="#405347" strokeWidth="1.5" />
+        <path d="M548 286 V390 H670" fill="none" stroke="#405347" strokeWidth="1.5" />
+      </g>
+
+      {[
+        [74, 122, 'SCOPE', '01'],
+        [224, 218, 'ROUTE', '02'],
+        [380, 154, 'TERMINATE', '03'],
+        [548, 286, 'SPACE', '04'],
+        [690, 286, 'VERIFY', '05'],
+        [420, 356, 'FIELD', '06'],
+        [670, 390, 'HANDOVER', '07'],
+      ].map(([x, y, label, index]) => (
+        <g key={String(label)} transform={'translate(' + x + ' ' + y + ')'}>
+          <circle r="8" fill={label === 'VERIFY' ? '#8ff257' : '#0b140d'} stroke="#8ff257" strokeWidth="1.4" />
+          <circle r="2.5" fill={label === 'VERIFY' ? '#071006' : '#8ff257'} />
+          <text x="14" y="-7" fill="#8ff257" fontSize="9" fontFamily="monospace" letterSpacing="1">{index}</text>
+          <text x="14" y="9" fill="#b9c5bd" fontSize="10" fontFamily="monospace" letterSpacing="1">{label}</text>
+        </g>
+      ))}
+
+      <text x="34" y="482" fill="#6f7e74" fontSize="9" fontFamily="monospace" letterSpacing="1.2">
+        PROJECT REQUIREMENT → PHYSICAL SYSTEM → FIELD CONDITION → VERIFICATION
+      </text>
+    </svg>
+  );
+}
 
 export default function CompanyExperience() {
   useEffect(() => {
@@ -78,44 +113,30 @@ export default function CompanyExperience() {
     const context = gsap.context(() => {
       gsap.from('[data-company-hero-kicker], [data-company-hero-title], [data-company-hero-copy]', {
         opacity: 0,
-        y: 20,
-        duration: 0.82,
-        stagger: 0.09,
+        y: 18,
+        duration: 0.75,
+        stagger: 0.08,
         ease: 'power3.out',
       });
 
-      gsap.from('[data-company-hero-media]', {
-        clipPath: 'inset(0 0 100% 0)',
-        scale: 1.035,
-        duration: 1.08,
-        delay: 0.14,
-        ease: 'power4.out',
+      gsap.from('[data-company-system-line]', {
+        strokeDasharray: 900,
+        strokeDashoffset: 900,
+        duration: 1.35,
+        delay: 0.18,
+        ease: 'power2.out',
       });
 
       gsap.utils.toArray<HTMLElement>('[data-company-reveal]').forEach((element) => {
         gsap.from(element, {
           opacity: 0,
-          y: 24,
-          duration: 0.72,
+          y: 18,
+          duration: 0.62,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: element,
-            start: 'top 88%',
+            start: 'top 90%',
             once: true,
-          },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>('[data-company-truth-media]').forEach((element) => {
-        gsap.from(element, {
-          clipPath: 'inset(12% 0 12% 0)',
-          scale: 1.03,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 92%',
-            end: 'center 55%',
-            scrub: 0.45,
           },
         });
       });
@@ -126,9 +147,9 @@ export default function CompanyExperience() {
         ease: 'none',
         scrollTrigger: {
           trigger: '[data-company-position]',
-          start: 'top 72%',
-          end: 'bottom 74%',
-          scrub: 0.4,
+          start: 'top 76%',
+          end: 'bottom 76%',
+          scrub: 0.35,
         },
       });
     });
@@ -145,7 +166,7 @@ export default function CompanyExperience() {
             <span>CAIRO / EGYPT</span>
           </div>
 
-          <div className="hiltech-company-hero-grid">
+          <div className="hiltech-company-hero-system">
             <div>
               <span data-company-hero-kicker>HILTECH / H.N.S</span>
               <h1 data-company-hero-title>
@@ -157,27 +178,13 @@ export default function CompanyExperience() {
               </p>
             </div>
 
-            <div className="hiltech-company-hero-media" data-company-hero-media>
-              <Image
-                src="/rack-front-cabling.jpg"
-                alt="Network rack and structured cabling field context."
-                fill
-                priority
-                sizes="(max-width: 900px) 92vw, 48vw"
-                className="object-cover"
-              />
+            <div className="hiltech-company-system-stage" data-company-reveal>
               <div>
-                <span>OFFICIAL NAME</span>
+                <span>OPERATING MAP / ILLUSTRATIVE</span>
                 <strong>{site.officialName}</strong>
               </div>
+              <CompanySystemMap />
             </div>
-          </div>
-
-          <div className="hiltech-company-route">
-            <span>PROJECT REQUIREMENT</span><i />
-            <span>PHYSICAL SYSTEM</span><i />
-            <span>FIELD EXECUTION</span><i />
-            <span>HANDOVER</span>
           </div>
         </div>
       </section>
@@ -186,17 +193,14 @@ export default function CompanyExperience() {
         <div className="hiltech-company-shell">
           <div className="hiltech-company-section-label">
             <span>01 / OPERATING POSITION</span>
-            <strong>WHERE HILTECH SITS IN THE PROJECT.</strong>
+            <strong>BETWEEN THE DRAWING AND THE HANDOVER.</strong>
           </div>
 
-          <div className="hiltech-company-position-intro" data-company-reveal>
-            <h2>
-              BETWEEN THE DRAWING<br />
-              <em>AND THE HANDOVER.</em>
-            </h2>
-            <p>
-              Company identity is not a list of departments. It is the set of interfaces HILTECH stays accountable to while infrastructure moves from requirement to physical delivery.
-            </p>
+          <div className="hiltech-company-position-note" data-company-reveal>
+            <span>POSITION</span>
+            <strong>
+              Company identity is the set of interfaces HILTECH stays accountable to while infrastructure moves from requirement to physical delivery.
+            </strong>
           </div>
 
           <div className="hiltech-company-route-track">
@@ -222,39 +226,16 @@ export default function CompanyExperience() {
         <div className="hiltech-company-shell">
           <div className="hiltech-company-section-label is-dark">
             <span>02 / TECHNICAL TRUTHS</span>
-            <strong>WHAT THE COMPANY STAYS CLOSE TO.</strong>
+            <strong>THE COMPANY STAYS CLOSE TO FOUR PHYSICAL CONDITIONS.</strong>
           </div>
 
-          <div className="hiltech-company-truths-intro" data-company-reveal>
-            <h2>
-              THE COMPANY IS<br />
-              <em>WHERE THE SYSTEM BECOMES REAL.</em>
-            </h2>
-            <p>
-              Detailed capability, solution, product, and evidence pages carry the depth. Company keeps the operating worldview visible without duplicating them.
-            </p>
-          </div>
-
-          <div className="hiltech-company-truth-list">
-            {technicalTruths.map((item, index) => (
-              <article key={item.code} className={index % 2 ? 'is-reverse' : undefined} data-company-reveal>
-                <div className="hiltech-company-truth-media" data-company-truth-media>
-                  <Image
-                    src={item.image}
-                    alt={item.title.toLowerCase() + ' field context.'}
-                    fill
-                    sizes="(max-width: 900px) 92vw, 55vw"
-                    className="object-cover"
-                  />
-                  <span>{item.code}</span>
-                </div>
-
-                <div className="hiltech-company-truth-copy">
-                  <span>{item.code}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                  <Link href={item.href}>{item.link} <b aria-hidden="true">↗</b></Link>
-                </div>
+          <div className="hiltech-company-truth-index">
+            {technicalTruths.map((item) => (
+              <article key={item.code} data-company-reveal>
+                <span>{item.code}</span>
+                <strong>{item.title}</strong>
+                <p>{item.body}</p>
+                <Link href={item.href}>{item.link} <b aria-hidden="true">↗</b></Link>
               </article>
             ))}
           </div>
@@ -268,15 +249,12 @@ export default function CompanyExperience() {
             <strong>ONE PUBLISHED LOCATION / DIRECT CHANNELS</strong>
           </div>
 
-          <div className="hiltech-company-presence-grid">
+          <div className="hiltech-company-presence-endpoint">
             <div data-company-reveal>
-              <span>CAIRO / EGYPT</span>
-              <h2>
-                ONE VERIFIED<br />
-                <em>POINT OF CONTACT.</em>
-              </h2>
+              <span>CAIRO / ENDPOINT 01</span>
+              <strong>ONE VERIFIED POINT OF CONTACT.</strong>
               <p>
-                HILTECH currently publishes one physical Cairo address. The site does not create a Locations network or branch count that the available company data does not support.
+                HILTECH currently publishes one physical Cairo address. The site does not create a branch network that the available company data does not support.
               </p>
             </div>
 
@@ -306,47 +284,30 @@ export default function CompanyExperience() {
         <div className="hiltech-company-shell">
           <div className="hiltech-company-section-label is-dark">
             <span>04 / PROOF NETWORK</span>
-            <strong>THE COMPANY PAGE DOES NOT REPEAT THE WHOLE SITE.</strong>
+            <strong>FOLLOW THE DEEPER SYSTEM INSTEAD OF REPEATING IT HERE.</strong>
           </div>
 
-          <div className="hiltech-company-proof-grid">
-            <div data-company-reveal>
-              <h2>
-                FOLLOW THE<br />
-                <em>ACTUAL PROOF.</em>
-              </h2>
-            </div>
-
-            <nav aria-label="Company proof routes" data-company-reveal>
-              <Link href="/work"><span>01</span><strong>Work / Field Evidence</strong><em>↗</em></Link>
-              <Link href="/solutions"><span>02</span><strong>Solutions / System Context</strong><em>↗</em></Link>
-              <Link href="/services"><span>03</span><strong>Capabilities / Field Execution</strong><em>↗</em></Link>
-              <Link href="/products-partners"><span>04</span><strong>Products / Physical Library</strong><em>↗</em></Link>
-            </nav>
-          </div>
+          <nav className="hiltech-company-proof-index" aria-label="Company proof routes" data-company-reveal>
+            <Link href="/work"><span>01</span><strong>Work / Field Evidence</strong><em>PROOF ↗</em></Link>
+            <Link href="/solutions"><span>02</span><strong>Solutions / System Context</strong><em>PATH ↗</em></Link>
+            <Link href="/services"><span>03</span><strong>Capabilities / Field Execution</strong><em>FIELD ↗</em></Link>
+            <Link href="/products-partners"><span>04</span><strong>Products / Physical Library</strong><em>OBJECT ↗</em></Link>
+          </nav>
         </div>
       </section>
 
       <section className="hiltech-company-close">
         <div className="hiltech-company-shell">
-          <div className="hiltech-company-close-grid">
-            <div data-company-reveal>
-              <span>05 / START A PROJECT</span>
-              <h2>
-                DEFINE THE SCOPE.<br />
-                <em>MAKE CONTACT DIRECT.</em>
-              </h2>
+          <div className="hiltech-company-close-row" data-company-reveal>
+            <div>
+              <span>05 / PROJECT ENTRY</span>
+              <strong>DEFINED REFERENCES → RFQ. UNDEFINED SCOPE → DIRECT CONTACT.</strong>
             </div>
-            <div data-company-reveal>
-              <p>
-                Start with a structured RFQ when the project already has references or quantities. Use direct contact when the scope still needs to be framed.
-              </p>
-              <div>
-                <Link href="/rfq">START RFQ <span aria-hidden="true">↗</span></Link>
-                <Link href="/contact">CONTACT HILTECH <span aria-hidden="true">↗</span></Link>
-                <a href="/hiltech-company-profile.pdf" target="_blank" rel="noreferrer">COMPANY PROFILE <span aria-hidden="true">↗</span></a>
-              </div>
-            </div>
+            <nav>
+              <Link href="/rfq">START RFQ <span aria-hidden="true">↗</span></Link>
+              <Link href="/contact">CONTACT HILTECH <span aria-hidden="true">↗</span></Link>
+              <a href="/hiltech-company-profile.pdf" target="_blank" rel="noreferrer">COMPANY PROFILE <span aria-hidden="true">↗</span></a>
+            </nav>
           </div>
         </div>
       </section>
