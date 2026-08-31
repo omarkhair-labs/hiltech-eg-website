@@ -1627,3 +1627,42 @@ body {
     bottom: 6.5rem;
   }
 }
+
+
+/* Mobile no-clip gate for the reference-led opening */
+@media (max-width: 639px) {
+  .hiltech-layer-frame > *,
+  .hiltech-scale-frame > *,
+  .hiltech-scale-intro,
+  .hiltech-layer-statement {
+    min-width: 0;
+  }
+
+  .hiltech-hero-word-a {
+    font-size: clamp(2.9rem, 13.8vw, 3.45rem);
+    letter-spacing: -0.074em;
+  }
+
+  .hiltech-hero-word-outline {
+    font-size: clamp(3.05rem, 15.4vw, 3.75rem);
+  }
+
+  .hiltech-hero-word-signal {
+    margin-left: 34%;
+    font-size: clamp(3.85rem, 19vw, 4.7rem);
+  }
+
+  .hiltech-scale-intro h2 {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: clamp(2.85rem, 13.7vw, 3.45rem);
+    line-height: 0.86;
+  }
+
+  .hiltech-scale-intro > p,
+  .hiltech-layer-copy {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
