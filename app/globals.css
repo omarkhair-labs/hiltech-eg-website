@@ -8825,6 +8825,18 @@ body {
     gap: 2.5rem;
   }
 
+  .hiltech-product-intelligence-compatibility-grid > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hiltech-product-intelligence-compatibility-grid h2,
+  .hiltech-product-intelligence-compatibility-grid > div:first-child > p {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
   .hiltech-product-intelligence-compatibility-grid h2 {
     font-size: clamp(3rem,14vw,3.55rem);
   }
