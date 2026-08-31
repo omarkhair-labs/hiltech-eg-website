@@ -1666,3 +1666,15 @@ body {
     overflow-wrap: anywhere;
   }
 }
+
+
+/* H02 mobile typography closure */
+@media (max-width: 639px) {
+  .hiltech-layer-statement h2 {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: clamp(3rem, 14.4vw, 3.55rem);
+    line-height: 0.84;
+    letter-spacing: -0.068em;
+  }
+}
