@@ -52,6 +52,18 @@ body {
   outline-offset: 3px;
 }
 
+/* English creative shell: retire the legacy orange interaction state without
+   changing legacy/Arabic surfaces that have not entered creative parity yet. */
+body:has(.hiltech-creative-header) ::selection {
+  background: rgba(143, 242, 87, 0.32);
+  color: #050806;
+}
+
+body:has(.hiltech-creative-header)
+  :where(a, button, input, textarea, select, summary):focus-visible {
+  outline-color: #8ff257;
+}
+
 .container {
   @apply mx-auto w-full px-4 sm:px-5;
   max-width: var(--container-max);
@@ -12307,23 +12319,38 @@ body {
   padding: .55rem .75rem;
   color: #b7c0ba;
   font-family: var(--font-hiltech-mono), ui-monospace, monospace;
-  font-size: .42rem;
+  font-size: .6rem;
   font-weight: 600;
-  letter-spacing: .07em;
+  letter-spacing: .055em;
   text-transform: uppercase;
   transition: color 160ms ease;
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link::before {
+  content: "";
+  position: absolute;
+  left: .75rem;
+  bottom: .12rem;
+  width: .25rem;
+  height: .25rem;
+  border: 1px solid rgba(143,242,87,.48);
+  border-radius: 50%;
+  background: #050806;
+  opacity: 0;
+  transform: scale(.55);
+  transition: opacity 160ms ease, transform 180ms ease, background 160ms ease;
 }
 
 .hiltech-creative-header .hiltech-creative-nav-link::after {
   content: "";
   position: absolute;
-  left: .75rem;
+  left: 1.06rem;
   right: .75rem;
-  bottom: .18rem;
+  bottom: .235rem;
   height: 1px;
   transform: scaleX(0);
   transform-origin: left center;
-  background: #8ff257;
+  background: linear-gradient(90deg, #8ff257, rgba(143,242,87,.18));
   transition: transform 180ms ease;
 }
 
@@ -12331,6 +12358,18 @@ body {
 .hiltech-creative-header .hiltech-creative-nav-link:focus-visible,
 .hiltech-creative-header .hiltech-creative-nav-link.is-active {
   color: #a8ff79;
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link:hover::before,
+.hiltech-creative-header .hiltech-creative-nav-link:focus-visible::before,
+.hiltech-creative-header .hiltech-creative-nav-link.is-active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link.is-active::before {
+  background: #8ff257;
+  box-shadow: 0 0 0 .16rem rgba(143,242,87,.08);
 }
 
 .hiltech-creative-header .hiltech-creative-nav-link:hover::after,
@@ -12353,7 +12392,7 @@ body {
 .hiltech-creative-header .hiltech-creative-utility-link {
   padding: .55rem .7rem;
   color: #aeb8b1;
-  font-size: .42rem;
+  font-size: .57rem;
   font-weight: 600;
 }
 
@@ -12362,7 +12401,7 @@ body {
   border-left: 1px solid rgba(225,241,228,.14);
   border-right: 1px solid rgba(225,241,228,.14);
   color: #bdc6c0;
-  font-size: .4rem;
+  font-size: .54rem;
   font-weight: 600;
 }
 
@@ -12371,7 +12410,7 @@ body {
   padding: .55rem .95rem;
   border: 1px solid rgba(143,242,87,.46);
   color: #a8ff79;
-  font-size: .42rem;
+  font-size: .56rem;
   font-weight: 700;
   text-transform: uppercase;
   transition: background 160ms ease, color 160ms ease;
@@ -12397,9 +12436,9 @@ body {
   padding: .65rem .75rem;
   color: #c1cac4;
   font-family: var(--font-hiltech-mono), ui-monospace, monospace;
-  font-size: .44rem;
+  font-size: .58rem;
   font-weight: 600;
-  letter-spacing: .055em;
+  letter-spacing: .045em;
 }
 
 .hiltech-creative-header .hiltech-creative-mobile-menu-button {
@@ -12422,9 +12461,9 @@ body {
   border-bottom: 1px solid rgba(225,241,228,.11);
   color: #bbc5be;
   font-family: var(--font-hiltech-mono), ui-monospace, monospace;
-  font-size: .48rem;
+  font-size: .68rem;
   font-weight: 600;
-  letter-spacing: .06em;
+  letter-spacing: .045em;
   text-transform: uppercase;
 }
 
@@ -12455,9 +12494,9 @@ body {
   border-bottom: 1px solid rgba(225,241,228,.12);
   background: transparent;
   font-family: var(--font-hiltech-mono), ui-monospace, monospace;
-  font-size: .44rem;
+  font-size: .6rem;
   font-weight: 650;
-  letter-spacing: .055em;
+  letter-spacing: .045em;
   text-transform: uppercase;
 }
 
@@ -14136,5 +14175,14 @@ body {
   .hiltech-utility-copy-index article > div,
   .hiltech-utility-copy-index pre {
     grid-column: 2;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .hiltech-creative-header .hiltech-creative-nav-link,
+  .hiltech-creative-header .hiltech-creative-nav-link::before,
+  .hiltech-creative-header .hiltech-creative-nav-link::after {
+    transition: none;
   }
 }
