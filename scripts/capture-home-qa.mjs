@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000/';
-const chapters = ['h01', 'h02', 'h03', 'h04', 'h05', 'h06', 'h07', 'h08'];
+const chapters = ['h01', 'h02', 'h03', 'h04', 'h05', 'h06', 'h07', 'h08', 'h09', 'h10', 'h11', 'h12'];
 const targets = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 },
@@ -46,6 +46,32 @@ try {
           await page.waitForTimeout(480);
           await page.screenshot({
             path: `visual-qa/desktop-h07-categories-${tabIndex + 1}.png`,
+            fullPage: false,
+          });
+        }
+      }
+
+      if (chapter === 'h08' && target.name === 'desktop') {
+        const brands = page.locator('[data-brand-row]');
+        const count = Math.min(await brands.count(), 4);
+        for (let index = 0; index < count; index += 1) {
+          await brands.nth(index).focus();
+          await page.waitForTimeout(420);
+          await page.screenshot({
+            path: `visual-qa/desktop-h08-brands-${index + 1}.png`,
+            fullPage: false,
+          });
+        }
+      }
+
+      if (chapter === 'h10' && target.name === 'desktop') {
+        const tabs = page.locator('.hiltech-validation-mode-tabs button');
+        const count = await tabs.count();
+        for (let index = 0; index < count; index += 1) {
+          await tabs.nth(index).focus();
+          await page.waitForTimeout(420);
+          await page.screenshot({
+            path: `visual-qa/desktop-h10-mode-${index + 1}.png`,
             fullPage: false,
           });
         }
