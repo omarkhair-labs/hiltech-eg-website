@@ -142,11 +142,14 @@ try {
       await menuButton.click();
       const mobilePanel = page.locator('.hiltech-creative-mobile-panel');
       await mobilePanel.waitFor();
-      const primaryLabels = await mobilePanel.locator('.hiltech-creative-mobile-nav-link').allInnerTexts();
-      const expected = ['Solutions', 'Capabilities', 'Products', 'Work', 'Company'];
-      for (const label of expected) {
-        if (!primaryLabels.some((value) => value.trim() === label)) {
-          throw new Error('mobile creative navigation missing primary route: ' + label);
+      const primaryLinks = mobilePanel.locator('.hiltech-creative-mobile-nav-link');
+      const primaryHrefs = await primaryLinks.evaluateAll((links) =>
+        links.map((link) => link.getAttribute('href'))
+      );
+      const expectedRoutes = ['/solutions', '/services', '/products-partners', '/work', '/company'];
+      for (const route of expectedRoutes) {
+        if (!primaryHrefs.includes(route)) {
+          throw new Error('mobile creative navigation missing primary route: ' + route);
         }
       }
       await page.screenshot({
