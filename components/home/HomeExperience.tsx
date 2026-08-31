@@ -204,9 +204,10 @@ export default function HomeExperience() {
             </ol>
 
             <div data-reveal className="hiltech-slice-next">
-              <span>PRODUCTION SLICE 1</span>
-              <strong>H01–H03 / LIVE FOUNDATION</strong>
-              <p>The next production slice extends this same system into Solutions, Build→Route→Test→Prove, and Capabilities.</p>
+              <span>NEXT LAYER</span>
+              <strong>THE SYSTEMS HILTECH BUILDS</strong>
+              <p>Networks, fiber, data-center environments, and assurance — engineered as connected infrastructure, not isolated services.</p>
+              <Link href="/solutions" className="hiltech-inline-link">Explore solutions <span aria-hidden="true">↗</span></Link>
             </div>
           </div>
         </section>
