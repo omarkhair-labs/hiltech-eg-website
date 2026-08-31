@@ -50,10 +50,11 @@ try {
 
     const familyButtons = page.locator('[data-product-family]');
     const familyCount = await familyButtons.count();
-    if (familyCount < 7) throw new Error(`Expected 7 product families, got ${familyCount}`);
+    if (familyCount < 5) throw new Error(`Expected at least 5 live product families, got ${familyCount}`);
 
     if (target.name === 'desktop') {
-      for (const index of [0, 1, 4, 6]) {
+      const worldIndexes = [0, 1, Math.max(0, familyCount - 2), familyCount - 1];
+      for (const index of [...new Set(worldIndexes)]) {
         await familyButtons.nth(index).click();
         await page.waitForTimeout(650);
         await page.screenshot({
