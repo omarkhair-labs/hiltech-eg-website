@@ -1,12 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import {
-  CCTVInfrastructureDiagram,
-  DataRoomDiagram,
-  FiberBackboneDiagram,
-  StructuredCablingDiagram,
-} from '@/components/diagrams';
+import ProductIntelligenceSystemDiagram from '@/components/products/ProductIntelligenceSystemDiagram';
 import { productIntelligenceBySlug, productIntelligenceCategories } from '@/content/product-intelligence';
 import { productDisclaimer } from '@/content/products';
 import { site } from '@/content/site';
@@ -25,24 +20,15 @@ const relatedSolutionsByIntelligenceSlug = {
   'cctv-security': [{ label: 'CCTV Infrastructure', slug: 'cctv-infrastructure' }],
 } as const;
 
-const categoryDiagramBySlug = {
-  'fiber-optic-systems': {
-    label: 'ROUTE / ODF / TRACE',
-    node: <FiberBackboneDiagram />,
-  },
-  'copper-cat6-cabling': {
-    label: 'ENDPOINT / PATCH / RACK',
-    node: <StructuredCablingDiagram />,
-  },
-  'cabinets-racks-pdu': {
-    label: 'RACK / POWER / PATCH',
-    node: <DataRoomDiagram />,
-  },
-  'cctv-security': {
-    label: 'CAMERA / PATH / CONTROL',
-    node: <CCTVInfrastructureDiagram />,
-  },
-} as const;
+const systemLabelBySlug: Record<string, string> = {
+  'fiber-optic-systems': 'CABLE / ODF / CONNECTOR / TRACE',
+  'copper-cat6-cabling': 'PAIR / CABLE / TERMINATE / TEST',
+  'patch-cords-connectivity': 'PORT / PATCH / EQUIPMENT',
+  'faceplates-keystone-rj45': 'BOX / MODULE / OUTLET / DEVICE',
+  'cabinets-racks-pdu': 'ENCLOSURE / POWER / PATCH / ACCESS',
+  'cable-management-duct-systems': 'PATH / BEND / SEPARATE / ACCESS',
+  'cctv-security': 'CAMERA / LINK / CONTROL / REVIEW',
+};
 
 interface Params { slug: string }
 
@@ -77,7 +63,6 @@ export default async function ProductIntelligencePage({ params }: { params: Para
 
   const { products } = await getPublicProducts();
   const relatedProducts = products.filter((item) => item.category === category.title);
-  const diagram = categoryDiagramBySlug[category.slug as keyof typeof categoryDiagramBySlug];
   const relatedSolutions = relatedSolutionsByIntelligenceSlug[category.slug as keyof typeof relatedSolutionsByIntelligenceSlug];
 
   return (
@@ -106,24 +91,24 @@ export default async function ProductIntelligencePage({ params }: { params: Para
         </div>
       </section>
 
-      {diagram ? (
-        <section className="hiltech-product-intelligence-diagram-section">
-          <div className="hiltech-product-intelligence-shell">
-            <div className="hiltech-product-intelligence-label">
-              <span>01 / SYSTEM CONTEXT</span>
-              <strong>{diagram.label}</strong>
-            </div>
+      <section className="hiltech-product-intelligence-diagram-section">
+        <div className="hiltech-product-intelligence-shell">
+          <div className="hiltech-product-intelligence-label">
+            <span>01 / SYSTEM CONTEXT</span>
+            <strong>{systemLabelBySlug[category.slug]}</strong>
+          </div>
 
-            <div className="hiltech-product-intelligence-diagram">
-              <div>
-                <span>ILLUSTRATIVE TECHNICAL CONTEXT</span>
-                <strong>{category.title}</strong>
-              </div>
-              <div>{diagram.node}</div>
+          <div className="hiltech-product-intelligence-diagram">
+            <div>
+              <span>SEMANTIC SYSTEM MODEL / ILLUSTRATIVE</span>
+              <strong>{category.title}</strong>
+            </div>
+            <div>
+              <ProductIntelligenceSystemDiagram slug={category.slug} />
             </div>
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
       <section className="hiltech-product-intelligence-planning">
         <div className="hiltech-product-intelligence-shell">
