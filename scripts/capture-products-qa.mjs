@@ -34,13 +34,10 @@ try {
     await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(900);
 
-    const detailPaths = await page.locator('[data-product-card] a[href^="/products-partners/"]').evaluateAll((nodes) => {
-      const hrefs = nodes
-        .map((node) => node.getAttribute('href'))
-        .filter((href) => href && !href.includes('/intelligence/'));
-      return [...new Set(hrefs)].slice(0, 3);
-    });
-    if (detailPaths.length < 1) throw new Error('No real product detail routes found from the live catalog');
+    const detailCodes = await page.locator('[data-product-card] .hiltech-product-code').evaluateAll((nodes) =>
+      nodes.map((node) => node.textContent?.trim()).filter(Boolean).slice(0, 3),
+    );
+    if (detailCodes.length < 1) throw new Error('No real product codes found from the live catalog');
 
     for (const [name, selector] of [
       ['hero', '.hiltech-products-hero'],
@@ -112,9 +109,13 @@ try {
       });
     }
 
-    for (let detailIndex = 0; detailIndex < detailPaths.length; detailIndex += 1) {
-      const detailPath = detailPaths[detailIndex];
-      await page.goto(`${baseURL}${detailPath}`, { waitUntil: 'networkidle' });
+    for (let detailIndex = 0; detailIndex < detailCodes.length; detailIndex += 1) {
+      const detailCode = detailCodes[detailIndex];
+      const detailURL = `${baseURL}/products-partners/${encodeURIComponent(detailCode)}`;
+      const response = await page.goto(detailURL, { waitUntil: 'networkidle' });
+      if (!response || !response.ok()) {
+        throw new Error(`Product detail failed for ${detailCode}: ${response?.status() ?? 'no response'}`);
+      }
       await page.waitForTimeout(650);
       for (const [name, selector] of [
         ['top', '.hiltech-product-detail-hero'],
