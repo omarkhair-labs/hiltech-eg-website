@@ -59,7 +59,7 @@ jobs:
 
       - name: Capture mobile visual QA
         run: |
-          npx --yes playwright@1.55.0 screenshot             --browser=chromium             --device="iPhone 13"             --wait-for-timeout=3000             --full-page             http://127.0.0.1:3000/             visual-qa/home-mobile.png
+          npx --yes playwright@1.55.0 screenshot             --browser=chromium             --viewport-size="390,844"             --wait-for-timeout=3000             --full-page             http://127.0.0.1:3000/             visual-qa/home-mobile.png
 
       - name: Upload visual QA
         uses: actions/upload-artifact@v4
