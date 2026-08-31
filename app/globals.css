@@ -3408,9 +3408,10 @@ body:has(.hiltech-creative-header)
 }
 
 .hiltech-catalog-category-rail {
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  margin-top: clamp(2.5rem, 4vw, 4rem);
+  margin-top: 0;
   border-top: 1px solid rgba(224, 241, 228, 0.13);
   border-bottom: 1px solid rgba(224, 241, 228, 0.13);
 }
@@ -3608,24 +3609,44 @@ body:has(.hiltech-creative-header)
     font-size: clamp(3rem, 14vw, 3.5rem);
   }
 
+  .hiltech-catalog-media {
+    order: 1;
+  }
+
   .hiltech-catalog-category-rail {
-    grid-template-columns: 1fr;
-    margin-top: 2.2rem;
+    order: 2;
+    grid-template-columns: repeat(5, minmax(7.6rem, 1fr));
+    margin-top: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .hiltech-catalog-category-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hiltech-catalog-spec {
+    order: 3;
   }
 
   .hiltech-catalog-category-rail button,
   .hiltech-catalog-category-rail button:nth-child(3) {
-    min-height: 4.5rem;
-    border-right: 0;
-    border-bottom: 1px solid rgba(224, 241, 228, 0.08);
+    min-height: 4.35rem;
+    padding: .75rem .7rem;
+    border-right: 1px solid rgba(224, 241, 228, 0.08);
+    border-bottom: 0;
+    scroll-snap-align: start;
   }
 
   .hiltech-catalog-category-rail button:last-child {
+    border-right: 0;
     border-bottom: 0;
   }
 
   .hiltech-catalog-category-rail strong {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
   }
 
   .hiltech-catalog-foot {
