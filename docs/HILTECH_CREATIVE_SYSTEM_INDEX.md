@@ -77,5 +77,7 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_PRODUCTION_ARCHITECTURE.md`
 - `HILTECH_EVIDENCE_GATE.md`
 - `HILTECH_HOME_PRODUCTION_CLOSURE.md`
+- `HILTECH_SOLUTIONS_PRODUCTION_SPEC.md`
+- `HILTECH_SOLUTIONS_PRODUCTION_CLOSURE.md`
 
 These files form one system and must be read before major public-site implementation work.
