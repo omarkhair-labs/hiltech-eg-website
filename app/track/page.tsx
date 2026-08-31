@@ -4,10 +4,19 @@ import TrackClient from './track-client';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Track Your RFQ | HILTECH',
-  description: 'Track the current status of your RFQ request using your request reference and contact details.',
-  alternates: { canonical: `${site.siteUrl}/track`, languages: { en: `${site.siteUrl}/track`, ar: `${site.siteUrl}/ar/track`, 'x-default': `${site.siteUrl}/` } },
+  description:
+    'Track the current status of your RFQ request using your request reference and matching contact detail.',
+  alternates: {
+    canonical: site.siteUrl + '/track',
+    languages: {
+      en: site.siteUrl + '/track',
+      ar: site.siteUrl + '/ar/track',
+      'x-default': site.siteUrl + '/',
+    },
+  },
 };
 
 interface TrackPageProps {
@@ -16,22 +25,48 @@ interface TrackPageProps {
 
 export default async function TrackPage({ searchParams }: TrackPageProps) {
   const params = await searchParams;
-  const initialRequestCode = typeof params?.request_code === 'string' ? params.request_code : '';
+  const initialRequestCode =
+    typeof params?.request_code === 'string' ? params.request_code : '';
 
   return (
-    <main className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 min-h-screen">
-      <section className="py-16">
-        <div className="container max-w-3xl space-y-8">
-          <div className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm p-8 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-orange-400">Customer Tracking</p>
-            <h1 className="text-3xl sm:text-4xl font-black text-white">Track Your RFQ</h1>
-            <p className="text-slate-300">Enter your RFQ reference and the same phone or email used during submission.</p>
-            <p className="text-slate-300 text-sm" dir="rtl">أدخل رقم RFQ ونفس رقم الهاتف أو البريد المستخدم وقت الإرسال.</p>
+    <main className="hiltech-utility-page">
+      <div className="hiltech-utility-shell">
+        <section className="hiltech-utility-hero">
+          <div className="hiltech-utility-topline">
+            <span>RFQ / TRACKING</span>
+            <span>REFERENCE + CONTACT VERIFICATION</span>
+          </div>
+
+          <div className="hiltech-utility-hero-grid">
+            <div className="hiltech-utility-hero-copy">
+              <span>REQUEST STATE / CLIENT ACCESS</span>
+              <h1>
+                FOLLOW THE<br />
+                <em>REQUEST STATE.</em>
+              </h1>
+              <p>
+                Use the RFQ reference and the same phone number or email used at submission.
+                Tracking exposes the current request state; it does not create or change a quotation.
+              </p>
+            </div>
+
+            <div className="hiltech-utility-hero-state">
+              <div><span>01</span><strong>REFERENCE</strong><small>REQUEST CODE</small></div>
+              <div><span>02</span><strong>VERIFY</strong><small>PHONE / EMAIL</small></div>
+              <div><span>03</span><strong>READ STATE</strong><small>STATUS / UPDATE</small></div>
+              <div><span>04</span><strong>NEXT STEP</strong><small>CONTACT / RESPONSE</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="hiltech-utility-section">
+          <div className="hiltech-utility-section-label">
+            <span>01 / REQUEST LOOKUP</span>
+            <strong>REFERENCE / MATCHING CONTACT</strong>
           </div>
           <TrackClient initialRequestCode={initialRequestCode} />
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
-
