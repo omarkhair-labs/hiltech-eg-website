@@ -64,7 +64,7 @@ export default function Header() {
   };
 
   return (
-    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isCreativeHome ? 'border-[#8ff257]/15 bg-[#050806]/90 shadow-[0_10px_40px_rgba(0,0,0,0.34)]' : 'border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)]'}`}>
+    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isCreativeHome ? 'hiltech-creative-header border-[#8ff257]/15 bg-[#050806]/90 shadow-[0_10px_40px_rgba(0,0,0,0.34)]' : 'border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)]'}`}>
       <div className="container flex h-16 items-center justify-between gap-3">
         <Link
           href={isArabic ? '/ar' : '/'}
