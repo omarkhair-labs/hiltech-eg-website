@@ -14,7 +14,12 @@ on:
       - 'next.config.mjs'
       - 'tailwind.config.ts'
       - 'tsconfig.json'
+      - 'scripts/capture-home-qa.mjs'
       - '.github/workflows/creative-home-ci.yml'
+
+concurrency:
+  group: creative-home-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -52,18 +57,8 @@ jobs:
           cat /tmp/hiltech-next.log
           exit 1
 
-      - name: Capture desktop visual QA
-        run: |
-          mkdir -p visual-qa
-          for chapter in h01 h02 h03; do
-            npx --yes playwright@1.55.0 screenshot --browser=chromium --viewport-size="1440,1000" --wait-for-timeout=2500 "http://127.0.0.1:3000/#$chapter" "visual-qa/desktop-$chapter.png"
-          done
-
-      - name: Capture mobile visual QA
-        run: |
-          for chapter in h01 h02 h03; do
-            npx --yes playwright@1.55.0 screenshot --browser=chromium --viewport-size="390,844" --wait-for-timeout=2500 "http://127.0.0.1:3000/#$chapter" "visual-qa/mobile-$chapter.png"
-          done
+      - name: Capture chapter visual QA
+        run: node scripts/capture-home-qa.mjs
 
       - name: Upload visual QA
         uses: actions/upload-artifact@v4
