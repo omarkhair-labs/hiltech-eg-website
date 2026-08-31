@@ -32,30 +32,46 @@ try {
     const page = await context.newPage();
 
     await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
-    await page.waitForTimeout(900);
-
-    const detailCodes = await page.locator('[data-product-card] .hiltech-product-code').evaluateAll((nodes) =>
-      nodes.map((node) => node.textContent?.trim()).filter(Boolean).slice(0, 3),
-    );
-    if (detailCodes.length < 1) throw new Error('No real product codes found from the live catalog');
+    await page.waitForTimeout(1000);
 
     for (const [name, selector] of [
       ['hero', '.hiltech-products-hero'],
+      ['world', '[data-product-world]'],
       ['filters', '[data-products-filters]'],
       ['results', '[data-products-results]'],
     ]) {
       await page.locator(selector).scrollIntoViewIfNeeded();
-      await page.waitForTimeout(700);
+      await page.waitForTimeout(750);
       await page.screenshot({
         path: `visual-qa-products/${target.name}-catalog-${name}.png`,
         fullPage: false,
       });
     }
 
-    const firstCard = page.locator('[data-product-card]').first();
-    const code = (await firstCard.locator('.hiltech-product-code').innerText()).trim();
+    const familyButtons = page.locator('[data-product-family]');
+    const familyCount = await familyButtons.count();
+    if (familyCount < 7) throw new Error(`Expected 7 product families, got ${familyCount}`);
+
+    if (target.name === 'desktop') {
+      for (const index of [0, 1, 4, 6]) {
+        await familyButtons.nth(index).click();
+        await page.waitForTimeout(650);
+        await page.screenshot({
+          path: `visual-qa-products/desktop-world-family-${index + 1}.png`,
+          fullPage: false,
+        });
+      }
+    }
+
+    const detailCodes = await page.locator('[data-product-card] .hiltech-product-code').evaluateAll((nodes) =>
+      nodes.map((node) => node.textContent?.trim()).filter(Boolean).slice(0, 3),
+    );
+    if (detailCodes.length < 1) throw new Error('No real product codes found from the live catalog');
+
+    const firstRow = page.locator('[data-product-card]').first();
+    const firstCode = (await firstRow.locator('.hiltech-product-code').innerText()).trim();
     const search = page.locator('[data-products-filters] input').first();
-    await search.fill(code);
+    await search.fill(firstCode);
     await page.waitForTimeout(650);
     if ((await page.locator('[data-product-card]').count()) < 1) throw new Error('Product-code search returned no products');
     await page.screenshot({
@@ -63,13 +79,16 @@ try {
       fullPage: false,
     });
 
-    const clear = page.getByRole('button', { name: /clear filters/i });
-    if (await clear.count()) {
-      await clear.first().click();
-      await page.waitForTimeout(450);
-    }
+    const clearFilters = async () => {
+      const clear = page.locator('.hiltech-product-finder-active button');
+      if (await clear.count()) {
+        await clear.first().click();
+        await page.waitForTimeout(450);
+      }
+    };
+    await clearFilters();
 
-    const brandButtons = page.locator('.hiltech-products-brand-filter button');
+    const brandButtons = page.locator('.hiltech-product-brand-index button');
     if ((await brandButtons.count()) > 1) {
       await brandButtons.nth(1).click();
       await page.waitForTimeout(500);
@@ -78,31 +97,34 @@ try {
         fullPage: false,
       });
     }
+    await clearFilters();
 
     if (target.name === 'desktop') {
-      if (await clear.count()) {
-        await clear.first().click();
-        await page.waitForTimeout(350);
-      }
-      const card = page.locator('[data-product-card]').first();
-      await card.getByRole('button', { name: /add to rfq/i }).click();
-      await page.waitForTimeout(500);
+      const row = page.locator('[data-product-card]').first();
+      await row.getByRole('button', { name: /add to rfq/i }).click();
+      await page.waitForTimeout(600);
       await page.screenshot({
         path: 'visual-qa-products/desktop-catalog-rfq-added.png',
         fullPage: false,
       });
 
       await page.getByRole('button', { name: /rfq basket/i }).click();
-      await page.waitForTimeout(450);
+      await page.waitForTimeout(500);
+      await page.locator('.hiltech-product-rfq-overlay aside').waitFor();
       await page.screenshot({
         path: 'visual-qa-products/desktop-catalog-rfq-drawer.png',
         fullPage: false,
       });
+
       const close = page.getByRole('button', { name: /^close$/i });
-      if (await close.count()) await close.click();
+      if (await close.count()) {
+        await close.click();
+        await page.waitForTimeout(350);
+      }
 
       await page.getByRole('button', { name: /build by project/i }).click();
-      await page.waitForTimeout(450);
+      await page.waitForTimeout(550);
+      await page.locator('[data-project-builder]').waitFor();
       await page.screenshot({
         path: 'visual-qa-products/desktop-catalog-project-mode.png',
         fullPage: false,
@@ -116,14 +138,17 @@ try {
       if (!response || !response.ok()) {
         throw new Error(`Product detail failed for ${detailCode}: ${response?.status() ?? 'no response'}`);
       }
-      await page.waitForTimeout(650);
+      await page.waitForTimeout(750);
+
       for (const [name, selector] of [
-        ['top', '.hiltech-product-detail-hero'],
-        ['context', '.hiltech-product-detail-context'],
-        ['rfq', '.hiltech-product-detail-rfq'],
+        ['object', '.hiltech-product-v2-stage'],
+        ['position', '.hiltech-product-v2-position'],
+        ['ledger', '.hiltech-product-v2-ledger'],
+        ['related', '.hiltech-product-v2-related'],
+        ['rfq', '.hiltech-product-v2-rfq'],
       ]) {
         await page.locator(selector).scrollIntoViewIfNeeded();
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(550);
         await page.screenshot({
           path: `visual-qa-products/${target.name}-detail-${detailIndex + 1}-${name}.png`,
           fullPage: false,
@@ -150,6 +175,7 @@ try {
       for (const [name, selector] of [
         ['top', '.hiltech-product-intelligence-hero'],
         ['planning', '.hiltech-product-intelligence-planning'],
+        ['compatibility', '.hiltech-product-intelligence-compatibility'],
       ]) {
         await page.locator(selector).scrollIntoViewIfNeeded();
         await page.waitForTimeout(450);
