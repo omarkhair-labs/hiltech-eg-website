@@ -7970,3 +7970,458 @@ body {
     font-size: 1rem;
   }
 }
+
+
+/* Product intelligence */
+.hiltech-product-intelligence-page {
+  background: #eef0eb;
+  color: #0a0e0b;
+  overflow-x: clip;
+}
+
+.hiltech-product-intelligence-shell {
+  width: min(94vw, 102rem);
+  margin-inline: auto;
+}
+
+.hiltech-product-intelligence-hero {
+  padding: clamp(1.5rem,3vw,3rem) 0 clamp(4rem,7vw,7rem);
+  background: #050806;
+  color: #eef3ee;
+}
+
+.hiltech-product-intelligence-breadcrumb {
+  display: flex;
+  gap: 0.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(224,241,228,0.12);
+  color: #69766d;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.075em;
+}
+.hiltech-product-intelligence-breadcrumb a { color: #8ff257; }
+
+.hiltech-product-intelligence-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1.15fr) minmax(20rem,0.85fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: end;
+  margin-top: clamp(4rem,7vw,7rem);
+}
+.hiltech-product-intelligence-hero-grid > div:first-child > span,
+.hiltech-product-intelligence-summary > span {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hiltech-product-intelligence-hero h1 {
+  margin-top: 1rem;
+  max-width: 12ch;
+  font-size: clamp(4rem,8vw,9rem);
+  line-height: 0.8;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+  font-weight: 860;
+}
+.hiltech-product-intelligence-hero-grid > div:first-child > p {
+  margin-top: 1.4rem;
+  max-width: 36rem;
+  color: #98a49c;
+  font-size: 0.82rem;
+  line-height: 1.62;
+}
+
+.hiltech-product-intelligence-summary {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(224,241,228,0.13);
+}
+.hiltech-product-intelligence-summary > strong {
+  display: block;
+  margin-top: 1.3rem;
+  color: #d1d9d3;
+  font-size: clamp(1.4rem,2.2vw,2.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  font-weight: 620;
+}
+.hiltech-product-intelligence-summary > small {
+  display: block;
+  margin-top: 1.3rem;
+  color: #758078;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.hiltech-product-intelligence-diagram-section,
+.hiltech-product-intelligence-planning,
+.hiltech-product-intelligence-links {
+  padding: clamp(5rem,8vw,8rem) 0;
+}
+
+.hiltech-product-intelligence-diagram-section {
+  background: #e8ece6;
+}
+
+.hiltech-product-intelligence-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(10,14,11,0.16);
+  color: #68736b;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.47rem;
+  letter-spacing: 0.075em;
+}
+.hiltech-product-intelligence-label span { color: #397329; }
+.hiltech-product-intelligence-label strong { font-weight: 500; }
+.hiltech-product-intelligence-label.is-dark {
+  border-color: rgba(224,241,228,0.12);
+  color: #6e7b71;
+}
+.hiltech-product-intelligence-label.is-dark span { color: #8ff257; }
+
+.hiltech-product-intelligence-diagram {
+  margin-top: clamp(3rem,5vw,5rem);
+  border: 1px solid rgba(10,14,11,0.15);
+  background:
+    linear-gradient(rgba(10,14,11,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,14,11,0.025) 1px, transparent 1px),
+    #f3f5f0;
+  background-size: 3rem 3rem;
+}
+.hiltech-product-intelligence-diagram > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(10,14,11,0.13);
+  color: #68736b;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.075em;
+}
+.hiltech-product-intelligence-diagram > div:first-child span { color: #397329; }
+.hiltech-product-intelligence-diagram > div:last-child {
+  min-height: 24rem;
+  display: grid;
+  place-items: center;
+  overflow-x: auto;
+  padding: clamp(1rem,3vw,3rem);
+}
+.hiltech-product-intelligence-diagram svg {
+  width: min(100%, 58rem);
+  min-width: 38rem;
+}
+
+.hiltech-product-intelligence-planning {
+  background: #f2f4ef;
+}
+
+.hiltech-product-intelligence-columns {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  margin-top: clamp(3rem,5vw,5rem);
+  background: rgba(10,14,11,0.14);
+  border: 1px solid rgba(10,14,11,0.14);
+}
+.hiltech-product-intelligence-columns > article {
+  background: #f7f8f4;
+}
+.hiltech-product-intelligence-columns > article > span,
+.hiltech-product-intelligence-compatibility-grid section > span,
+.hiltech-product-intelligence-link-grid > div > span {
+  display: block;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(10,14,11,0.12);
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.075em;
+}
+.hiltech-product-intelligence-columns article > div,
+.hiltech-product-intelligence-compatibility-grid section > div {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 1rem;
+  min-height: 5.7rem;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(10,14,11,0.1);
+}
+.hiltech-product-intelligence-columns small,
+.hiltech-product-intelligence-compatibility-grid small {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.44rem;
+}
+.hiltech-product-intelligence-columns strong,
+.hiltech-product-intelligence-compatibility-grid strong {
+  color: #3d4840;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  font-weight: 590;
+}
+
+.hiltech-product-intelligence-compatibility {
+  padding: clamp(5rem,8vw,8rem) 0;
+  background: #050806;
+  color: #eef3ee;
+}
+.hiltech-product-intelligence-compatibility-grid {
+  display: grid;
+  grid-template-columns: minmax(0,0.85fr) minmax(22rem,1.15fr);
+  gap: clamp(3rem,7vw,8rem);
+  margin-top: clamp(3rem,5vw,5rem);
+  align-items: start;
+}
+.hiltech-product-intelligence-compatibility-grid h2 {
+  font-size: clamp(3.8rem,7.2vw,8rem);
+  line-height: 0.82;
+  letter-spacing: -0.068em;
+  text-transform: uppercase;
+}
+.hiltech-product-intelligence-compatibility-grid h2 em {
+  display: block;
+  color: transparent;
+  font-style: normal;
+  -webkit-text-stroke: 1px rgba(238,243,238,0.66);
+}
+.hiltech-product-intelligence-compatibility-grid > div:first-child > p {
+  margin-top: 1.3rem;
+  color: #849087;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+.hiltech-product-intelligence-compatibility-grid > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(224,241,228,0.1);
+  border: 1px solid rgba(224,241,228,0.1);
+}
+.hiltech-product-intelligence-compatibility-grid section {
+  background: #071008;
+}
+.hiltech-product-intelligence-compatibility-grid section > span {
+  border-color: rgba(224,241,228,0.1);
+  color: #8ff257;
+}
+.hiltech-product-intelligence-compatibility-grid section > div {
+  border-color: rgba(224,241,228,0.08);
+}
+.hiltech-product-intelligence-compatibility-grid section strong {
+  color: #c7d0c9;
+}
+.hiltech-product-intelligence-compatibility-grid section small {
+  color: #8ff257;
+}
+
+.hiltech-product-intelligence-links {
+  background: #e7ebe5;
+}
+.hiltech-product-intelligence-link-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin-top: clamp(3rem,5vw,5rem);
+  background: rgba(10,14,11,0.13);
+  border: 1px solid rgba(10,14,11,0.13);
+}
+.hiltech-product-intelligence-link-grid > div {
+  background: #f4f6f1;
+}
+.hiltech-product-intelligence-link-grid > div > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 1rem;
+}
+.hiltech-product-intelligence-link-grid strong,
+.hiltech-product-intelligence-link-grid a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(10,14,11,0.14);
+  padding: 0.55rem 0.75rem;
+  color: #3f4a42;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.47rem;
+  font-weight: 500;
+}
+.hiltech-product-intelligence-link-grid a b {
+  color: #397329;
+  font-weight: 500;
+}
+
+.hiltech-product-intelligence-client {
+  margin-top: clamp(3rem,5vw,5rem);
+}
+.hiltech-product-intelligence-client [data-intel-rfq],
+.hiltech-product-intelligence-client [data-intel-final] {
+  border-radius: 0 !important;
+  border-color: rgba(10,14,11,0.14) !important;
+  background: #f4f6f1 !important;
+  color: #0a0e0b !important;
+}
+.hiltech-product-intelligence-client [data-intel-rfq] h2,
+.hiltech-product-intelligence-client [data-intel-final] h2,
+.hiltech-product-intelligence-client [data-intel-products] h2 {
+  color: #0a0e0b !important;
+}
+.hiltech-product-intelligence-client [data-intel-rfq] p,
+.hiltech-product-intelligence-client [data-intel-final] p,
+.hiltech-product-intelligence-client [data-intel-products] > p {
+  color: #667168 !important;
+}
+.hiltech-product-intelligence-client [data-intel-rfq] a,
+.hiltech-product-intelligence-client [data-intel-rfq] button,
+.hiltech-product-intelligence-client [data-intel-final] a {
+  border-radius: 0 !important;
+}
+.hiltech-product-intelligence-client [data-intel-rfq] .btn-primary,
+.hiltech-product-intelligence-client [data-intel-product] .btn-primary {
+  background: #071008 !important;
+  color: #a8ff79 !important;
+  box-shadow: none !important;
+}
+.hiltech-product-intelligence-client [data-intel-products] {
+  margin-top: 3rem !important;
+}
+.hiltech-product-intelligence-client [data-intel-products] > div {
+  gap: 1px !important;
+  background: rgba(10,14,11,0.13);
+  border: 1px solid rgba(10,14,11,0.13);
+}
+.hiltech-product-intelligence-client [data-intel-product] {
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: #f7f8f4 !important;
+  box-shadow: none !important;
+}
+.hiltech-product-intelligence-client [data-intel-product] h3 {
+  color: #0a0e0b !important;
+}
+.hiltech-product-intelligence-client [data-intel-product] p {
+  color: #667168 !important;
+}
+.hiltech-product-intelligence-client [data-intel-product] > p:first-child {
+  border-color: rgba(10,14,11,0.13) !important;
+  background: transparent !important;
+  color: #397329 !important;
+}
+.hiltech-product-intelligence-client [data-intel-final] {
+  margin-top: 3rem !important;
+}
+.hiltech-product-intelligence-client [data-intel-final] a {
+  border-color: rgba(10,14,11,0.16) !important;
+  background: transparent !important;
+  color: #356f26 !important;
+}
+
+.hiltech-product-intelligence-disclaimer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(10,14,11,0.15);
+  border-bottom: 1px solid rgba(10,14,11,0.15);
+}
+.hiltech-product-intelligence-disclaimer span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.075em;
+}
+.hiltech-product-intelligence-disclaimer p {
+  color: #667168;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .hiltech-product-intelligence-hero-grid,
+  .hiltech-product-intelligence-compatibility-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-product-intelligence-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-product-intelligence-compatibility-grid > div:last-child {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-product-intelligence-shell { width: 90vw; }
+
+  .hiltech-product-intelligence-hero {
+    padding: 1.2rem 0 4rem;
+  }
+
+  .hiltech-product-intelligence-breadcrumb {
+    font-size: 0.4rem;
+  }
+
+  .hiltech-product-intelligence-hero-grid {
+    margin-top: 3rem;
+    gap: 2rem;
+  }
+
+  .hiltech-product-intelligence-hero h1 {
+    max-width: 100%;
+    font-size: clamp(3rem,14vw,3.55rem);
+    line-height: 0.83;
+  }
+
+  .hiltech-product-intelligence-diagram-section,
+  .hiltech-product-intelligence-planning,
+  .hiltech-product-intelligence-compatibility,
+  .hiltech-product-intelligence-links {
+    padding: 4rem 0;
+  }
+
+  .hiltech-product-intelligence-label {
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.4rem;
+  }
+
+  .hiltech-product-intelligence-diagram {
+    margin-top: 2.4rem;
+  }
+
+  .hiltech-product-intelligence-diagram > div:first-child {
+    font-size: 0.38rem;
+  }
+
+  .hiltech-product-intelligence-diagram > div:last-child {
+    min-height: 18rem;
+    justify-content: start;
+  }
+
+  .hiltech-product-intelligence-compatibility-grid {
+    margin-top: 2.4rem;
+    gap: 2.5rem;
+  }
+
+  .hiltech-product-intelligence-compatibility-grid h2 {
+    font-size: clamp(3rem,14vw,3.55rem);
+  }
+
+  .hiltech-product-intelligence-link-grid {
+    grid-template-columns: 1fr;
+    margin-top: 2.4rem;
+  }
+
+  .hiltech-product-intelligence-disclaimer {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+}
