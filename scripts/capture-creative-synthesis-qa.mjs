@@ -2,6 +2,8 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000';
+const SHOT_TIMEOUT = 15000;
+const NAV_TIMEOUT = 30000;
 
 const routes = [
   { name: 'home', path: '/', hero: '[data-home-experience], main' },
@@ -97,12 +99,15 @@ const browser = await chromium.launch({ headless: true });
 try {
   for (const target of targets) {
     for (const route of routes) {
+      console.log(`[synthesis] ${target.name} ${route.name} start`);
       const context = await browser.newContext({
         viewport: { width: target.width, height: target.height },
         deviceScaleFactor: 1,
         reducedMotion: 'no-preference',
       });
       const page = await context.newPage();
+      page.setDefaultTimeout(15000);
+      page.setDefaultNavigationTimeout(NAV_TIMEOUT);
 
       const response = await page.goto(`${baseURL}${route.path}`, { waitUntil: 'networkidle' });
       if (!response || !response.ok()) {
@@ -135,6 +140,7 @@ try {
         await page.screenshot({
           path: `visual-qa-creative-synthesis/${target.name}-${route.name}-top.png`,
           fullPage: false,
+          timeout: SHOT_TIMEOUT,
         });
       }
 
@@ -149,6 +155,7 @@ try {
       await page.screenshot({
         path: `visual-qa-creative-synthesis/${target.name}-${route.name}-full.png`,
         fullPage: true,
+        timeout: SHOT_TIMEOUT,
       });
 
       if (target.name === 'mobile') {
@@ -176,6 +183,7 @@ try {
 
       await assertNoHorizontalOverflow(page, `${target.name} ${route.name} footer`);
       await context.close();
+      console.log(`[synthesis] ${target.name} ${route.name} done`);
     }
   }
 
@@ -209,8 +217,11 @@ try {
       hasTouch: true,
     });
     const mobilePage = await mobileContext.newPage();
+    mobilePage.setDefaultTimeout(15000);
+    mobilePage.setDefaultNavigationTimeout(NAV_TIMEOUT);
 
     for (const route of routes) {
+      console.log(`[mobile-final] ${mobile.name} main ${route.name}`);
       const response = await mobilePage.goto(`${baseURL}${route.path}`, { waitUntil: 'networkidle' });
       if (!response || !response.ok()) throw new Error(`${mobile.name} ${route.name} route failed`);
       await mobilePage.waitForTimeout(450);
@@ -220,6 +231,7 @@ try {
     }
 
     for (const [name, path] of mobileDeepRoutes) {
+      console.log(`[mobile-final] ${mobile.name} deep ${name}`);
       const response = await mobilePage.goto(`${baseURL}${path}`, { waitUntil: 'networkidle' });
       if (!response || !response.ok()) throw new Error(`${mobile.name} ${name} route failed`);
       await mobilePage.waitForTimeout(350);
@@ -227,7 +239,7 @@ try {
       await primeLazyImages(mobilePage);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} ${name}`);
       if (mobile.name === 'baseline-touch' && ['solution-fiber','solution-cctv','intel-racks','intel-cctv'].includes(name)) {
-        await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-${name}.png`, fullPage: true });
+        await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-${name}.png`, fullPage: true, timeout: SHOT_TIMEOUT });
       }
     }
 
@@ -236,6 +248,7 @@ try {
     const detailCodes = await mobilePage.locator('[data-product-card] .hiltech-product-code').evaluateAll((nodes) => nodes.map((node) => node.textContent?.trim()).filter(Boolean).slice(0, 2));
     for (let index = 0; index < detailCodes.length; index += 1) {
       const code = detailCodes[index];
+      console.log(`[mobile-final] ${mobile.name} product-detail ${index + 1} ${code}`);
       const response = await mobilePage.goto(`${baseURL}/products-partners/${encodeURIComponent(code)}`, { waitUntil: 'networkidle' });
       if (!response || !response.ok()) throw new Error(`${mobile.name} product detail ${index + 1} route failed`);
       await mobilePage.waitForTimeout(350);
@@ -243,11 +256,12 @@ try {
       await primeLazyImages(mobilePage);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} product detail ${index + 1}`);
       if (mobile.name === 'baseline-touch') {
-        await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-product-detail-${index + 1}.png`, fullPage: true });
+        await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-product-detail-${index + 1}.png`, fullPage: true, timeout: SHOT_TIMEOUT });
       }
     }
 
     if (mobile.name === 'baseline-touch') {
+      console.log('[mobile-final] baseline menu');
       await mobilePage.goto(`${baseURL}/`, { waitUntil: 'networkidle' });
       const menuButton = mobilePage.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
       await menuButton.click();
@@ -256,7 +270,7 @@ try {
       const roundedActions = await panel.locator('.rounded-lg, .rounded-xl, .rounded-2xl').count();
       if (roundedActions) throw new Error(`mobile creative menu still contains ${roundedActions} rounded controls`);
       await assertMobileTextFits(mobilePage, 'baseline-touch mobile menu', mobile.width);
-      await mobilePage.screenshot({ path: 'visual-qa-creative-synthesis/mobile-final-global-menu.png', fullPage: false });
+      await mobilePage.screenshot({ path: 'visual-qa-creative-synthesis/mobile-final-global-menu.png', fullPage: false, timeout: SHOT_TIMEOUT });
     }
 
     await mobileContext.close();
@@ -266,6 +280,8 @@ try {
     reducedMotion: 'reduce',
   });
   const page = await context.newPage();
+      page.setDefaultTimeout(15000);
+      page.setDefaultNavigationTimeout(NAV_TIMEOUT);
 
   for (const route of ['/work', '/company']) {
     const response = await page.goto(`${baseURL}${route}`, { waitUntil: 'networkidle' });
