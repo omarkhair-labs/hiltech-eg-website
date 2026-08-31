@@ -17,6 +17,9 @@ const checks = [
   { name: 'products-top', path: '/products-partners', selector: '.hiltech-products-hero' },
   { name: 'products-world', path: '/products-partners', selector: '[data-product-world]' },
   { name: 'products-intelligence', path: '/products-partners/intelligence/fiber-optic-systems', selector: '.hiltech-product-intelligence-hero' },
+  { name: 'work-top', path: '/work', selector: '.hiltech-work-hero' },
+  { name: 'work-evidence', path: '/work', selector: '.hiltech-work-index' },
+  { name: 'work-final', path: '/work', selector: '.hiltech-work-close' },
 ];
 
 await mkdir('visual-qa-closed-public-smoke', { recursive: true });
