@@ -12979,3 +12979,136 @@ body {
     padding: 1rem 5vw 1.4rem;
   }
 }
+
+
+/* ==========================================================================
+   RFQ FORM ACTION — INLINE SUBMISSION
+   ========================================================================== */
+
+.hiltech-rfq-project-form {
+  min-width: 0;
+}
+
+.hiltech-rfq-project-actions {
+  margin-top: 2.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(10,14,11,.18);
+}
+
+.hiltech-rfq-project-actions > span,
+.hiltech-rfq-submit-context > span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.hiltech-rfq-project-actions > strong,
+.hiltech-rfq-submit-context > strong {
+  display: block;
+  margin-top: .65rem;
+  color: #263129;
+  font-size: clamp(.92rem,1.4vw,1.15rem);
+  line-height: 1.35;
+  font-weight: 620;
+}
+
+.hiltech-rfq-project-actions > div {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,.7fr);
+  margin-top: 1rem;
+  border-top: 1px solid rgba(10,14,11,.16);
+}
+
+.hiltech-rfq-project-actions button,
+.hiltech-rfq-project-actions a {
+  display: flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(10,14,11,.16);
+  background: transparent;
+  padding: .8rem 0;
+  color: #344037;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .42rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.hiltech-rfq-project-actions button {
+  color: #285d20;
+  border-bottom-color: rgba(57,115,41,.32);
+}
+
+.hiltech-rfq-project-actions a {
+  padding-inline-start: 1rem;
+  border-inline-start: 1px solid rgba(10,14,11,.16);
+}
+
+.hiltech-rfq-project-actions button:hover,
+.hiltech-rfq-project-actions button:focus-visible,
+.hiltech-rfq-project-actions a:hover,
+.hiltech-rfq-project-actions a:focus-visible {
+  color: #0a0e0b;
+  outline: none;
+}
+
+.hiltech-rfq-project-actions button:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.hiltech-rfq-project-actions .hiltech-rfq-error {
+  margin-top: .7rem;
+}
+
+.hiltech-rfq-submit-context {
+  min-width: 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-rfq-submit-context > span {
+  color: #8ff257;
+}
+
+.hiltech-rfq-submit-context > strong {
+  color: #d7dfd9;
+}
+
+.hiltech-rfq-submit-context > p {
+  max-width: 31rem;
+}
+
+.hiltech-rfq-submit-context > a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: .85rem 0;
+  border-top: 1px solid rgba(225,241,228,.13);
+  border-bottom: 1px solid rgba(225,241,228,.13);
+  color: #a8ff79;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .42rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 639px) {
+  .hiltech-rfq-project-actions > div {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-rfq-project-actions a {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+}
