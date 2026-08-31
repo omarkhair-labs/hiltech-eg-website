@@ -12442,3 +12442,71 @@ body {
   content: "→";
   color: #657169;
 }
+
+
+/* ==========================================================================
+   COMPACT PHONE FINAL QA — 360PX NO-CLIP
+   ========================================================================== */
+
+@media (max-width: 374px) {
+  .hiltech-hero-statement {
+    width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
+  }
+
+  .hiltech-hero-word-a {
+    font-size: clamp(2.78rem, 13.1vw, 3.15rem);
+  }
+
+  .hiltech-hero-word-outline {
+    font-size: clamp(2.95rem, 14.7vw, 3.35rem);
+  }
+
+  .hiltech-hero-word-signal {
+    font-size: clamp(3.55rem, 18.2vw, 4rem);
+  }
+
+  .hiltech-layer-statement h2 {
+    font-size: clamp(2.75rem, 13.2vw, 3.08rem);
+    letter-spacing: -0.072em;
+  }
+
+  .hiltech-scale-intro h2 {
+    font-size: clamp(2.62rem, 12.6vw, 3rem);
+    letter-spacing: -0.068em;
+  }
+
+  .hiltech-system-row {
+    grid-template-columns: 1.45rem minmax(0, 1fr) .7rem;
+    gap: .42rem;
+  }
+
+  .hiltech-system-row-copy strong {
+    max-width: 100%;
+    font-size: clamp(1.52rem, 7.45vw, 1.78rem);
+    overflow-wrap: anywhere;
+  }
+
+  .hiltech-validation-band {
+    grid-template-columns: 1fr;
+    gap: .55rem;
+    padding: 1rem .85rem;
+    overflow: hidden;
+  }
+
+  .hiltech-validation-band-label,
+  .hiltech-validation-band strong,
+  .hiltech-validation-band p {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .hiltech-validation-band strong {
+    font-size: 1.32rem;
+  }
+
+  .hiltech-validation-band-arrow {
+    display: none;
+  }
+}
