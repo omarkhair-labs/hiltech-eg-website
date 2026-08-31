@@ -10,6 +10,10 @@ import ProcessSequence from '@/components/home/ProcessSequence';
 import CapabilitiesFlow from '@/components/home/CapabilitiesFlow';
 import CatalogBridge from '@/components/home/CatalogBridge';
 import BrandField from '@/components/home/BrandField';
+import WorkEvidence from '@/components/home/WorkEvidence';
+import ValidationField from '@/components/home/ValidationField';
+import CertaintyField from '@/components/home/CertaintyField';
+import FinalProjectCTA from '@/components/home/FinalProjectCTA';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -297,6 +301,10 @@ export default function HomeExperience() {
       <CapabilitiesFlow />
       <CatalogBridge />
       <BrandField />
+      <WorkEvidence />
+      <ValidationField />
+      <CertaintyField />
+      <FinalProjectCTA />
     </div>
   );
 }
