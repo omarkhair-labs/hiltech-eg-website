@@ -14738,3 +14738,43 @@ body:has(.hiltech-creative-header)
     transition: none;
   }
 }
+
+
+/* ==========================================================================
+   PRODUCT DETAIL — CONTENT-AWARE TITLE MEASURE
+   ========================================================================== */
+
+.hiltech-product-v2-title-row h1[data-title-density="long"] {
+  max-width: 18ch;
+  font-size: clamp(3rem,5.7vw,6.6rem);
+  line-height: .86;
+  letter-spacing: -.058em;
+}
+
+.hiltech-product-v2-title-row h1[data-title-density="dense"] {
+  max-width: 22ch;
+  font-size: clamp(2.35rem,4.4vw,5rem);
+  line-height: .9;
+  letter-spacing: -.046em;
+}
+
+.hiltech-product-v2-title-row h1[data-mixed-script="true"] {
+  max-width: 22ch;
+  text-transform: none;
+  line-height: .94;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  .hiltech-product-v2-title-row h1[data-title-density="long"] {
+    font-size: clamp(2.25rem,10.8vw,3rem);
+    line-height: .9;
+  }
+
+  .hiltech-product-v2-title-row h1[data-title-density="dense"],
+  .hiltech-product-v2-title-row h1[data-mixed-script="true"] {
+    font-size: clamp(1.95rem,9.6vw,2.7rem);
+    line-height: .95;
+  }
+}
