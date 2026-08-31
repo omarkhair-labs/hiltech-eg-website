@@ -11889,3 +11889,352 @@ body {
     padding: 1.6rem 0;
   }
 }
+
+
+/* ==========================================================================
+   COMPANY SYNTHESIS OVERRIDES — SYSTEMIC, NEAR NO-PHOTO
+   ========================================================================== */
+
+.hiltech-company-hero-system {
+  display: grid;
+  grid-template-columns: minmax(0,.86fr) minmax(30rem,1.14fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: end;
+  min-height: min(72vh,49rem);
+  padding-top: clamp(3.5rem,7vw,7rem);
+}
+
+.hiltech-company-hero-system > * {
+  min-width: 0;
+}
+
+.hiltech-company-hero-system > div:first-child > span {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .46rem;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.hiltech-company-system-stage {
+  border: 1px solid rgba(225,241,228,.13);
+  background: #08100a;
+}
+
+.hiltech-company-system-stage > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: .8rem .9rem;
+  border-bottom: 1px solid rgba(225,241,228,.12);
+  color: #728078;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .39rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-system-stage > div span {
+  color: #8ff257;
+}
+
+.hiltech-company-system-stage > div strong {
+  justify-self: end;
+  color: #bfc9c2;
+  font-weight: 500;
+}
+
+.hiltech-company-system-map {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hiltech-company-position-note {
+  display: grid;
+  grid-template-columns: 10rem minmax(0,1fr);
+  gap: 1.5rem;
+  margin-top: clamp(3rem,5vw,5rem);
+  padding: 1rem 0;
+  border-top: 1px solid rgba(10,14,11,.14);
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-company-position-note span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .42rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-position-note strong {
+  max-width: 55rem;
+  color: #263129;
+  font-size: clamp(1.05rem,1.7vw,1.5rem);
+  line-height: 1.3;
+  font-weight: 620;
+}
+
+.hiltech-company-truths {
+  padding: clamp(4.8rem,8vw,7.5rem) 0;
+}
+
+.hiltech-company-truth-index {
+  margin-top: clamp(3rem,5vw,5rem);
+  border-top: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-company-truth-index article {
+  display: grid;
+  grid-template-columns: 8rem minmax(12rem,.35fr) minmax(0,1fr) auto;
+  gap: 1.2rem;
+  align-items: center;
+  min-height: 7.4rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-company-truth-index article > span,
+.hiltech-company-truth-index a {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-truth-index article > strong {
+  color: #eef3ee;
+  font-size: clamp(1.2rem,2.2vw,2rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.hiltech-company-truth-index p {
+  max-width: 40rem;
+  color: #89958d;
+  font-size: .7rem;
+  line-height: 1.55;
+}
+
+.hiltech-company-truth-index a {
+  display: inline-flex;
+  gap: .5rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.hiltech-company-presence {
+  padding: clamp(4.8rem,8vw,7.5rem) 0;
+}
+
+.hiltech-company-presence-endpoint {
+  display: grid;
+  grid-template-columns: minmax(0,.7fr) minmax(24rem,1.3fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: start;
+  margin-top: clamp(3rem,5vw,5rem);
+}
+
+.hiltech-company-presence-endpoint > div {
+  display: grid;
+  gap: .8rem;
+}
+
+.hiltech-company-presence-endpoint > div > span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .42rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-presence-endpoint > div > strong {
+  max-width: 16ch;
+  color: #0a0e0b;
+  font-size: clamp(1.8rem,3.4vw,3.8rem);
+  line-height: .95;
+  letter-spacing: -.05em;
+}
+
+.hiltech-company-presence-endpoint > div > p {
+  max-width: 31rem;
+  color: #667168;
+  font-size: .7rem;
+  line-height: 1.55;
+}
+
+.hiltech-company-presence-endpoint address {
+  font-style: normal;
+  border-top: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-company-presence-endpoint address > div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0,1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-company-presence-endpoint address span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-presence-endpoint address strong,
+.hiltech-company-presence-endpoint address a {
+  color: #344037;
+  font-size: .75rem;
+  line-height: 1.5;
+  font-weight: 620;
+}
+
+.hiltech-company-proof {
+  padding: clamp(4.6rem,7vw,6.5rem) 0;
+}
+
+.hiltech-company-proof-index {
+  margin-top: clamp(2.5rem,4vw,4rem);
+  border-top: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-company-proof-index a {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0,1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.13);
+  color: #cbd4cd;
+}
+
+.hiltech-company-proof-index span,
+.hiltech-company-proof-index em {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+  font-style: normal;
+}
+
+.hiltech-company-proof-index strong {
+  font-size: clamp(.92rem,1.35vw,1.12rem);
+  font-weight: 600;
+}
+
+.hiltech-company-close {
+  padding: 2rem 0;
+}
+
+.hiltech-company-close-row {
+  display: grid;
+  grid-template-columns: minmax(0,1.15fr) minmax(18rem,.5fr);
+  gap: clamp(2rem,6vw,7rem);
+  align-items: center;
+}
+
+.hiltech-company-close-row > div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0,1fr);
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.hiltech-company-close-row > div > span {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-company-close-row > div > strong {
+  color: #bfc9c1;
+  font-size: clamp(.92rem,1.35vw,1.15rem);
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.hiltech-company-close-row nav {
+  border-top: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-company-close-row nav a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.13);
+  color: #d7dfd9;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .05em;
+}
+
+.hiltech-company-close-row nav a:first-child {
+  color: #a8ff79;
+}
+
+@media (max-width: 980px) {
+  .hiltech-company-hero-system,
+  .hiltech-company-presence-endpoint,
+  .hiltech-company-close-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-company-truth-index article {
+    grid-template-columns: 6rem minmax(0,1fr) auto;
+  }
+
+  .hiltech-company-truth-index p {
+    grid-column: 2 / -1;
+  }
+
+  .hiltech-company-close-row > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-company-hero-system {
+    min-height: auto;
+    gap: 2rem;
+    padding-top: 3rem;
+  }
+
+  .hiltech-company-system-stage > div {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-company-system-stage > div strong {
+    justify-self: start;
+  }
+
+  .hiltech-company-position-note {
+    grid-template-columns: 1fr;
+    gap: .7rem;
+  }
+
+  .hiltech-company-truth-index article {
+    grid-template-columns: 1.8rem minmax(0,1fr);
+    gap: .7rem;
+  }
+
+  .hiltech-company-truth-index article > span {
+    grid-row: 1 / 4;
+  }
+
+  .hiltech-company-truth-index article > strong,
+  .hiltech-company-truth-index p,
+  .hiltech-company-truth-index a {
+    grid-column: 2;
+  }
+
+  .hiltech-company-presence-endpoint address > div {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+  }
+
+  .hiltech-company-close {
+    padding: 1.6rem 0;
+  }
+}
