@@ -1555,3 +1555,75 @@ body {
     padding-inline: 0;
   }
 }
+
+
+/* H01 visual QA corrections */
+.hiltech-creative-header img {
+  filter: grayscale(1) brightness(2.25) contrast(0.9);
+  opacity: 0.92;
+}
+
+.hiltech-hero-word,
+.hiltech-hero-word > span {
+  white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .hiltech-hero-frame {
+    overflow: hidden;
+  }
+
+  .hiltech-hero-statement {
+    margin-top: 2.25rem;
+  }
+
+  .hiltech-hero-word,
+  .hiltech-hero-word > span {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hiltech-hero-word-a {
+    font-size: clamp(3.05rem, 15.8vw, 3.85rem);
+    letter-spacing: -0.072em;
+  }
+
+  .hiltech-hero-word-bridge {
+    width: auto;
+    margin-top: 0.45rem;
+    margin-left: 58%;
+    font-size: clamp(1rem, 5vw, 1.35rem);
+  }
+
+  .hiltech-hero-word-bridge > span {
+    width: max-content;
+  }
+
+  .hiltech-hero-word-outline {
+    width: 100%;
+    margin-top: 0.05rem;
+    margin-left: 0;
+    font-size: clamp(3.35rem, 16.8vw, 4.1rem);
+    letter-spacing: -0.078em;
+  }
+
+  .hiltech-hero-word-signal {
+    width: auto;
+    margin-top: 0.1rem;
+    margin-left: 33%;
+    font-size: clamp(4.05rem, 20.5vw, 5.05rem);
+    letter-spacing: -0.075em;
+  }
+
+  .hiltech-hero-word-signal > span {
+    width: max-content;
+  }
+
+  .hiltech-hero-route {
+    top: 43.5%;
+  }
+
+  .hiltech-hero-lower {
+    bottom: 6.5rem;
+  }
+}
