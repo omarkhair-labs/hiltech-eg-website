@@ -96,7 +96,7 @@ export default function ServicesExperience() {
         });
 
         gsap.to('[data-services-signal]', {
-          scaleX: 1,
+          scaleY: 1,
           ease: 'none',
           scrollTrigger: {
             trigger: '.hiltech-services-lifecycle',
