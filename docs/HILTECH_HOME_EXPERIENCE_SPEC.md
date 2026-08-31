@@ -106,23 +106,31 @@ Do not rename Data Rooms to “Data Centers” or collapse Structured Cabling in
 Purpose:
 - signature HILTECH lifecycle
 - center of the homepage story
+- show one physical system changing state instead of presenting four disconnected service panels
+
+Implementation contract:
+- one native-sticky viewport
+- one GSAP scrubbed timeline
+- SVG process field rather than another WebGL scene
+- MotionPathPlugin is justified only for the route signal traveling along the actual path
+- no fabricated measurements or performance metrics
 
 Sequence:
 
 ### BUILD
-Physical structure assembles.
+Terminations, racks, endpoints, and containment assemble into one installed structure.
 
 ### ROUTE
-Paths activate and establish connection.
+The installed structure becomes a continuous physical path from source to destination.
 
 ### TEST
-The visual language shifts from cinematic to measurement.
+The same path moves into an illustrative measurement state with trace, scan, remediation/retest language.
 
 ### PROVE
-Movement resolves into a verified state.
+The system resolves into a documented handover-ready state and the motion settles.
 
 Rule:
-Keep it concentrated. Do not stretch this into an unnecessarily long pinned sequence.
+Keep it concentrated. Do not stretch this into an unnecessarily long pinned sequence. The sequence may occupy scroll distance, but it should read as one transformation, not four slides.
 
 ## H06 — Capabilities
 
