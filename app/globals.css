@@ -14551,3 +14551,97 @@ body:has(.hiltech-creative-header)
     transition: none;
   }
 }
+
+
+/* ==========================================================================
+   PRODUCTS R&D — WORLD TO REFERENCE COLLAPSE
+   ========================================================================== */
+
+.hiltech-product-world-scene {
+  transform-origin: center bottom;
+  clip-path: inset(0 0 0 0);
+  transition:
+    clip-path 380ms cubic-bezier(.22,.61,.36,1),
+    transform 380ms cubic-bezier(.22,.61,.36,1),
+    opacity 300ms ease;
+}
+
+.hiltech-product-world.is-collapsing .hiltech-product-world-scene {
+  clip-path: inset(68% 0 6% 0);
+  transform: translateY(8%) scale(.985);
+  opacity: .58;
+}
+
+.hiltech-product-world.is-collapsing .hiltech-product-world-copy {
+  opacity: .72;
+}
+
+.hiltech-product-world-copy {
+  transition: opacity 260ms ease;
+}
+
+.hiltech-product-world-to-reference {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: .35rem 1rem;
+  align-items: center;
+  width: 100%;
+  margin-top: .25rem;
+  padding: .85rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(224,241,228,.12);
+  background: transparent;
+  color: #d9e2dc;
+  text-align: left;
+}
+
+.hiltech-product-world-to-reference > span {
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .48rem;
+  letter-spacing: .06em;
+}
+
+.hiltech-product-world-to-reference > strong {
+  grid-column: 1;
+  color: #a6b2aa;
+  font-size: .72rem;
+  font-weight: 560;
+  letter-spacing: -.01em;
+}
+
+.hiltech-product-world-to-reference > em {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  color: #8ff257;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 1rem;
+  font-style: normal;
+  transition: transform 180ms ease;
+}
+
+.hiltech-product-world-to-reference:hover > em,
+.hiltech-product-world-to-reference:focus-visible > em {
+  transform: translateY(.28rem);
+}
+
+@media (max-width: 980px) {
+  .hiltech-product-world-to-reference {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hiltech-product-world-scene,
+  .hiltech-product-world-copy,
+  .hiltech-product-world-to-reference > em {
+    transition: none;
+  }
+
+  .hiltech-product-world.is-collapsing .hiltech-product-world-scene {
+    clip-path: none;
+    transform: none;
+    opacity: 1;
+  }
+}
