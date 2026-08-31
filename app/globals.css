@@ -12563,3 +12563,25 @@ body {
     overflow-wrap: anywhere;
   }
 }
+
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-secondary-link {
+  display: flex;
+  min-height: 2.8rem;
+  align-items: center;
+  border-radius: 0;
+  padding: .65rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.09);
+  color: #7e8a82;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  font-weight: 560;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-secondary-link:hover,
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-secondary-link:focus-visible {
+  color: #a8ff79;
+  border-bottom-color: rgba(143,242,87,.35);
+}
