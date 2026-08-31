@@ -24,11 +24,15 @@ async function assertNoHorizontalOverflow(page, label) {
 }
 
 async function assertReferenceFocus(page, label) {
-  await page.waitForTimeout(180);
-  const focused = await page.locator('#exact-finding input').evaluate(
-    (input) => document.activeElement === input,
-  );
-  if (!focused) throw new Error(`${label} did not focus exact finding`);
+  const input = page.locator('#exact-finding input');
+  await input.waitFor();
+  await page.waitForFunction(
+    () => document.activeElement === document.querySelector('#exact-finding input'),
+    undefined,
+    { timeout: 3000 },
+  ).catch(() => {
+    throw new Error(`${label} did not focus exact finding`);
+  });
 }
 
 const browser = await chromium.launch({ headless: true });
