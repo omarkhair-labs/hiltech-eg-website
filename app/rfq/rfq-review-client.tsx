@@ -5,7 +5,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { trackEvent } from '@/lib/client/analytics';
 import { arRFQMessages, type RFQMessages } from '@/content/ar/rfq';
 import { products as catalogProducts } from '@/content/products';
-import { getBestMatchingBundleForBasket, getMissingBundleRequirements, getSuggestedProductsForMissingRequirements } from '@/lib/project-bundles';
+import {
+  getBestMatchingBundleForBasket,
+  getMissingBundleRequirements,
+  getSuggestedProductsForMissingRequirements,
+} from '@/lib/project-bundles';
 import {
   buildRFQWhatsappMessage,
   getRFQWhatsappLink,
@@ -100,7 +104,11 @@ export default function RFQReviewClient({
   const t = (locale === 'ar' ? messages || arRFQMessages : en) as typeof en;
   const [items, setItems] = useState<RFQItem[]>([]);
   const [project, setProject] = useState<RFQProjectDetails>({});
-  const [submitState, setSubmitState] = useState<{ status: 'idle' | 'submitting' | 'error' | 'success'; requestCode?: string; message?: string }>({ status: 'idle' });
+  const [submitState, setSubmitState] = useState<{
+    status: 'idle' | 'submitting' | 'error' | 'success';
+    requestCode?: string;
+    message?: string;
+  }>({ status: 'idle' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [quantityError, setQuantityError] = useState('');
   const fullNameRef = useRef<HTMLInputElement>(null);
@@ -109,40 +117,75 @@ export default function RFQReviewClient({
 
   useEffect(() => setItems(readRFQItems()), []);
   useEffect(() => writeRFQItems(items), [items]);
-  const count = useMemo(() => items.reduce((s, i) => s + normalizeRFQQuantity(i.quantity), 0), [items]);
-  const isBasketEmpty = items.length === 0;
 
+  const count = useMemo(
+    () => items.reduce((sum, item) => sum + normalizeRFQQuantity(item.quantity), 0),
+    [items],
+  );
+  const isBasketEmpty = items.length === 0;
   const bestBundleMatch = useMemo(() => getBestMatchingBundleForBasket(items), [items]);
-  const missingRequirements = useMemo(() => (bestBundleMatch ? getMissingBundleRequirements(bestBundleMatch.bundle, items) : []), [bestBundleMatch, items]);
-  const missingSuggestions = useMemo(() => (bestBundleMatch ? getSuggestedProductsForMissingRequirements(bestBundleMatch.bundle, items, catalogProducts) : []), [bestBundleMatch, items]);
+  const missingRequirements = useMemo(
+    () => (bestBundleMatch ? getMissingBundleRequirements(bestBundleMatch.bundle, items) : []),
+    [bestBundleMatch, items],
+  );
+  const missingSuggestions = useMemo(
+    () => (bestBundleMatch
+      ? getSuggestedProductsForMissingRequirements(bestBundleMatch.bundle, items, catalogProducts)
+      : []),
+    [bestBundleMatch, items],
+  );
 
   const addSuggestedItem = (productId: string) => {
     const product = catalogProducts.find((entry) => entry.id === productId);
     if (!product) return;
-    setItems((prev) => {
-      if (prev.some((entry) => entry.id === product.id)) return prev;
-      const next = [...prev, normalizeRFQItem({ id: product.id, name: product.name, category: product.category, brand: product.brand, specs: product.shortSpecs, quantity: 1, priceNote: product.priceNote })];
-      trackEvent('aov_missing_item_add', { product_id: product.id, bundle_id: bestBundleMatch ? bestBundleMatch.bundle.id : 'none', source: 'rfq_review' });
+    setItems((previous) => {
+      if (previous.some((entry) => entry.id === product.id)) return previous;
+      const next = [
+        ...previous,
+        normalizeRFQItem({
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          brand: product.brand,
+          specs: product.shortSpecs,
+          quantity: 1,
+          priceNote: product.priceNote,
+        }),
+      ];
+      trackEvent('aov_missing_item_add', {
+        product_id: product.id,
+        bundle_id: bestBundleMatch ? bestBundleMatch.bundle.id : 'none',
+        source: 'rfq_review',
+      });
       return next;
     });
   };
 
   const updateItem = (id: string, patch: Partial<RFQItem>) => {
-    setItems((prev) => prev.map((entry) => (entry.id === id ? normalizeRFQItem({ ...entry, ...patch }) : entry)));
+    setItems((previous) =>
+      previous.map((entry) =>
+        entry.id === id ? normalizeRFQItem({ ...entry, ...patch }) : entry,
+      ),
+    );
   };
 
   const validate = () => {
-    const e: Record<string, string> = {};
-    if (!project.fullName?.trim()) e.fullName = t.fullNameRequired;
-    if (!project.phoneNumber?.trim() || !isValidEgyptPhone(project.phoneNumber)) e.phoneNumber = t.phoneRequired;
-    if (!project.emailAddress?.trim()) e.emailAddress = t.emailRequired;
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(project.emailAddress.trim())) e.emailAddress = t.invalidEmail;
-    setErrors(e);
-    const first = Object.keys(e)[0];
+    const nextErrors: Record<string, string> = {};
+    if (!project.fullName?.trim()) nextErrors.fullName = t.fullNameRequired;
+    if (!project.phoneNumber?.trim() || !isValidEgyptPhone(project.phoneNumber)) {
+      nextErrors.phoneNumber = t.phoneRequired;
+    }
+    if (!project.emailAddress?.trim()) nextErrors.emailAddress = t.emailRequired;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(project.emailAddress.trim())) {
+      nextErrors.emailAddress = t.invalidEmail;
+    }
+
+    setErrors(nextErrors);
+    const first = Object.keys(nextErrors)[0];
     if (first === 'fullName') fullNameRef.current?.focus();
     if (first === 'phoneNumber') phoneRef.current?.focus();
     if (first === 'emailAddress') emailRef.current?.focus();
-    return Object.keys(e).length === 0;
+    return Object.keys(nextErrors).length === 0;
   };
 
   const submit = async () => {
@@ -151,12 +194,19 @@ export default function RFQReviewClient({
       return;
     }
     if (!validate()) return;
+
     const normalizedItems = items.map((item) => normalizeRFQItem(item));
-    if (normalizedItems.some((i) => i.quantity < MIN_RFQ_QUANTITY || i.quantity > MAX_RFQ_QUANTITY)) {
+    if (
+      normalizedItems.some(
+        (item) => item.quantity < MIN_RFQ_QUANTITY || item.quantity > MAX_RFQ_QUANTITY,
+      )
+    ) {
       setQuantityError(t.quantityError);
       return;
     }
+
     setSubmitState({ status: 'submitting' });
+
     try {
       const response = await fetch('/api/rfq', {
         method: 'POST',
@@ -186,170 +236,426 @@ export default function RFQReviewClient({
           whatsappMessage: buildRFQWhatsappMessage(normalizedItems, project),
         }),
       });
+
       const data = await response.json();
+
       if (!response.ok || !data.ok || !data.requestCode) {
         const details = Array.isArray(data?.issues)
           ? data.issues
               .map((issue: { path?: string[]; message?: string }) => issue?.message)
               .filter((message: string | undefined): message is string => Boolean(message))
           : [];
-        throw new Error(details.length ? `${t.serverValidationPrefix} ${details.join(' ')}` : t.submitError);
+        throw new Error(
+          details.length ? \`\${t.serverValidationPrefix} \${details.join(' ')}\` : t.submitError,
+        );
       }
+
       setSubmitState({ status: 'success', requestCode: data.requestCode });
-      trackEvent('rfq_submit_success', { item_count: items.length, total_units: count, source: 'rfq_page' });
+      trackEvent('rfq_submit_success', {
+        item_count: items.length,
+        total_units: count,
+        source: 'rfq_page',
+      });
     } catch (error) {
-      setSubmitState({ status: 'error', message: error instanceof Error && error.message ? error.message : t.submitError });
+      setSubmitState({
+        status: 'error',
+        message: error instanceof Error && error.message ? error.message : t.submitError,
+      });
     }
   };
 
+  const flowState = submitState.status === 'success'
+    ? 'received'
+    : isBasketEmpty
+      ? 'empty'
+      : 'draft';
+
   return (
-    <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="space-y-6">
-      <header className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-        <h1 className="text-2xl font-bold text-white">{t.pageTitle}</h1>
-        <p className="mt-2 text-sm text-slate-200">{t.pageSubtitle}</p>
-        <div className="mt-4 grid gap-2 text-sm sm:grid-cols-3">
-          {[t.step1, t.step2, t.step3].map((step) => (
-            <div key={step} className="rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 px-3 py-2 font-medium text-slate-200">
-              {step}
+    <div
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+      className="hiltech-rfq-flow"
+      data-rfq-flow
+      data-rfq-state={flowState}
+    >
+      <header className="hiltech-rfq-hero" data-rfq-hero>
+        <div className="hiltech-rfq-topline">
+          <span>PROJECT REQUEST / RFQ</span>
+          <strong>{flowState.toUpperCase()}</strong>
+        </div>
+
+        <div className="hiltech-rfq-hero-grid">
+          <div>
+            <span>{t.pageTitle}</span>
+            <h1>
+              TURN THE SYSTEM<br />
+              <em>INTO A REQUEST.</em>
+            </h1>
+            <p>{t.pageSubtitle}</p>
+          </div>
+
+          <div className="hiltech-rfq-live-state">
+            <div>
+              <span>REFERENCES</span>
+              <strong>{items.length}</strong>
+              <small>EXACT LINES IN THIS REQUEST</small>
             </div>
-          ))}
+            <div>
+              <span>UNITS</span>
+              <strong>{count}</strong>
+              <small>EDITABLE BEFORE SUBMISSION</small>
+            </div>
+            <div>
+              <span>QUOTE STATE</span>
+              <strong>REVIEW</strong>
+              <small>PRICE / AVAILABILITY CONFIRMED LATER</small>
+            </div>
+          </div>
+        </div>
+
+        <div className="hiltech-rfq-steps" aria-label="RFQ steps">
+          <span>01 / REFERENCES</span><i />
+          <span>02 / PROJECT SHEET</span><i />
+          <span>03 / SUBMIT</span><i />
+          <span>04 / TRACK</span>
         </div>
       </header>
 
       {submitState.status === 'success' && submitState.requestCode ? (
-        <section className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-          <h2 className="text-xl font-semibold text-white">{t.successTitle}</h2>
-          <p className="mt-2 text-sm text-slate-200">{t.successBody}</p>
-          <p className="mt-4 rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-3 text-sm text-slate-100">
-            {t.reference}: <strong dir="ltr" className="font-mono text-base">{submitState.requestCode}</strong>
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <Link className="btn-primary text-center" href={`${trackHrefBase}?request_code=${encodeURIComponent(submitState.requestCode)}`}>{t.trackThisRFQ}</Link>
-            <Link className="btn-secondary text-center" href={productsHref}>{t.backToProducts}</Link>
-            <a className="btn-secondary text-center" href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">{t.sendViaWhatsappToo}</a>
+        <section className="hiltech-rfq-receipt" data-rfq-success>
+          <div>
+            <span>REQUEST RECEIVED</span>
+            <h2>
+              SAVE THE<br />
+              <em>REFERENCE.</em>
+            </h2>
+            <p>{t.successBody}</p>
           </div>
+          <div className="hiltech-rfq-receipt-code">
+            <span>{t.reference}</span>
+            <strong dir="ltr">{submitState.requestCode}</strong>
+            <small>USE THIS CODE WITH THE SAME PHONE OR EMAIL TO TRACK THE REQUEST.</small>
+          </div>
+          <nav>
+            <Link href={\`\${trackHrefBase}?request_code=\${encodeURIComponent(submitState.requestCode)}\`}>
+              {t.trackThisRFQ} <span aria-hidden="true">↗</span>
+            </Link>
+            <Link href={productsHref}>{t.backToProducts} <span aria-hidden="true">↗</span></Link>
+            <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+              {t.sendViaWhatsappToo} <span aria-hidden="true">↗</span>
+            </a>
+          </nav>
         </section>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-          <div className="space-y-6">
-            <section className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-              <h2 className="text-xl font-semibold text-white">{t.itemsCardTitle}</h2>
-              {isBasketEmpty ? (
-                <div className="mt-3 rounded-xl border border-dashed border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4 text-sm text-slate-200">
-                  <p>{t.emptyBasket}</p>
-                  <Link className="btn-secondary mt-3 inline-flex" href={productsHref}>{t.browseProducts}</Link>
+        <>
+          <section className="hiltech-rfq-ledger" data-rfq-ledger>
+            <div className="hiltech-rfq-section-label">
+              <span>01 / REFERENCE LEDGER</span>
+              <strong>EXACT CODES / QUANTITY / ITEM NOTE</strong>
+            </div>
+
+            {isBasketEmpty ? (
+              <div className="hiltech-rfq-empty" data-rfq-empty>
+                <div>
+                  <span>EMPTY REQUEST</span>
+                  <h2>
+                    START WITH<br />
+                    <em>THE PHYSICAL LIBRARY.</em>
+                  </h2>
                 </div>
-              ) : (
-                <div className="mt-4 space-y-3">
-                  {items.map((item) => (
-                    <article key={item.id} className="rounded-xl border border-white/15 p-4">
-                      <h3 className="font-semibold text-white">{item.name}</h3>
-                      <p className="text-sm text-slate-300">{item.category} • {item.brand}</p>
-                      <p className="mt-2 text-sm text-slate-200">{t.priceReference}: {item.priceNote || t.priceOnRequest}</p>
-                      <p className="text-xs text-slate-500">{t.availabilityNote}</p>
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <div className="inline-flex items-center gap-2 rounded-lg border border-white/15 p-1">
-                          <button type="button" className="h-9 w-9 rounded border border-white/15" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity - 1) })}>-</button>
-                          <span className="min-w-20 text-center text-sm">{t.quantity}: {item.quantity}</span>
-                          <button type="button" className="h-9 w-9 rounded border border-white/15" onClick={() => updateItem(item.id, { quantity: normalizeRFQQuantity(item.quantity + 1) })}>+</button>
-                        </div>
-                        <button type="button" className="btn-secondary ms-auto" onClick={() => setItems((prev) => prev.filter((entry) => entry.id !== item.id))}>{t.remove}</button>
+                <div>
+                  <p>{t.emptyStateBody}</p>
+                  <Link href={productsHref}>{t.browseProducts} <span aria-hidden="true">↗</span></Link>
+                  <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                    {t.sendProjectOnly} <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="hiltech-rfq-reference-index">
+                {items.map((item, index) => (
+                  <article key={item.id} data-rfq-item>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+
+                    <div className="hiltech-rfq-reference-main">
+                      <small>{item.id}</small>
+                      <h3>{item.name}</h3>
+                      <p>{item.category} / {item.brand}</p>
+                    </div>
+
+                    <div className="hiltech-rfq-reference-commercial">
+                      <span>{t.priceReference}</span>
+                      <strong>{item.priceNote || t.priceOnRequest}</strong>
+                      <small>{t.availabilityNote}</small>
+                    </div>
+
+                    <div className="hiltech-rfq-quantity" aria-label={t.quantity}>
+                      <button
+                        type="button"
+                        aria-label="Decrease quantity"
+                        onClick={() =>
+                          updateItem(item.id, {
+                            quantity: normalizeRFQQuantity(item.quantity - 1),
+                          })
+                        }
+                      >
+                        −
+                      </button>
+                      <strong>{item.quantity}</strong>
+                      <button
+                        type="button"
+                        aria-label="Increase quantity"
+                        onClick={() =>
+                          updateItem(item.id, {
+                            quantity: normalizeRFQQuantity(item.quantity + 1),
+                          })
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <textarea
+                      rows={2}
+                      value={item.notes}
+                      onChange={(event) => updateItem(item.id, { notes: event.target.value })}
+                      placeholder="Item note / variant / location"
+                      aria-label={\`\${item.name} item note\`}
+                    />
+
+                    <button
+                      type="button"
+                      className="hiltech-rfq-remove"
+                      onClick={() =>
+                        setItems((previous) => previous.filter((entry) => entry.id !== item.id))
+                      }
+                    >
+                      {t.remove}
+                    </button>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {quantityError ? <p className="hiltech-rfq-error">{quantityError}</p> : null}
+          </section>
+
+          {bestBundleMatch ? (
+            <section className="hiltech-rfq-scope" data-rfq-scope>
+              <div className="hiltech-rfq-section-label">
+                <span>02 / SCOPE SIGNAL</span>
+                <strong>BEST CURRENT MATCH / NOT A FINAL PROJECT CLASSIFICATION</strong>
+              </div>
+
+              <div className="hiltech-rfq-scope-grid">
+                <div>
+                  <span>{t.scopeCompletion}</span>
+                  <h2>{bestBundleMatch.bundle.title}</h2>
+                  <p>
+                    {bestBundleMatch.completion.completedRequiredCount} of{' '}
+                    {bestBundleMatch.completion.totalRequiredCount} {t.requiredItemsCovered}
+                  </p>
+                </div>
+                <div>
+                  <strong>{bestBundleMatch.completion.completionPercentage}%</strong>
+                  <span>{missingRequirements.length ? t.missingFromScope : t.scopeComplete}</span>
+                </div>
+              </div>
+
+              {missingSuggestions.length ? (
+                <div className="hiltech-rfq-scope-suggestions">
+                  {missingSuggestions.map((suggestion, index) => (
+                    <div key={suggestion.id}>
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      <div>
+                        <small>{suggestion.id}</small>
+                        <strong>{suggestion.name}</strong>
                       </div>
-                    </article>
+                      <button type="button" onClick={() => addSuggestedItem(suggestion.id)}>
+                        {t.addRecommendation} +
+                      </button>
+                    </div>
                   ))}
                 </div>
-              )}
-              {quantityError ? <p className="mt-3 text-sm text-red-600">{quantityError}</p> : null}
+              ) : null}
             </section>
+          ) : null}
 
+          <section className="hiltech-rfq-project-sheet" data-rfq-project>
+            <div className="hiltech-rfq-section-label">
+              <span>03 / PROJECT SHEET</span>
+              <strong>IDENTITY / LOCATION / CONTEXT</strong>
+            </div>
 
+            <div className="hiltech-rfq-project-grid">
+              <div>
+                <h2>
+                  ADD THE CONTEXT<br />
+                  <em>THE PART LIST CANNOT.</em>
+                </h2>
+                <p>{t.prepareHint}</p>
+              </div>
 
-            {bestBundleMatch ? (
-              <section className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-                <h2 className="text-xl font-semibold text-white">{t.scopeCompletion}: {bestBundleMatch.bundle.title}</h2>
-                <p className="mt-2 text-sm text-slate-300">{bestBundleMatch.completion.completedRequiredCount} {locale === 'ar' ? 'من' : 'of'} {bestBundleMatch.completion.totalRequiredCount} {t.requiredItemsCovered} • {bestBundleMatch.completion.completionPercentage}%</p>
-                {missingRequirements.length === 0 ? <p className="mt-3 text-sm font-semibold text-emerald-300">{t.scopeComplete}</p> : <div className="mt-3 space-y-2"><p className="text-sm text-slate-200">{t.missingFromScope}</p>{missingSuggestions.map((suggestion) => <div key={suggestion.id} className="flex items-center justify-between rounded-lg border border-white/10 px-3 py-2"><span className="text-sm text-slate-100">{suggestion.name}</span><button type="button" className="rounded border border-orange-500/40 px-2 py-1 text-xs text-orange-200" onClick={() => addSuggestedItem(suggestion.id)}>{t.addRecommendation}</button></div>)}</div>}
-              </section>
-            ) : null}
+              <div className="hiltech-rfq-fields">
+                <label>
+                  <span>{t.fullName}</span>
+                  <input
+                    ref={fullNameRef}
+                    type="text"
+                    data-rfq-field="fullName"
+                    value={project.fullName || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({ ...previous, fullName: event.target.value }))
+                    }
+                  />
+                  {errors.fullName ? <small>{errors.fullName}</small> : null}
+                </label>
 
-            <section className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-              <h2 className="text-xl font-semibold text-white">{t.projectDetails}</h2>
-              <p className="mt-2 text-sm text-slate-300">{t.prepareHint}</p>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <label className="block text-sm text-slate-200">
-                  <span className="mb-1 block font-medium">{t.fullName}</span>
-                  <input ref={fullNameRef} type="text" className="w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.fullName || ''} onChange={(e) => setProject((prev) => ({ ...prev, fullName: e.target.value }))} />
-                  {errors.fullName ? <span className="mt-1 block text-xs text-red-600">{errors.fullName}</span> : null}
+                <label>
+                  <span>{t.phoneNumber}</span>
+                  <input
+                    ref={phoneRef}
+                    type="tel"
+                    dir="ltr"
+                    data-rfq-field="phoneNumber"
+                    value={project.phoneNumber || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({
+                        ...previous,
+                        phoneNumber: event.target.value,
+                      }))
+                    }
+                  />
+                  {errors.phoneNumber ? <small>{errors.phoneNumber}</small> : null}
                 </label>
-                <label className="block text-sm text-slate-200">
-                  <span className="mb-1 block font-medium">{t.phoneNumber}</span>
-                  <input ref={phoneRef} type="tel" dir="ltr" className="w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.phoneNumber || ''} onChange={(e) => setProject((prev) => ({ ...prev, phoneNumber: e.target.value }))} />
-                  {errors.phoneNumber ? <span className="mt-1 block text-xs text-red-600">{errors.phoneNumber}</span> : null}
+
+                <label>
+                  <span>{t.emailAddress}</span>
+                  <input
+                    ref={emailRef}
+                    type="email"
+                    dir="ltr"
+                    data-rfq-field="emailAddress"
+                    value={project.emailAddress || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({
+                        ...previous,
+                        emailAddress: event.target.value,
+                      }))
+                    }
+                  />
+                  {errors.emailAddress ? <small>{errors.emailAddress}</small> : null}
                 </label>
-                <label className="block text-sm text-slate-200">
-                  <span className="mb-1 block font-medium">{t.emailAddress}</span>
-                  <input ref={emailRef} type="email" dir="ltr" className="w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.emailAddress || ''} onChange={(e) => setProject((prev) => ({ ...prev, emailAddress: e.target.value }))} />
-                  {errors.emailAddress ? <span className="mt-1 block text-xs text-red-600">{errors.emailAddress}</span> : null}
+
+                <label>
+                  <span>{t.companyName}</span>
+                  <input
+                    type="text"
+                    data-rfq-field="companyName"
+                    value={project.companyName || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({
+                        ...previous,
+                        companyName: event.target.value,
+                      }))
+                    }
+                  />
                 </label>
-                <label className="block text-sm text-slate-200">
-                  <span className="mb-1 block font-medium">{t.companyName}</span>
-                  <input type="text" className="w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.companyName || ''} onChange={(e) => setProject((prev) => ({ ...prev, companyName: e.target.value }))} />
+
+                <label className="is-wide">
+                  <span>{t.projectLocation}</span>
+                  <input
+                    type="text"
+                    data-rfq-field="projectLocation"
+                    value={project.projectLocation || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({
+                        ...previous,
+                        projectLocation: event.target.value,
+                      }))
+                    }
+                  />
                 </label>
-                <label className="block text-sm text-slate-200 sm:col-span-2">
-                  <span className="mb-1 block font-medium">{t.projectLocation}</span>
-                  <input type="text" className="w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.projectLocation || ''} onChange={(e) => setProject((prev) => ({ ...prev, projectLocation: e.target.value }))} />
+
+                <label className="is-wide">
+                  <span>{t.projectNotes}</span>
+                  <textarea
+                    rows={5}
+                    data-rfq-field="projectNotes"
+                    value={project.projectNotes || ''}
+                    onChange={(event) =>
+                      setProject((previous) => ({
+                        ...previous,
+                        projectNotes: event.target.value,
+                      }))
+                    }
+                  />
                 </label>
               </div>
-              <label className="mt-4 block text-sm text-slate-200">
-                <span className="mb-1 block font-medium">{t.projectNotes}</span>
-                <textarea className="min-h-28 w-full rounded-xl border border-white/20 px-3 py-2 bg-slate-950/80 text-slate-100" value={project.projectNotes || ''} onChange={(e) => setProject((prev) => ({ ...prev, projectNotes: e.target.value }))} />
-              </label>
-            </section>
+            </div>
+          </section>
 
-            <section className="public-card rounded-2xl border border-white/15 bg-white/5 p-5">
-              <h2 className="text-xl font-semibold text-white">{t.submitSectionTitle}</h2>
+          <section className="hiltech-rfq-submit" data-rfq-submit>
+            <div>
+              <span>04 / SUBMISSION GATE</span>
+              <h2>
+                THE REQUEST IS<br />
+                <em>NOT THE QUOTE.</em>
+              </h2>
+              <p>{t.finalQuotationNote}</p>
+            </div>
+
+            <div>
               {isBasketEmpty ? (
-                <div className="mt-3 space-y-4">
-                  <div className="rounded-xl border border-dashed border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-4">
-                    <h3 className="text-base font-semibold text-white">{t.emptyStateTitle}</h3>
-                    <p className="mt-1 text-sm text-slate-200">{t.emptyStateBody}</p>
-                    <Link className="btn-primary mt-4 inline-flex" href={productsHref}>{t.browseProducts}</Link>
-                  </div>
-                  <div className="rounded-xl border border-white/15 bg-white/5 p-4">
-                    <h3 className="text-base font-semibold text-white">{t.projectOnlyTitle}</h3>
-                    <p className="mt-1 text-sm text-slate-200">{t.projectOnlyBody}</p>
-                    <a className="btn-secondary mt-4 inline-flex" href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">{t.sendProjectOnly}</a>
-                  </div>
-                </div>
+                <>
+                  <p>{t.addItemsToSubmit}</p>
+                  <Link href={productsHref}>{t.browseProducts} <span aria-hidden="true">↗</span></Link>
+                  <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                    {t.sendProjectOnly} <span aria-hidden="true">↗</span>
+                  </a>
+                </>
               ) : (
                 <>
-                  <p className="mt-2 text-sm text-slate-300">{t.finalQuotationNote}</p>
-                  <div className="mt-4 flex flex-col gap-3">
-                    <button type="button" className="btn-primary w-full" onClick={submit} disabled={submitState.status === 'submitting'}>
-                      {submitState.status === 'submitting' ? t.submitting : t.submitRFQ}
-                    </button>
-                    <a className="btn-secondary w-full text-center" href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">{t.sendViaWhatsapp}</a>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={submit}
+                    disabled={submitState.status === 'submitting'}
+                    data-rfq-submit-button
+                  >
+                    {submitState.status === 'submitting' ? t.submitting : t.submitRFQ}
+                    <span aria-hidden="true">↗</span>
+                  </button>
+                  <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                    {t.sendViaWhatsapp} <span aria-hidden="true">↗</span>
+                  </a>
                 </>
               )}
-              {submitState.status === 'error' ? <p className="mt-3 text-sm text-red-600">{submitState.message}</p> : null}
-              <div className="mt-4 rounded-xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-3 text-sm text-slate-200">
-                <span>{t.contactHelper} </span>
-                <a className="font-semibold underline" href={contactHref}>{t.contactHiltech}</a>
-              </div>
-            </section>
-          </div>
 
-          <aside className="public-card h-fit rounded-2xl border border-white/15 bg-white/5 p-5">
-            <h2 className="text-lg font-semibold text-white">{t.nextTitle}</h2>
-            <ul className="mt-3 list-disc space-y-2 ps-5 text-sm text-slate-200">
-              <li>{t.nextPoint1}</li>
-              <li>{t.nextPoint2}</li>
-              <li>{t.nextPoint3}</li>
-              <li>{t.nextPoint4}</li>
-            </ul>
-          </aside>
-        </div>
+              {submitState.status === 'error' ? (
+                <p className="hiltech-rfq-error" data-rfq-submit-error>{submitState.message}</p>
+              ) : null}
+
+              <div className="hiltech-rfq-help">
+                <span>{t.contactHelper}</span>
+                <Link href={contactHref}>{t.contactHiltech} ↗</Link>
+              </div>
+            </div>
+          </section>
+
+          <section className="hiltech-rfq-after" data-rfq-after>
+            <div className="hiltech-rfq-section-label is-dark">
+              <span>05 / AFTER SUBMISSION</span>
+              <strong>REVIEW / CLARIFY / QUOTE / TRACK</strong>
+            </div>
+            <div className="hiltech-rfq-after-grid">
+              {[t.nextPoint1, t.nextPoint2, t.nextPoint3, t.nextPoint4].map((point, index) => (
+                <div key={point}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{point}</strong>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );
