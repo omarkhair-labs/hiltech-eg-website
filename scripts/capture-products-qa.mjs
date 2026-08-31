@@ -8,12 +8,6 @@ const targets = [
   { name: 'mobile', width: 390, height: 844 },
 ];
 
-const detailProducts = [
-  'fiber-leviton-om3',
-  'rack-network-cabinets',
-  'cctv-hikvision-cams',
-];
-
 const intelligenceSlugs = [
   'fiber-optic-systems',
   'copper-cat6-cabling',
@@ -39,6 +33,14 @@ try {
 
     await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(900);
+
+    const detailPaths = await page.locator('[data-product-card] a[href^="/products-partners/"]').evaluateAll((nodes) => {
+      const hrefs = nodes
+        .map((node) => node.getAttribute('href'))
+        .filter((href) => href && !href.includes('/intelligence/'));
+      return [...new Set(hrefs)].slice(0, 3);
+    });
+    if (detailPaths.length < 1) throw new Error('No real product detail routes found from the live catalog');
 
     for (const [name, selector] of [
       ['hero', '.hiltech-products-hero'],
@@ -110,8 +112,9 @@ try {
       });
     }
 
-    for (const productCode of detailProducts) {
-      await page.goto(`${baseURL}/products-partners/${productCode}`, { waitUntil: 'networkidle' });
+    for (let detailIndex = 0; detailIndex < detailPaths.length; detailIndex += 1) {
+      const detailPath = detailPaths[detailIndex];
+      await page.goto(`${baseURL}${detailPath}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(650);
       for (const [name, selector] of [
         ['top', '.hiltech-product-detail-hero'],
@@ -121,7 +124,7 @@ try {
         await page.locator(selector).scrollIntoViewIfNeeded();
         await page.waitForTimeout(500);
         await page.screenshot({
-          path: `visual-qa-products/${target.name}-detail-${productCode}-${name}.png`,
+          path: `visual-qa-products/${target.name}-detail-${detailIndex + 1}-${name}.png`,
           fullPage: false,
         });
       }
