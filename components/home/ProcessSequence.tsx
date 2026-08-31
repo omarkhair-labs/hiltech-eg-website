@@ -59,20 +59,38 @@ export default function ProcessSequence() {
 
     if (!route || !signal || !testLayer || !trace || !proof) return;
 
-    gsap.set(modules, { opacity: 0, scale: 0.78, transformOrigin: 'center center' });
-    gsap.set(ports, { opacity: 0, scale: 0.4, transformOrigin: 'center center' });
+    const moduleOffsets = [
+      { x: -76, y: 42 },
+      { x: -28, y: -54 },
+      { x: 44, y: 48 },
+      { x: 72, y: -34 },
+    ];
+
+    modules.forEach((module, index) => {
+      const offset = moduleOffsets[index] ?? { x: 0, y: 0 };
+      gsap.set(module, {
+        opacity: 0.28,
+        scale: 0.88,
+        x: offset.x,
+        y: offset.y,
+        transformOrigin: 'center center',
+      });
+    });
+    gsap.set(ports, { opacity: 0.1, scale: 0.62, transformOrigin: 'center center' });
     gsap.set(route, { strokeDasharray: 1, strokeDashoffset: 1 });
     gsap.set(signal, { opacity: 0 });
     gsap.set(testLayer, { opacity: 0 });
     gsap.set(trace, { strokeDasharray: 1, strokeDashoffset: 1 });
     gsap.set(proof, { opacity: 0, scale: 0.97, transformOrigin: 'center center' });
-    gsap.set(buildGuides, { opacity: 0.12 });
+    gsap.set(buildGuides, { opacity: 0.2 });
 
     const tl = gsap.timeline({ paused: true });
 
     tl.to(modules, {
       opacity: 1,
       scale: 1,
+      x: 0,
+      y: 0,
       duration: 0.62,
       stagger: 0.08,
       ease: 'power3.out',
