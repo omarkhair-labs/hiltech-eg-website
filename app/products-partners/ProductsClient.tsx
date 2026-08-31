@@ -3,8 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import ProductWorldScene from '@/components/products/ProductWorldScene';
+import { PRODUCT_ROUTE_TRANSITION_EVENT } from '@/components/products/ProductRouteTransition';
 import { productIntelligenceCategories, productIntelligenceSlugByCategory } from '@/content/product-intelligence';
 import { productVisuals } from '@/content/product-visuals';
 import { productCategories, products as staticProducts, type ProductCategory, type ProductItem } from '@/content/products';
@@ -385,6 +386,57 @@ export default function ProductsClient({
   };
 
   const productDetailHref = (id: string) => productDetailPath(id, isArabic ? 'ar' : 'en');
+
+  const startProductDetailTransition = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    item: ProductItem,
+  ) => {
+    if (
+      isArabic ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
+
+    const article = event.currentTarget.closest<HTMLElement>('[data-product-card]');
+    const media = article?.querySelector<HTMLElement>('.hiltech-product-index-media');
+    const image = media?.querySelector<HTMLImageElement>('img');
+    if (!media || !image?.currentSrc) return;
+
+    event.preventDefault();
+
+    const rect = media.getBoundingClientRect();
+    const href = productDetailHref(item.id);
+
+    trackEvent('product_detail_transition_start', {
+      product_id: item.id,
+      category: item.category,
+      source: 'reference_index',
+    });
+
+    window.dispatchEvent(
+      new CustomEvent(PRODUCT_ROUTE_TRANSITION_EVENT, {
+        detail: {
+          href,
+          productId: item.id,
+          src: image.currentSrc,
+          alt: image.alt || item.name,
+          rect: {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+          },
+        },
+      }),
+    );
+  };
+
   const intelligenceHref = (slug?: string) => {
     if (!slug) return productsHref;
     return isArabic
@@ -673,13 +725,20 @@ export default function ProductsClient({
                         <small>{localizeCategory(item.category)}</small>
                       </div>
 
-                      <Link href={productDetailHref(item.id)} className="hiltech-product-reference-media-link">
+                      <Link
+                        href={productDetailHref(item.id)}
+                        className="hiltech-product-reference-media-link"
+                        onClick={(event) => startProductDetailTransition(event, item)}
+                      >
                         <ProductIndexVisual item={item} />
                       </Link>
 
                       <div className="hiltech-product-reference-main">
                         <span className="hiltech-product-code">{item.id}</span>
-                        <Link href={productDetailHref(item.id)}>
+                        <Link
+                          href={productDetailHref(item.id)}
+                          onClick={(event) => startProductDetailTransition(event, item)}
+                        >
                           <h3>{item.name}</h3>
                         </Link>
                         <p>{item.useCase}</p>
@@ -698,7 +757,12 @@ export default function ProductsClient({
                         <button type="button" onClick={() => addToRFQ(item)}>
                           {justAdded === item.id ? 'ADDED' : 'ADD TO RFQ'}
                         </button>
-                        <Link href={productDetailHref(item.id)}>DETAIL ↗</Link>
+                        <Link
+                          href={productDetailHref(item.id)}
+                          onClick={(event) => startProductDetailTransition(event, item)}
+                        >
+                          DETAIL ↗
+                        </Link>
                         <Link href={intelligenceHref(slug)}>TECHNICAL GUIDE ↗</Link>
                       </div>
 
