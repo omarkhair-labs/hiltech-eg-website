@@ -156,123 +156,177 @@ export default function ScopeFinderClient() {
   };
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-2xl border border-white/10 bg-slate-950/70 p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-orange-600">Smart utility</p>
-        <h1 className="mt-2 text-3xl font-bold text-white">Scope Finder</h1>
-        <p className="mt-2 text-sm text-slate-300">Answer a few project questions and get a preliminary infrastructure direction, suggested solution pages, and starter RFQ items.</p>
-        <p className="mt-3 rounded-lg border border-slate-300 bg-slate-900/70 p-3 text-xs text-slate-300">No pricing or final scope is generated here — HILTECH confirms details before quotation.</p>
-      </section>
-
+    <div className="hiltech-scope-finder" data-scope-finder>
       {!showResult ? (
-        <section className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-sm font-semibold text-white">
-              <p>Step {step + 1} of {questions.length}</p>
-              <p>{progressPercent}%</p>
+        <section className="hiltech-scope-workspace" data-scope-question>
+          <div className="hiltech-scope-progress">
+            <div>
+              <span>STEP {String(step + 1).padStart(2, '0')} / {String(questions.length).padStart(2, '0')}</span>
+              <strong>{progressPercent}%</strong>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
-              <div className="h-full rounded-full bg-navy-900 transition-all" style={{ width: `${progressPercent}%` }} />
-            </div>
+            <i>
+              <b style={{ width: progressPercent + '%' }} />
+            </i>
           </div>
 
-          <fieldset>
-            <legend className="text-base font-semibold text-white">{current.label}</legend>
-            <div className="mt-3 grid gap-2">
-              {current.options.map((option) => (
-                <label key={option.value} className="cursor-pointer rounded-lg border border-slate-300 p-3 text-sm text-slate-200 has-[:checked]:border-navy-700 has-[:checked]:bg-navy-50">
-                  <input className="mr-2" type="radio" name={current.key} checked={answers[current.key] === option.value} onChange={() => setAnswers((prev) => ({ ...prev, [current.key]: option.value as never }))} />
-                  <span className="font-medium">{option.label}</span>
-                  {option.helper ? <span className="mt-0.5 block pl-6 text-xs text-slate-300">{option.helper}</span> : null}
-                </label>
-              ))}
+          <fieldset className="hiltech-scope-question">
+            <legend>{current.label}</legend>
+
+            <div className="hiltech-scope-option-index">
+              {current.options.map((option, index) => {
+                const selected = answers[current.key] === option.value;
+                return (
+                  <label key={option.value} className={selected ? 'is-selected' : undefined}>
+                    <input
+                      type="radio"
+                      name={current.key}
+                      checked={selected}
+                      onChange={() =>
+                        setAnswers((prev) => ({ ...prev, [current.key]: option.value as never }))
+                      }
+                    />
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <div>
+                      <strong>{option.label}</strong>
+                      {option.helper ? <p>{option.helper}</p> : null}
+                    </div>
+                    <em aria-hidden="true">{selected ? 'ACTIVE' : 'SELECT'}</em>
+                  </label>
+                );
+              })}
             </div>
           </fieldset>
 
-          <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-            <button type="button" className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-300 disabled:opacity-50" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}>Back</button>
+          <div className="hiltech-scope-actions">
+            <button
+              type="button"
+              disabled={step === 0}
+              onClick={() => setStep((value) => Math.max(0, value - 1))}
+            >
+              BACK <span aria-hidden="true">←</span>
+            </button>
+
             {step < questions.length - 1 ? (
-              <button type="button" className="btn-primary" onClick={() => setStep((s) => Math.min(questions.length - 1, s + 1))}>Next</button>
+              <button
+                type="button"
+                onClick={() => setStep((value) => Math.min(questions.length - 1, value + 1))}
+              >
+                NEXT <span aria-hidden="true">→</span>
+              </button>
             ) : (
-              <button type="button" className="btn-primary" onClick={() => setShowResult(true)}>See My Recommended Scope</button>
+              <button type="button" onClick={() => setShowResult(true)}>
+                RESOLVE PRELIMINARY SCOPE <span aria-hidden="true">↗</span>
+              </button>
             )}
           </div>
+
+          <p className="hiltech-scope-disclaimer">
+            No pricing, compatibility approval, or final project classification is generated here.
+            HILTECH confirms the scope before quotation.
+          </p>
         </section>
       ) : null}
 
       {showResult ? (
-        <section className="rounded-2xl border border-navy-200 bg-navy-50 p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-xl font-bold text-white">Recommended direction: {result.title}</h2>
-            <span className="rounded-full border border-navy-300 bg-slate-900/70 px-2.5 py-1 text-xs font-semibold text-navy-900">{fitBadge}</span>
-          </div>
-          <p className="mt-2 text-sm text-slate-300">{result.explanation}</p>
-
-          <div className="mt-4 rounded-xl border border-white/10 bg-slate-900/70 p-4">
-            <p className="text-sm font-semibold text-white">Why this matches your project</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-300">
-              {whyBullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
-              ))}
-            </ul>
+        <section className="hiltech-scope-result" data-scope-result>
+          <div className="hiltech-utility-section-label">
+            <span>02 / PRELIMINARY RESULT</span>
+            <strong>{fitBadge.toUpperCase()}</strong>
           </div>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="hiltech-scope-result-head">
             <div>
-              <p className="text-sm font-semibold">Recommended solutions</p>
-              <ul className="mt-2 space-y-1 text-sm">
-                {result.solutionSlugs.map((slug) => (
-                  <li key={slug}>
-                    <Link href={`/solutions/${slug}`} className="font-medium text-navy-900 underline">/solutions/{slug}</Link>
-                  </li>
+              <span>DIRECTION</span>
+              <h2>{result.title}</h2>
+              <p>{result.explanation}</p>
+            </div>
+            <button type="button" onClick={() => setShowResult(false)}>
+              REVIEW ANSWERS <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+
+          <div className="hiltech-scope-evidence">
+            <span>WHY THIS DIRECTION</span>
+            <div>
+              {whyBullets.map((bullet, index) => (
+                <p key={bullet}>
+                  <b>{String(index + 1).padStart(2, '0')}</b>
+                  {bullet}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          <div className="hiltech-scope-route-grid">
+            <div>
+              <span>RECOMMENDED SOLUTIONS</span>
+              <nav>
+                {result.solutionSlugs.map((slug, index) => (
+                  <Link key={slug} href={'/solutions/' + slug}>
+                    <b>{String(index + 1).padStart(2, '0')}</b>
+                    <strong>{slug.replaceAll('-', ' ')}</strong>
+                    <em>↗</em>
+                  </Link>
                 ))}
-              </ul>
+              </nav>
             </div>
+
             <div>
-              <p className="text-sm font-semibold">Suggested product categories</p>
-              <ul className="mt-2 space-y-1 text-sm">
-                {result.productSlugs.map((slug) => (
-                  <li key={slug}>
-                    <Link href={`/products-partners/intelligence/${slug}`} className="font-medium text-navy-900 underline">/products-partners/{slug}</Link>
-                  </li>
+              <span>TECHNICAL PRODUCT CONTEXT</span>
+              <nav>
+                {result.productSlugs.map((slug, index) => (
+                  <Link key={slug} href={'/products-partners/intelligence/' + slug}>
+                    <b>{String(index + 1).padStart(2, '0')}</b>
+                    <strong>{slug.replaceAll('-', ' ')}</strong>
+                    <em>↗</em>
+                  </Link>
                 ))}
-              </ul>
+              </nav>
             </div>
           </div>
 
-          <div className="mt-4">
-            <p className="text-sm font-semibold">Suggested RFQ starter items</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-300">
-              {result.starterItems.map((item) => (
-                <li key={item.name}>{item.name} ({item.category})</li>
-              ))}
-            </ul>
+          <div className="hiltech-scope-result-ledger">
+            <article>
+              <span>03 / STARTER REFERENCES</span>
+              <div>
+                <strong>PRELIMINARY RFQ STARTER ITEMS</strong>
+                <ul>
+                  {result.starterItems.map((item) => (
+                    <li key={item.name}>{item.name} / {item.category}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+
+            <article>
+              <span>04 / REQUEST INPUTS</span>
+              <div>
+                <strong>WHAT TO INCLUDE BEFORE REVIEW</strong>
+                <ul>
+                  {requestChecklist.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </article>
           </div>
 
-          <div className="mt-4">
-            <p className="text-sm font-semibold">What to include in your request</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-300">
-              {requestChecklist.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+          <p className="hiltech-scope-disclaimer">
+            This is a preliminary scope suggestion. Final product selection, availability,
+            compatibility, and quotation must be confirmed by HILTECH.
+          </p>
+
+          <div className="hiltech-utility-actions">
+            <button type="button" onClick={addStarterItems} disabled={addedOnce}>
+              {addedOnce ? 'STARTER ITEMS ADDED' : 'ADD STARTER ITEMS TO RFQ'} <span aria-hidden="true">↗</span>
+            </button>
+            <Link href="/rfq">REVIEW RFQ <span aria-hidden="true">↗</span></Link>
+            <a href={getRFQWhatsappLink(readRFQItems())}>WHATSAPP HILTECH <span aria-hidden="true">↗</span></a>
           </div>
 
-          <p className="mt-4 rounded-lg border border-slate-300 bg-slate-900/70 p-3 text-xs text-slate-300">This is a preliminary scope suggestion. Final product selection, availability, compatibility, and quotation must be confirmed by HILTECH.</p>
-
-          <div className="mt-4 space-y-2">
-            <button type="button" onClick={addStarterItems} disabled={addedOnce} className="btn-primary disabled:cursor-not-allowed disabled:opacity-60">{addedOnce ? 'Starter items added' : 'Add starter items to RFQ Basket'}</button>
-            <div>
-              <Link href="/rfq" className="inline-flex items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-300">Review RFQ Basket</Link>
-            </div>
-            <div className="flex flex-wrap gap-4 text-sm">
-              <Link href="/contact" className="font-semibold text-navy-900 underline">Request Project Quote</Link>
-              <a href={getRFQWhatsappLink(readRFQItems())} className="font-semibold text-navy-900 underline">WhatsApp HILTECH</a>
-            </div>
-            {addFeedback ? (
-              <p className="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-sm text-emerald-800">{addFeedback} <Link href="/rfq" className="font-semibold underline">Review RFQ Basket</Link></p>
-            ) : null}
-          </div>
+          {addFeedback ? (
+            <p className="hiltech-scope-feedback">
+              {addFeedback} <Link href="/rfq">Review RFQ ↗</Link>
+            </p>
+          ) : null}
         </section>
       ) : null}
     </div>
