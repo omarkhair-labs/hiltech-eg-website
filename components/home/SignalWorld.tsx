@@ -2,14 +2,21 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
 
 gsap.registerPlugin(ScrollTrigger);
 
 type Props = {
   rootId: string;
 };
+
+function setMaterialOpacity(materials: THREE.Material[], opacity: number) {
+  materials.forEach((material) => {
+    material.opacity = opacity;
+    material.transparent = opacity < 0.999;
+  });
+}
 
 export default function SignalWorld({ rootId }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -19,168 +26,234 @@ export default function SignalWorld({ rootId }: Props) {
     const root = document.getElementById(rootId);
     if (!mount || !root) return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isCompact = window.matchMedia('(max-width: 767px)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const compact = window.matchMedia('(max-width: 767px)').matches;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x050806, isCompact ? 0.065 : 0.045);
+    scene.fog = new THREE.FogExp2(0x030604, compact ? 0.078 : 0.048);
 
-    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 80);
-    camera.position.set(isCompact ? 0.2 : 1.4, 1.2, isCompact ? 10.5 : 11.8);
+    const camera = new THREE.PerspectiveCamera(compact ? 52 : 46, 1, 0.1, 90);
+    camera.position.set(compact ? 0.15 : 0.9, 0.55, compact ? 9.8 : 9.3);
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: !isCompact,
       alpha: true,
+      antialias: !compact,
       powerPreference: 'high-performance',
     });
-
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isCompact ? 1.2 : 1.65));
-    renderer.setClearColor(0x050806, 0);
+    renderer.toneMappingExposure = 1.08;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1.15 : 1.55));
+    renderer.setClearColor(0x030604, 0);
     mount.appendChild(renderer.domElement);
 
-    const world = new THREE.Group();
-    scene.add(world);
+    const worldRoot = new THREE.Group();
+    scene.add(worldRoot);
 
-    const graphite = new THREE.MeshStandardMaterial({
-      color: 0x0c1210,
-      roughness: 0.82,
-      metalness: 0.35,
-    });
-    const edge = new THREE.MeshStandardMaterial({
-      color: 0x151c18,
-      emissive: 0x0b1d11,
-      emissiveIntensity: 0.65,
-      roughness: 0.55,
-      metalness: 0.65,
-    });
-    const signalMaterial = new THREE.MeshStandardMaterial({
-      color: 0x96ff59,
-      emissive: 0x65ff2e,
-      emissiveIntensity: 2.4,
-      roughness: 0.25,
-      metalness: 0.15,
-    });
+    const fiberGroup = new THREE.Group();
+    const terminationGroup = new THREE.Group();
+    const systemGroup = new THREE.Group();
+    worldRoot.add(fiberGroup, terminationGroup, systemGroup);
 
-    const ambient = new THREE.HemisphereLight(0xc7ffd5, 0x050806, 1.2);
+    const ambient = new THREE.HemisphereLight(0xd9ffe4, 0x020403, 1.35);
     scene.add(ambient);
-    const key = new THREE.PointLight(0x8dff5a, 22, 24, 2);
-    key.position.set(4, 5, 6);
-    scene.add(key);
-    const rim = new THREE.PointLight(0x7fb6ff, 10, 18, 2);
-    rim.position.set(-6, 2, -2);
-    scene.add(rim);
 
-    const nodeGeometry = new THREE.BoxGeometry(1, 0.34, 1.5);
-    const rackGeometry = new THREE.BoxGeometry(1.2, 3.4, 1.45);
+    const signalLight = new THREE.PointLight(0x8ff257, 24, 20, 2);
+    signalLight.position.set(2.7, 1.4, 4.5);
+    scene.add(signalLight);
 
-    const nodes: THREE.Mesh[] = [];
-    const nodePositions = [
-      [-4.8, -1.5, 0.5],
-      [-2.8, -0.7, -0.4],
-      [-0.8, -1.2, 0.4],
-      [1.3, -0.5, -0.6],
-      [3.4, -1.1, 0.3],
-      [5.1, -0.4, -0.8],
-    ] as const;
+    const coolRim = new THREE.PointLight(0x8fb7ff, 9, 22, 2);
+    coolRim.position.set(-5.5, 2.7, 1.4);
+    scene.add(coolRim);
 
-    nodePositions.forEach(([x, y, z], index) => {
-      const node = new THREE.Mesh(nodeGeometry, index === 3 ? edge : graphite);
-      node.position.set(x, y, z);
-      node.rotation.y = (index % 2 ? -1 : 1) * 0.12;
-      world.add(node);
-      nodes.push(node);
+    const activeFiberMaterial = new THREE.MeshBasicMaterial({
+      color: 0x9cff63,
+      transparent: true,
+      opacity: 0.96,
     });
 
-    const rack = new THREE.Mesh(rackGeometry, edge);
-    rack.position.set(1.45, 0.95, -0.75);
-    world.add(rack);
+    const passiveFiberMaterials: THREE.MeshBasicMaterial[] = [];
+    const fiberCurves: THREE.CatmullRomCurve3[] = [];
 
-    const portGeometry = new THREE.BoxGeometry(0.12, 0.06, 0.05);
-    const ports = new THREE.InstancedMesh(portGeometry, signalMaterial, 42);
-    const matrix = new THREE.Matrix4();
-    for (let i = 0; i < 42; i += 1) {
-      const col = i % 6;
-      const row = Math.floor(i / 6);
-      matrix.makeTranslation(
-        0.98 + col * 0.17,
-        -0.25 + row * 0.32,
-        0.0,
+    const strandCount = compact ? 11 : 22;
+    for (let index = 0; index < strandCount; index += 1) {
+      const normalized = strandCount === 1 ? 0 : index / (strandCount - 1);
+      const spread = normalized - 0.5;
+      const vertical = spread * (compact ? 2.8 : 4.2);
+      const depth = Math.sin(index * 1.73) * (compact ? 0.72 : 1.2);
+      const endY = spread * 1.45;
+
+      const points = [
+        new THREE.Vector3(-8.2, vertical * 1.15, depth + 1.1),
+        new THREE.Vector3(-5.8, vertical * 0.8, depth * 0.8 + 0.65),
+        new THREE.Vector3(-3.1, vertical * 0.5, depth * 0.45 + 0.15),
+        new THREE.Vector3(-0.6, vertical * 0.25, depth * 0.2 - 0.1),
+        new THREE.Vector3(2.3, endY * 0.35, -0.28),
+        new THREE.Vector3(3.35, endY * 0.12, -0.42),
+      ];
+
+      const curve = new THREE.CatmullRomCurve3(points);
+      fiberCurves.push(curve);
+
+      const isActive = index === Math.floor(strandCount * 0.55);
+      const material = isActive
+        ? activeFiberMaterial
+        : new THREE.MeshBasicMaterial({
+            color: index % 4 === 0 ? 0xa9c9ff : 0x6f8978,
+            transparent: true,
+            opacity: index % 4 === 0 ? 0.19 : 0.12,
+          });
+
+      if (!isActive) passiveFiberMaterials.push(material);
+
+      const tube = new THREE.Mesh(
+        new THREE.TubeGeometry(
+          curve,
+          compact ? 90 : 150,
+          isActive ? (compact ? 0.035 : 0.052) : (compact ? 0.012 : 0.018),
+          isActive ? 8 : 6,
+          false,
+        ),
+        material,
       );
-      ports.setMatrixAt(i, matrix);
+      fiberGroup.add(tube);
     }
-    ports.position.z = 0.02;
-    world.add(ports);
 
-    const routePoints = [
-      new THREE.Vector3(-6.2, -1.9, 1.2),
-      new THREE.Vector3(-4.1, -1.25, 0.55),
-      new THREE.Vector3(-2.2, -0.35, 0.15),
-      new THREE.Vector3(-0.2, -0.9, 0.35),
-      new THREE.Vector3(1.45, 0.1, -0.55),
-      new THREE.Vector3(3.5, -0.55, 0.25),
-      new THREE.Vector3(6.4, -0.35, -0.65),
-    ];
-    const mainCurve = new THREE.CatmullRomCurve3(routePoints);
-    const tube = new THREE.Mesh(
-      new THREE.TubeGeometry(mainCurve, 180, isCompact ? 0.028 : 0.045, 8, false),
-      new THREE.MeshBasicMaterial({
-        color: 0x8bff55,
+    const activeCurve = fiberCurves[Math.floor(strandCount * 0.55)];
+
+    const pulseMaterial = new THREE.MeshStandardMaterial({
+      color: 0xc2ff9e,
+      emissive: 0x74ff34,
+      emissiveIntensity: 3.4,
+      roughness: 0.16,
+      metalness: 0.05,
+    });
+    const pulse = new THREE.Mesh(new THREE.SphereGeometry(compact ? 0.09 : 0.12, 18, 18), pulseMaterial);
+    fiberGroup.add(pulse);
+
+    const terminationShell = new THREE.Mesh(
+      new THREE.BoxGeometry(compact ? 2.2 : 2.7, compact ? 3.2 : 3.8, 1.4),
+      new THREE.MeshStandardMaterial({
+        color: 0x090e0b,
+        roughness: 0.64,
+        metalness: 0.58,
+        emissive: 0x061309,
+        emissiveIntensity: 0.72,
         transparent: true,
-        opacity: 0.86,
+        opacity: 0.97,
       }),
     );
-    world.add(tube);
+    terminationShell.position.set(4.55, 0.05, -0.62);
+    terminationShell.rotation.y = -0.1;
+    terminationGroup.add(terminationShell);
 
-    const secondaryCurves: THREE.Mesh[] = [];
-    for (let route = 0; route < (isCompact ? 4 : 8); route += 1) {
-      const offset = (route - 3.5) * 0.12;
-      const curve = new THREE.CatmullRomCurve3(
-        routePoints.map((point, index) => new THREE.Vector3(
-          point.x,
-          point.y + offset * (0.45 + index * 0.07),
-          point.z + offset,
-        )),
-      );
-      const mesh = new THREE.Mesh(
-        new THREE.TubeGeometry(curve, 120, 0.012, 6, false),
-        new THREE.MeshBasicMaterial({
-          color: route % 3 === 0 ? 0xb7d4ff : 0x58d835,
-          transparent: true,
-          opacity: route % 3 === 0 ? 0.22 : 0.28,
-        }),
-      );
-      world.add(mesh);
-      secondaryCurves.push(mesh);
+    const terminationEdge = new THREE.LineSegments(
+      new THREE.EdgesGeometry(terminationShell.geometry),
+      new THREE.LineBasicMaterial({
+        color: 0x36513d,
+        transparent: true,
+        opacity: 0.54,
+      }),
+    );
+    terminationEdge.position.copy(terminationShell.position);
+    terminationEdge.rotation.copy(terminationShell.rotation);
+    terminationGroup.add(terminationEdge);
+
+    const portGeometry = new THREE.BoxGeometry(0.24, 0.11, 0.07);
+    const portMaterial = new THREE.MeshStandardMaterial({
+      color: 0x141d17,
+      roughness: 0.5,
+      metalness: 0.55,
+      emissive: 0x0d1c10,
+      emissiveIntensity: 0.5,
+      transparent: true,
+      opacity: 0.96,
+    });
+    const activePortMaterial = new THREE.MeshStandardMaterial({
+      color: 0x93ff58,
+      emissive: 0x65ff2c,
+      emissiveIntensity: 2.6,
+      roughness: 0.24,
+      metalness: 0.08,
+    });
+
+    for (let row = 0; row < 9; row += 1) {
+      for (let col = 0; col < 3; col += 1) {
+        const active = row === 4 && col === 1;
+        const port = new THREE.Mesh(portGeometry, active ? activePortMaterial : portMaterial);
+        port.position.set(
+          3.47 + col * 0.39,
+          -1.24 + row * 0.31,
+          -1.41,
+        );
+        terminationGroup.add(port);
+      }
     }
 
-    const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), signalMaterial);
-    world.add(pulse);
-
-    const grid = new THREE.GridHelper(22, 42, 0x1d3823, 0x0d1711);
-    grid.position.y = -2.2;
-    const gridMaterials = Array.isArray(grid.material) ? grid.material : [grid.material];
-    gridMaterials.forEach((material) => {
-      material.transparent = true;
-      material.opacity = 0.36;
+    const rackMaterial = new THREE.MeshStandardMaterial({
+      color: 0x101713,
+      roughness: 0.73,
+      metalness: 0.62,
+      transparent: true,
+      opacity: 0,
     });
-    world.add(grid);
+    const rackEdgeMaterial = new THREE.LineBasicMaterial({
+      color: 0x496052,
+      transparent: true,
+      opacity: 0,
+    });
+
+    const rackPositions = [
+      [-4.8, 0.5, -5.6],
+      [-2.6, 0.5, -5.9],
+      [-0.4, 0.5, -6.2],
+      [1.8, 0.5, -6.0],
+      [4.0, 0.5, -5.7],
+      [-3.7, 0.5, -9.0],
+      [-1.4, 0.5, -9.2],
+      [0.9, 0.5, -9.1],
+      [3.2, 0.5, -8.8],
+    ] as const;
+
+    rackPositions.slice(0, compact ? 5 : rackPositions.length).forEach(([x, y, z], index) => {
+      const geometry = new THREE.BoxGeometry(1.3, 4.2, 1.5);
+      const rack = new THREE.Mesh(geometry, rackMaterial);
+      rack.position.set(x, y + (index % 2) * 0.08, z);
+      systemGroup.add(rack);
+
+      const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), rackEdgeMaterial);
+      edge.position.copy(rack.position);
+      systemGroup.add(edge);
+    });
+
+    const floor = new THREE.GridHelper(26, 36, 0x294431, 0x0c1710);
+    floor.position.set(0, -1.62, -6.5);
+    const floorMaterials = Array.isArray(floor.material) ? floor.material : [floor.material];
+    floorMaterials.forEach((material) => {
+      material.transparent = true;
+      material.opacity = 0;
+    });
+    systemGroup.add(floor);
+
+    const allTerminationMaterials = [
+      terminationShell.material as THREE.Material,
+      terminationEdge.material as THREE.Material,
+      portMaterial,
+    ];
 
     const progress = { value: 0 };
-    let frame = 0;
+    let animationFrame = 0;
 
     const resize = () => {
-      const { clientWidth, clientHeight } = mount;
-      renderer.setSize(clientWidth, clientHeight, false);
-      camera.aspect = clientWidth / Math.max(clientHeight, 1);
+      const width = mount.clientWidth;
+      const height = Math.max(1, mount.clientHeight);
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
     };
-    resize();
 
-    const onResize = () => resize();
-    window.addEventListener('resize', onResize);
+    resize();
+    window.addEventListener('resize', resize);
 
     const trigger = ScrollTrigger.create({
       trigger: root,
@@ -193,61 +266,88 @@ export default function SignalWorld({ rootId }: Props) {
     });
 
     const render = () => {
-      const t = performance.now() * 0.001;
-      const p = prefersReducedMotion ? 0.15 : progress.value;
-      const chapter = Math.min(1, Math.max(0, p));
-
-      world.rotation.y = THREE.MathUtils.lerp(-0.1, 0.34, chapter);
-      world.rotation.x = THREE.MathUtils.lerp(-0.04, 0.08, chapter);
+      const now = performance.now() * 0.001;
+      const chapter = reduced ? 0.08 : THREE.MathUtils.clamp(progress.value, 0, 1);
 
       if (chapter < 0.34) {
         const local = chapter / 0.34;
-        camera.position.x = THREE.MathUtils.lerp(isCompact ? 0.2 : 1.4, 0.3, local);
-        camera.position.y = THREE.MathUtils.lerp(1.2, 0.15, local);
-        camera.position.z = THREE.MathUtils.lerp(isCompact ? 10.5 : 11.8, 7.2, local);
+        camera.position.x = THREE.MathUtils.lerp(compact ? 0.1 : 0.9, -0.35, local);
+        camera.position.y = THREE.MathUtils.lerp(0.55, 0.15, local);
+        camera.position.z = THREE.MathUtils.lerp(compact ? 9.8 : 9.3, compact ? 7.5 : 6.5, local);
+        worldRoot.rotation.y = THREE.MathUtils.lerp(-0.06, 0.08, local);
+        worldRoot.rotation.x = THREE.MathUtils.lerp(-0.03, 0.025, local);
+
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.12, 0.24, local));
+        setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.94, 0.72, local));
+        rackMaterial.opacity = 0;
+        rackEdgeMaterial.opacity = 0;
+        floorMaterials.forEach((material) => { material.opacity = 0; });
+        systemGroup.scale.setScalar(0.82);
       } else if (chapter < 0.68) {
         const local = (chapter - 0.34) / 0.34;
-        camera.position.x = THREE.MathUtils.lerp(0.3, -1.8, local);
-        camera.position.y = THREE.MathUtils.lerp(0.15, -0.55, local);
-        camera.position.z = THREE.MathUtils.lerp(7.2, 5.5, local);
+        camera.position.x = THREE.MathUtils.lerp(-0.35, -2.3, local);
+        camera.position.y = THREE.MathUtils.lerp(0.15, -0.35, local);
+        camera.position.z = THREE.MathUtils.lerp(compact ? 7.5 : 6.5, compact ? 5.9 : 4.7, local);
+        worldRoot.rotation.y = THREE.MathUtils.lerp(0.08, 0.23, local);
+
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.24, 0.34, local));
+        setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.72, 0.3, local));
+        rackMaterial.opacity = 0;
+        rackEdgeMaterial.opacity = 0;
+        floorMaterials.forEach((material) => { material.opacity = 0; });
       } else {
         const local = (chapter - 0.68) / 0.32;
-        camera.position.x = THREE.MathUtils.lerp(-1.8, 0.1, local);
-        camera.position.y = THREE.MathUtils.lerp(-0.55, 1.65, local);
-        camera.position.z = THREE.MathUtils.lerp(5.5, isCompact ? 10.6 : 13.8, local);
+        camera.position.x = THREE.MathUtils.lerp(-2.3, compact ? 0.4 : 1.25, local);
+        camera.position.y = THREE.MathUtils.lerp(-0.35, compact ? 1.1 : 2.35, local);
+        camera.position.z = THREE.MathUtils.lerp(compact ? 5.9 : 4.7, compact ? 12.4 : 15.2, local);
+        worldRoot.rotation.y = THREE.MathUtils.lerp(0.23, -0.04, local);
+        worldRoot.rotation.x = THREE.MathUtils.lerp(0.025, 0.09, local);
+
+        setMaterialOpacity(passiveFiberMaterials, THREE.MathUtils.lerp(0.34, 0.08, local));
+        setMaterialOpacity(allTerminationMaterials, THREE.MathUtils.lerp(0.3, 0.12, local));
+        rackMaterial.opacity = THREE.MathUtils.lerp(0, 0.82, local);
+        rackEdgeMaterial.opacity = THREE.MathUtils.lerp(0, 0.42, local);
+        floorMaterials.forEach((material) => {
+          material.opacity = THREE.MathUtils.lerp(0, 0.38, local);
+        });
+        const scale = THREE.MathUtils.lerp(0.82, 1, local);
+        systemGroup.scale.setScalar(scale);
       }
 
-      camera.lookAt(0.4, -0.35, 0);
+      camera.lookAt(chapter < 0.68 ? new THREE.Vector3(0.8, -0.1, -0.45) : new THREE.Vector3(0, 0, -6.7));
 
-      const pulseProgress = prefersReducedMotion ? 0.48 : (t * 0.12 + chapter * 1.35) % 1;
-      pulse.position.copy(mainCurve.getPointAt(pulseProgress));
-      const pulseScale = 0.82 + Math.sin(t * 4.2) * 0.16;
+      const travel = reduced ? 0.62 : (now * 0.11 + chapter * 1.42) % 1;
+      pulse.position.copy(activeCurve.getPointAt(travel));
+      const pulseScale = 0.82 + Math.sin(now * 5.2) * 0.18;
       pulse.scale.setScalar(pulseScale);
+      signalLight.position.copy(pulse.position).add(new THREE.Vector3(0.4, 0.5, 2.4));
+      signalLight.intensity = 20 + Math.sin(now * 4.8) * 3.5;
 
-      nodes.forEach((node, index) => {
-        const breathe = 1 + Math.sin(t * 0.8 + index) * 0.012;
-        node.scale.y = breathe;
-      });
+      activeFiberMaterial.opacity = 0.78 + Math.sin(now * 2.4) * 0.1;
+      terminationGroup.rotation.z = Math.sin(now * 0.22) * 0.008;
 
       renderer.render(scene, camera);
-      if (!prefersReducedMotion) frame = window.requestAnimationFrame(render);
+      if (!reduced) animationFrame = window.requestAnimationFrame(render);
     };
 
     render();
 
     return () => {
       trigger.kill();
-      window.removeEventListener('resize', onResize);
-      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('resize', resize);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
 
-      world.traverse((object) => {
+      worldRoot.traverse((object) => {
         const renderable = object as THREE.Object3D & {
           geometry?: THREE.BufferGeometry;
           material?: THREE.Material | THREE.Material[];
         };
         renderable.geometry?.dispose();
-        if (Array.isArray(renderable.material)) renderable.material.forEach((material) => material.dispose());
-        else renderable.material?.dispose();
+        if (Array.isArray(renderable.material)) {
+          renderable.material.forEach((material) => material.dispose());
+        } else {
+          renderable.material?.dispose();
+        }
       });
 
       renderer.dispose();
