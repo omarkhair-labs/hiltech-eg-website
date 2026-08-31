@@ -12238,3 +12238,92 @@ body {
     padding: 1.6rem 0;
   }
 }
+
+
+/* ==========================================================================
+   CREATIVE HEADER — ENGINEERED UTILITY
+   ========================================================================== */
+
+.hiltech-creative-header .hiltech-creative-nav-link {
+  position: relative;
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  padding: .55rem .75rem;
+  color: #b7c0ba;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .42rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link::after {
+  content: "";
+  position: absolute;
+  left: .75rem;
+  right: .75rem;
+  bottom: .18rem;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: #8ff257;
+  transition: transform 180ms ease;
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link:hover,
+.hiltech-creative-header .hiltech-creative-nav-link:focus-visible,
+.hiltech-creative-header .hiltech-creative-nav-link.is-active {
+  color: #a8ff79;
+}
+
+.hiltech-creative-header .hiltech-creative-nav-link:hover::after,
+.hiltech-creative-header .hiltech-creative-nav-link:focus-visible::after,
+.hiltech-creative-header .hiltech-creative-nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+.hiltech-creative-header .hiltech-creative-utility-link,
+.hiltech-creative-header .hiltech-creative-rfq-count,
+.hiltech-creative-header .hiltech-creative-project-link {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  border-radius: 0;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  letter-spacing: .05em;
+}
+
+.hiltech-creative-header .hiltech-creative-utility-link {
+  padding: .55rem .7rem;
+  color: #aeb8b1;
+  font-size: .42rem;
+  font-weight: 600;
+}
+
+.hiltech-creative-header .hiltech-creative-rfq-count {
+  padding: .55rem .7rem;
+  border-left: 1px solid rgba(225,241,228,.14);
+  border-right: 1px solid rgba(225,241,228,.14);
+  color: #bdc6c0;
+  font-size: .4rem;
+  font-weight: 600;
+}
+
+.hiltech-creative-header .hiltech-creative-project-link {
+  justify-content: center;
+  padding: .55rem .95rem;
+  border: 1px solid rgba(143,242,87,.46);
+  color: #a8ff79;
+  font-size: .42rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.hiltech-creative-header .hiltech-creative-project-link:hover,
+.hiltech-creative-header .hiltech-creative-project-link:focus-visible {
+  background: #8ff257;
+  color: #071006;
+}
