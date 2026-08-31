@@ -1528,3 +1528,30 @@ body {
     left: 52%;
   }
 }
+
+
+.hiltech-creative-header {
+  font-family: var(--font-hiltech-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.hiltech-creative-header nav a,
+.hiltech-creative-header button,
+.hiltech-creative-header [role='button'] {
+  letter-spacing: 0.055em;
+}
+
+.hiltech-creative-header nav a {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.hiltech-creative-header .container {
+  max-width: 96vw;
+}
+
+@media (min-width: 1024px) {
+  .hiltech-creative-header .container {
+    height: 4rem;
+    padding-inline: 0;
+  }
+}
