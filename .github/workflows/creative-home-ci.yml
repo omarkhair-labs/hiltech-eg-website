@@ -17,6 +17,7 @@ on:
       - 'scripts/capture-home-qa.mjs'
       - 'scripts/capture-home-smoke-qa.mjs'
       - 'scripts/capture-solutions-qa.mjs'
+      - 'scripts/capture-services-qa.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
 concurrency:
@@ -62,8 +63,11 @@ jobs:
       - name: Capture Home regression smoke
         run: node scripts/capture-home-smoke-qa.mjs
 
-      - name: Capture Solutions visual QA
+      - name: Capture Solutions regression QA
         run: node scripts/capture-solutions-qa.mjs
+
+      - name: Capture Services visual QA
+        run: node scripts/capture-services-qa.mjs
 
       - name: Upload Home regression smoke
         uses: actions/upload-artifact@v4
@@ -77,6 +81,13 @@ jobs:
         with:
           name: hiltech-solutions-visual-qa
           path: visual-qa-solutions/
+          retention-days: 7
+
+      - name: Upload Services visual QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: hiltech-services-visual-qa
+          path: visual-qa-services/
           retention-days: 7
 
       - name: Stop production server
