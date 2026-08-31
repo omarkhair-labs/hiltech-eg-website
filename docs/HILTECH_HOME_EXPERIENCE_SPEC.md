@@ -168,26 +168,39 @@ Motion:
 
 Purpose:
 - introduce technical commerce without breaking the narrative
-- show that components are parts of systems, not a detached shop
+- show the physical system resolving into exact bill-of-material references
+- preserve a direct procurement path into the existing catalog and RFQ flow
+
+Reality-backed active catalog:
+- Fiber Optic Systems — 13 references in the current 48-item Wix fallback snapshot
+- Copper / CAT6 Cabling — 3 references
+- Patch Cords & Connectivity — 20 references
+- Faceplates / Keystone / RJ45 — 10 references
+- Cabinets / Racks / PDU — 2 references
+
+Total snapshot: 48 catalog references.
+
+Runtime rule:
+The public catalog intentionally exposes only populated categories. Do not add Cable Management / Duct Systems or CCTV & Security as empty commerce tabs until live inventory exists.
 
 Visual:
-- exploded component/system view
-- product categories connect to infrastructure roles
-
-Potential categories, subject to real catalog validation:
-- Fiber
-- Copper / UTP
-- Connectivity
-- Fiber Management
-- Cabinets / Racks
-- Network Hardware
-- Testers / Tools
-- Accessories
+- dark procurement field after the light H06 execution map
+- one literal product inspection plate using the product's current catalog image
+- one technical specification panel
+- five-category rail showing real reference counts
+- no generic product-card wall on the Home
 
 Interaction:
-- explore category
-- browse products
-- direct product lookup must remain fast
+- hover/focus/click changes the active category and representative real catalog product
+- Open category deep-links into the current /products-partners category query
+- Browse full catalog and Start RFQ remain direct
+- procurement must not require the user to replay cinematic interactions
+
+Product media gate:
+- use current product listing media from the Wix/live catalog when available
+- if real listing media is absent, show a neutral missing-media state
+- do not use the AI-generated product visuals in content/product-visuals.ts as accurate commerce photography
+- do not synthesize product details, logos, packaging, or specifications
 
 Rule:
 A procurement user must never be forced through cinematic interactions to buy/find a part.
