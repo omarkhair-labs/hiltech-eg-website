@@ -56,13 +56,13 @@ export default function ProductDetailActions({ product, intelligenceHref, labels
   };
 
   return (
-    <div className="mt-5 space-y-3">
-      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-        <button type="button" onClick={addToRFQ} className="btn-primary w-full justify-center sm:w-auto">{t.addToRFQ}</button>
-        {intelligenceHref ? <Link href={intelligenceHref} className="inline-flex w-full items-center justify-center rounded-lg border border-white/25 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-white/40 hover:bg-white/10 sm:w-auto">{t.technicalNotes}</Link> : null}
-        <Link href={productsHref} className="inline-flex w-full items-center justify-center rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-white/35 hover:bg-white/10 sm:w-auto">{t.backToProducts}</Link>
+    <div className="hiltech-product-detail-actions">
+      <div className="hiltech-product-detail-actions-row">
+        <button type="button" onClick={addToRFQ} className="hiltech-product-detail-add">{t.addToRFQ}</button>
+        {intelligenceHref ? <Link href={intelligenceHref} className="hiltech-product-detail-secondary">{t.technicalNotes}</Link> : null}
+        <Link href={productsHref} className="hiltech-product-detail-secondary">{t.backToProducts}</Link>
       </div>
-      {added ? <p className="text-sm font-medium text-emerald-700">{t.addedToRFQ}</p> : null}
+      {added ? <p className="hiltech-product-detail-added">{t.addedToRFQ}</p> : null}
     </div>
   );
 }
