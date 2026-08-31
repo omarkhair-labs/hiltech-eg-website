@@ -3,7 +3,7 @@
 Status: **PRODUCTS CLOSED — PUBLIC SITE STILL WIP**  
 Date: **2026-08-31**  
 Branch: `redesign/creative-system-20260831`  
-Validated implementation head: `7544808962ff46dfaf2967bc05e5ad5276a699a0`
+Validated implementation head: `6681690af303a930d5d3c05e556a37c0bb6de501`
 
 ## Scope closed
 
@@ -145,6 +145,70 @@ Seven technical category guides remain part of the closed Product lane:
 
 They expose system/category context, planning inputs, compatibility/handover context, and related references without becoming a duplicate ecommerce catalog.
 
+## Nested Product Intelligence reopening / revalidation
+
+Products was reopened after a manual browser review of the Technical Intelligence index revealed that the original closure QA was too shallow.
+
+The previous QA had captured:
+- guide hero,
+- category planning,
+- compatibility / handover,
+
+but it had not captured the lower nested Product Intelligence client surfaces.
+
+That gap allowed legacy UI to remain below otherwise-redesigned guides:
+- rounded slate/navy/orange RFQ shells,
+- generic starter pills,
+- three-column related-product cards,
+- legacy CTA styling,
+- older orange/navy technical diagrams,
+- missing System Context on three of the seven guides.
+
+The nested audit corrected the problem instead of preserving the earlier closure judgment.
+
+All seven guides now use one current HILTECH Product Intelligence architecture:
+
+1. System Context
+2. Category Planning
+3. Compatibility & Handover
+4. Connect the Category
+5. RFQ Translation
+6. Current Reference Index
+7. Procurement Close
+
+All seven now have a semantic system model:
+- Fiber → cable / ODF / connector / trace
+- Copper → pair / cable / terminate / test
+- Patch / Connectivity → port / patch / equipment
+- Faceplates / Keystone / RJ45 → box / module / outlet / device
+- Cabinets / Racks / PDU → enclosure / power / patch / access
+- Cable Management / Duct → path / bend / separate / access
+- CCTV / Security → camera / link / control / review
+
+The nested procurement surface is no longer a card wall.
+
+It now exposes:
+- live-reference count,
+- RFQ basket state,
+- exact starter references where live catalog data exists,
+- explicit RFQ-only state when no public references exist,
+- complete current-reference index,
+- exact reference code / brand / spec / use context,
+- Add to RFQ,
+- Product Detail,
+- procurement close.
+
+No fake products are introduced to make an empty category look complete.
+
+The new browser QA explicitly fails when:
+- a guide has no semantic system diagram,
+- a legacy rounded intelligence shell returns,
+- long mobile RFQ/reference/close titles clip horizontally.
+
+The English Product implementation files were also audited for legacy surface markers such as old rounded/slate/navy/orange shells. No such markers remain in the reviewed Product V2 implementation surface.
+
+Full Arabic creative parity is still intentionally deferred to the later Arabic parity lane. The Arabic routes are not counted as visually closed by this English Product closure.
+
 ## Final mobile typography correction
 
 The full-size Product artifact review found a real mobile blocker in Product Intelligence:
@@ -178,19 +242,18 @@ The corrected full-size captures show the titles, intro text, and strategic summ
 
 Creative Public CI:
 
-- Run ID: `33364880032`
-- Run #102
+- Run ID: `33367095742`
+- Run #120
 - Result: **SUCCESS**
-- Validated implementation head: `7544808962ff46dfaf2967bc05e5ad5276a699a0`
+- Validated implementation head: `6681690af303a930d5d3c05e556a37c0bb6de501`
 
 Products visual QA:
-- Artifact ID: `9747997493`
+- Artifact ID: `9748772283`
 - Name: `hiltech-products-visual-qa`
-- 87 browser captures
+- **157 browser captures**
+- now covers the full depth of every Product Intelligence guide, not only its upper sections
 
-Closed-public regression smoke:
-- Artifact ID: `9747997053`
-- Name: `hiltech-closed-public-regression-smoke`
+The same run also revalidated Work QA and the closed public regression smoke.
 
 Passed:
 - dependency install
@@ -210,11 +273,15 @@ Passed:
 - Product Detail object / position / ledger / related / RFQ states
 - Arabic Unicode Product Detail smoke
 - all seven Product Intelligence routes
-- mobile Product Intelligence horizontal-clipping gate
+- all seven Product Intelligence semantic system models
+- Product Intelligence connections / RFQ translation / reference index / procurement close
+- no legacy rounded Product Intelligence client shells
+- live-reference and zero-live-reference category states
+- mobile Product Intelligence horizontal-clipping gates across upper and nested sections
 
 ## Closure judgment
 
-No known material visual or interaction blocker remains in the reviewed English Products V2 surfaces.
+No known material visual or interaction blocker remains in the reviewed English Products V2 surfaces after the nested Product Intelligence reopening and full-depth revalidation.
 
 Products now expresses the same HILTECH engineering worldview as the closed Home, Solutions, and Services without repeating their structures:
 
