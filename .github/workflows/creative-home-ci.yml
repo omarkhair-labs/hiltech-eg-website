@@ -55,11 +55,15 @@ jobs:
       - name: Capture desktop visual QA
         run: |
           mkdir -p visual-qa
-          npx --yes playwright@1.55.0 screenshot             --browser=chromium             --viewport-size="1440,1000"             --wait-for-timeout=3000             --full-page             http://127.0.0.1:3000/             visual-qa/home-desktop.png
+          for chapter in h01 h02 h03; do
+            npx --yes playwright@1.55.0 screenshot --browser=chromium --viewport-size="1440,1000" --wait-for-timeout=2500 "http://127.0.0.1:3000/#$chapter" "visual-qa/desktop-$chapter.png"
+          done
 
       - name: Capture mobile visual QA
         run: |
-          npx --yes playwright@1.55.0 screenshot             --browser=chromium             --viewport-size="390,844"             --wait-for-timeout=3000             --full-page             http://127.0.0.1:3000/             visual-qa/home-mobile.png
+          for chapter in h01 h02 h03; do
+            npx --yes playwright@1.55.0 screenshot --browser=chromium --viewport-size="390,844" --wait-for-timeout=2500 "http://127.0.0.1:3000/#$chapter" "visual-qa/mobile-$chapter.png"
+          done
 
       - name: Upload visual QA
         uses: actions/upload-artifact@v4
