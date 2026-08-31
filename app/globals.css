@@ -14046,3 +14046,95 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   UTILITY COPY ARCHIVE
+   ========================================================================== */
+
+.hiltech-utility-copy-index {
+  margin-top: clamp(3rem,5vw,5rem);
+  border-top: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-utility-copy-index article {
+  display: grid;
+  grid-template-columns: 3rem minmax(12rem,.32fr) minmax(0,1fr);
+  gap: 1.2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-utility-copy-index article > span,
+.hiltech-utility-copy-index article small {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .38rem;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.hiltech-utility-copy-index article > div {
+  min-width: 0;
+}
+
+.hiltech-utility-copy-index article strong {
+  display: block;
+  color: #263129;
+  font-size: .8rem;
+  line-height: 1.3;
+}
+
+.hiltech-utility-copy-index article small {
+  display: block;
+  margin-top: .4rem;
+  color: #6b766e;
+}
+
+.hiltech-utility-copy-index pre {
+  min-width: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #667168;
+  font: inherit;
+  font-size: .66rem;
+  line-height: 1.65;
+}
+
+.hiltech-utility-copy-index.is-dark {
+  border-top-color: rgba(225,241,228,.13);
+}
+
+.hiltech-utility-copy-index.is-dark article {
+  border-bottom-color: rgba(225,241,228,.12);
+}
+
+.hiltech-utility-copy-index.is-dark article > span {
+  color: #8ff257;
+}
+
+.hiltech-utility-copy-index.is-dark article strong {
+  color: #d7dfd9;
+}
+
+.hiltech-utility-copy-index.is-dark article small,
+.hiltech-utility-copy-index.is-dark pre {
+  color: #7d8981;
+}
+
+@media (max-width: 639px) {
+  .hiltech-utility-copy-index article {
+    grid-template-columns: 1.6rem minmax(0,1fr);
+    gap: .7rem;
+  }
+
+  .hiltech-utility-copy-index article > span {
+    grid-row: 1 / 3;
+  }
+
+  .hiltech-utility-copy-index article > div,
+  .hiltech-utility-copy-index pre {
+    grid-column: 2;
+  }
+}
