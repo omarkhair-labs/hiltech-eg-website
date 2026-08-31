@@ -203,15 +203,35 @@ try {
     for (const slug of intelligenceSlugs) {
       await page.goto(`${baseURL}/products-partners/intelligence/${slug}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
+
+      const diagramCount = await page.locator('[data-intel-system-diagram]').count();
+      if (diagramCount !== 1) throw new Error(`${slug} expected one semantic system diagram, got ${diagramCount}`);
+
+      const legacyClientCount = await page.locator(
+        '[data-intel-rfq].rounded-2xl, [data-intel-product].rounded-2xl, [data-intel-final].rounded-2xl',
+      ).count();
+      if (legacyClientCount) {
+        throw new Error(`${slug} still contains legacy rounded intelligence shells`);
+      }
+
       if (target.name === 'mobile') {
         await assertNoHorizontalClip(page, '.hiltech-product-intelligence-hero h1', `${slug} mobile intelligence title`);
         await assertNoHorizontalClip(page, '.hiltech-product-intelligence-hero-grid > div:first-child > p', `${slug} mobile intelligence intro`);
         await assertNoHorizontalClip(page, '.hiltech-product-intelligence-summary > strong', `${slug} mobile intelligence summary`);
+        await assertNoHorizontalClip(page, '[data-intel-rfq] h2', `${slug} mobile RFQ translation title`);
+        await assertNoHorizontalClip(page, '[data-intel-products] h2', `${slug} mobile reference index title`);
+        await assertNoHorizontalClip(page, '[data-intel-final] h2', `${slug} mobile procurement close title`);
       }
+
       for (const [name, selector] of [
         ['top', '.hiltech-product-intelligence-hero'],
+        ['system', '.hiltech-product-intelligence-diagram-section'],
         ['planning', '.hiltech-product-intelligence-planning'],
         ['compatibility', '.hiltech-product-intelligence-compatibility'],
+        ['connections', '.hiltech-product-intelligence-link-grid'],
+        ['rfq-translation', '[data-intel-rfq]'],
+        ['references', '[data-intel-products]'],
+        ['close', '[data-intel-final]'],
       ]) {
         await page.locator(selector).scrollIntoViewIfNeeded();
         await page.waitForTimeout(450);
