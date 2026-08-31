@@ -10333,7 +10333,9 @@ body {
   }
   .hiltech-product-world-nav {
     display:flex;
+    max-width:100%;
     overflow-x:auto;
+    overscroll-behavior-inline:contain;
     border-right:0;
     border-bottom:1px solid rgba(224,241,228,.09);
   }
@@ -10371,9 +10373,16 @@ body {
     gap:.4rem;
     align-items:start;
   }
+  .hiltech-product-finder-grid > label,
+  .hiltech-product-brand-index {
+    min-width:0;
+    max-width:100%;
+  }
   .hiltech-product-brand-index > div {
+    max-width:100%;
     flex-wrap:nowrap;
     overflow-x:auto;
+    overscroll-behavior-inline:contain;
   }
   .hiltech-product-brand-index button {
     flex:0 0 auto;
