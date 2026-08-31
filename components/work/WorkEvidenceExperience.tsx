@@ -234,14 +234,13 @@ export default function WorkEvidenceExperience() {
           </div>
 
           <div className="hiltech-work-index-layout">
-            <div className="hiltech-work-record-list" role="list" aria-label="Field evidence disciplines">
+            <div className="hiltech-work-record-list" role="group" aria-label="Field evidence disciplines">
               {evidenceRecords.map((record) => {
                 const active = record.id === activeId;
                 return (
                   <button
                     key={record.id}
                     type="button"
-                    role="listitem"
                     className={active ? 'is-active' : undefined}
                     aria-pressed={active}
                     onClick={() => setActiveId(record.id)}
