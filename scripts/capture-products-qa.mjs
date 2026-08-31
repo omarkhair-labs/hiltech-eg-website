@@ -18,6 +18,30 @@ const intelligenceSlugs = [
   'cctv-security',
 ];
 
+async function assertNoHorizontalClip(page, selector, label) {
+  const locator = page.locator(selector).first();
+  await locator.waitFor();
+  const state = await locator.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      left: rect.left,
+      right: rect.right,
+      viewportWidth: window.innerWidth,
+    };
+  });
+  if (
+    state.scrollWidth > state.clientWidth + 1 ||
+    state.left < -1 ||
+    state.right > state.viewportWidth + 1
+  ) {
+    throw new Error(
+      `${label} clips horizontally: ${JSON.stringify(state)}`,
+    );
+  }
+}
+
 await mkdir('visual-qa-products', { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -33,6 +57,12 @@ try {
 
     await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1000);
+
+    const initialWorldCode = (await page.locator('.hiltech-product-world-topline strong').innerText()).trim();
+    const initialWorldLabel = (await page.locator('.hiltech-product-world-stage-label span').innerText()).trim();
+    if (initialWorldCode !== 'SYSTEM / 00' || !initialWorldLabel.includes('ALL SYSTEMS')) {
+      throw new Error(`All-systems world is inconsistent: code=${initialWorldCode}, label=${initialWorldLabel}`);
+    }
 
     for (const [name, selector] of [
       ['hero', '.hiltech-products-hero'],
@@ -173,6 +203,11 @@ try {
     for (const slug of intelligenceSlugs) {
       await page.goto(`${baseURL}/products-partners/intelligence/${slug}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(500);
+      if (target.name === 'mobile') {
+        await assertNoHorizontalClip(page, '.hiltech-product-intelligence-hero h1', `${slug} mobile intelligence title`);
+        await assertNoHorizontalClip(page, '.hiltech-product-intelligence-hero-grid > div:first-child > p', `${slug} mobile intelligence intro`);
+        await assertNoHorizontalClip(page, '.hiltech-product-intelligence-summary > strong', `${slug} mobile intelligence summary`);
+      }
       for (const [name, selector] of [
         ['top', '.hiltech-product-intelligence-hero'],
         ['planning', '.hiltech-product-intelligence-planning'],
