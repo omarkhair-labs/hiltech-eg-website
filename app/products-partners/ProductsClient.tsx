@@ -154,7 +154,6 @@ export default function ProductsClient({ initialProducts = staticProducts, local
     }
 
     setActiveCategory('All');
-    setActiveBrand('All');
     setHighlightedProductId(null);
   }, [initialProducts, productBrands, searchParams]);
 
@@ -199,6 +198,7 @@ export default function ProductsClient({ initialProducts = staticProducts, local
   const clearFilters = () => {
     setQuery('');
     setActiveCategory('All');
+    setActiveBrand('All');
     setHighlightedProductId(null);
     setVisibleCount(INITIAL_VISIBLE);
     router.replace(pathname, { scroll: false });
