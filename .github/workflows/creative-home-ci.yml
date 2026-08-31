@@ -18,6 +18,8 @@ on:
       - 'scripts/capture-home-smoke-qa.mjs'
       - 'scripts/capture-solutions-qa.mjs'
       - 'scripts/capture-services-qa.mjs'
+      - 'scripts/capture-products-qa.mjs'
+      - 'scripts/capture-closed-public-smoke.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
 concurrency:
@@ -60,34 +62,24 @@ jobs:
           cat /tmp/hiltech-next.log
           exit 1
 
-      - name: Capture Home regression smoke
-        run: node scripts/capture-home-smoke-qa.mjs
+      - name: Capture closed public regression smoke
+        run: node scripts/capture-closed-public-smoke.mjs
 
-      - name: Capture Solutions regression QA
-        run: node scripts/capture-solutions-qa.mjs
+      - name: Capture Products visual and interaction QA
+        run: node scripts/capture-products-qa.mjs
 
-      - name: Capture Services visual QA
-        run: node scripts/capture-services-qa.mjs
-
-      - name: Upload Home regression smoke
+      - name: Upload closed public regression smoke
         uses: actions/upload-artifact@v4
         with:
-          name: hiltech-home-regression-smoke
-          path: visual-qa-home-smoke/
+          name: hiltech-closed-public-regression-smoke
+          path: visual-qa-closed-public-smoke/
           retention-days: 7
 
-      - name: Upload Solutions visual QA
+      - name: Upload Products visual QA
         uses: actions/upload-artifact@v4
         with:
-          name: hiltech-solutions-visual-qa
-          path: visual-qa-solutions/
-          retention-days: 7
-
-      - name: Upload Services visual QA
-        uses: actions/upload-artifact@v4
-        with:
-          name: hiltech-services-visual-qa
-          path: visual-qa-services/
+          name: hiltech-products-visual-qa
+          path: visual-qa-products/
           retention-days: 7
 
       - name: Stop production server
