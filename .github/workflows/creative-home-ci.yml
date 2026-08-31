@@ -19,6 +19,7 @@ on:
       - 'scripts/capture-solutions-qa.mjs'
       - 'scripts/capture-services-qa.mjs'
       - 'scripts/capture-products-qa.mjs'
+      - 'scripts/capture-work-qa.mjs'
       - 'scripts/capture-closed-public-smoke.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
@@ -65,8 +66,8 @@ jobs:
       - name: Capture closed public regression smoke
         run: node scripts/capture-closed-public-smoke.mjs
 
-      - name: Capture Products visual and interaction QA
-        run: node scripts/capture-products-qa.mjs
+      - name: Capture Work visual and interaction QA
+        run: node scripts/capture-work-qa.mjs
 
       - name: Upload closed public regression smoke
         uses: actions/upload-artifact@v4
@@ -75,11 +76,11 @@ jobs:
           path: visual-qa-closed-public-smoke/
           retention-days: 7
 
-      - name: Upload Products visual QA
+      - name: Upload Work visual QA
         uses: actions/upload-artifact@v4
         with:
-          name: hiltech-products-visual-qa
-          path: visual-qa-products/
+          name: hiltech-work-visual-qa
+          path: visual-qa-work/
           retention-days: 7
 
       - name: Stop production server
