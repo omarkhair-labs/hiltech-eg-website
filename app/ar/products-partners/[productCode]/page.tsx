@@ -11,6 +11,7 @@ import { productVisuals } from '@/content/product-visuals';
 import { site } from '@/content/site';
 import { absoluteSiteUrl, buildProductJsonLd, getProductSeoDescription, serializeJsonLd } from '@/lib/seo/product';
 import { getPublicProducts } from '@/lib/server/products-public';
+import { normalizeProductCode } from '@/lib/products/product-code';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -21,8 +22,9 @@ const visualsByProductId = new Map(productVisuals.map((visual) => [visual.produc
 const localizeCategory = (c: string) => arProductsMessages.categoryLabels[c] || c;
 
 async function getProduct(productCode: string) {
+  const normalizedCode = normalizeProductCode(productCode);
   const { products } = await getPublicProducts();
-  const product = products.find((i) => i.id === productCode);
+  const product = products.find((item) => normalizeProductCode(item.id) === normalizedCode);
   return { product, products };
 }
 
