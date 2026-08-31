@@ -495,7 +495,8 @@ export default function RFQReviewClient({
                 <p>{t.prepareHint}</p>
               </div>
 
-              <div className="hiltech-rfq-fields">
+              <div className="hiltech-rfq-project-form">
+                <div className="hiltech-rfq-fields">
                 <label>
                   <span>{t.fullName}</span>
                   <input
@@ -590,6 +591,46 @@ export default function RFQReviewClient({
                     }
                   />
                 </label>
+                </div>
+
+                <div className="hiltech-rfq-project-actions" data-rfq-project-actions>
+                  <span>SUBMISSION / READY STATE</span>
+                  {isBasketEmpty ? (
+                    <>
+                      <strong>ADD A REFERENCE OR SEND THE PROJECT SCOPE WITHOUT A PART LIST.</strong>
+                      <div>
+                        <Link href={productsHref}>
+                          {t.browseProducts} <span aria-hidden="true">↗</span>
+                        </Link>
+                        <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                          {t.sendProjectOnly} <span aria-hidden="true">↗</span>
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <strong>{items.length} REFERENCES / {count} UNITS READY FOR REVIEW.</strong>
+                      <div>
+                        <button
+                          type="button"
+                          onClick={submit}
+                          disabled={submitState.status === 'submitting'}
+                          data-rfq-submit-button
+                        >
+                          {submitState.status === 'submitting' ? t.submitting : t.submitRFQ}
+                          <span aria-hidden="true">↗</span>
+                        </button>
+                        <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                          {t.sendViaWhatsapp} <span aria-hidden="true">↗</span>
+                        </a>
+                      </div>
+                    </>
+                  )}
+
+                  {submitState.status === 'error' ? (
+                    <p className="hiltech-rfq-error" data-rfq-submit-error>{submitState.message}</p>
+                  ) : null}
+                </div>
               </div>
             </div>
           </section>
@@ -604,36 +645,17 @@ export default function RFQReviewClient({
               <p>{t.finalQuotationNote}</p>
             </div>
 
-            <div>
-              {isBasketEmpty ? (
-                <>
-                  <p>{t.addItemsToSubmit}</p>
-                  <Link href={productsHref}>{t.browseProducts} <span aria-hidden="true">↗</span></Link>
-                  <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
-                    {t.sendProjectOnly} <span aria-hidden="true">↗</span>
-                  </a>
-                </>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    onClick={submit}
-                    disabled={submitState.status === 'submitting'}
-                    data-rfq-submit-button
-                  >
-                    {submitState.status === 'submitting' ? t.submitting : t.submitRFQ}
-                    <span aria-hidden="true">↗</span>
-                  </button>
-                  <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
-                    {t.sendViaWhatsapp} <span aria-hidden="true">↗</span>
-                  </a>
-                </>
-              )}
-
-              {submitState.status === 'error' ? (
-                <p className="hiltech-rfq-error" data-rfq-submit-error>{submitState.message}</p>
-              ) : null}
-
+            <div className="hiltech-rfq-submit-context">
+              <span>REQUEST STATE</span>
+              <strong>{isBasketEmpty ? 'PROJECT CONTEXT ONLY' : 'ITEMIZED RFQ / PENDING REVIEW'}</strong>
+              <p>
+                {isBasketEmpty
+                  ? 'A project-only scope can still be sent through the project sheet. Exact references can be added later.'
+                  : 'Submission records the requested references and project context. Commercial confirmation happens after review.'}
+              </p>
+              <a href={getRFQWhatsappLink(items, project)} target="_blank" rel="noopener noreferrer">
+                {isBasketEmpty ? t.sendProjectOnly : t.sendViaWhatsapp} <span aria-hidden="true">↗</span>
+              </a>
               <div className="hiltech-rfq-help">
                 <span>{t.contactHelper}</span>
                 <Link href={contactHref}>{t.contactHiltech} ↗</Link>
