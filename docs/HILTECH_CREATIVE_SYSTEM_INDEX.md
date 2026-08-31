@@ -87,5 +87,40 @@ The site must never force a procurement user through cinematic interactions befo
 - `HILTECH_SERVICES_PRODUCTION_CLOSURE.md`
 - `HILTECH_PRODUCTS_PRODUCTION_SPEC.md`
 - `HILTECH_PRODUCTS_PRODUCTION_CLOSURE.md`
+- `HILTECH_WORK_PRODUCTION_CLOSURE.md`
+- `HILTECH_COMPANY_PRODUCTION_SPEC.md`
+- `HILTECH_COMPANY_PRODUCTION_CLOSURE.md`
+- `HILTECH_RFQ_CONTACT_PRODUCTION_SPEC.md`
+- `HILTECH_RFQ_CONTACT_PRODUCTION_CLOSURE.md`
 
 These files form one system and must be read before major public-site implementation work.
+
+
+## Current English production-lane state
+
+Closed:
+
+- Home
+- Solutions
+- Services / Capabilities
+- Products / Partners, including full-depth Product Intelligence revalidation
+- Work / Evidence
+- Company
+- RFQ / Contact
+
+Validated implementation head before documentation-only closure commits:
+
+- `1194f9a81f80ed56767b66e95eed6e206d472b5d`
+
+Final implementation QA run for Company + RFQ / Contact:
+
+- Creative Public CI #137
+- Run ID: `33369634165`
+- Result: **SUCCESS**
+
+Still intentionally deferred:
+
+- Arabic parity
+- final whole-site / cross-route closure
+
+PR #183 remains **WIP / DO NOT MERGE** until deferred closure work is explicitly resumed and completed.
