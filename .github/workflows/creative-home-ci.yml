@@ -15,6 +15,7 @@ on:
       - 'tailwind.config.ts'
       - 'tsconfig.json'
       - 'scripts/capture-home-qa.mjs'
+      - 'scripts/capture-home-smoke-qa.mjs'
       - 'scripts/capture-solutions-qa.mjs'
       - '.github/workflows/creative-home-ci.yml'
 
@@ -58,17 +59,17 @@ jobs:
           cat /tmp/hiltech-next.log
           exit 1
 
-      - name: Capture Home regression QA
-        run: node scripts/capture-home-qa.mjs
+      - name: Capture Home regression smoke
+        run: node scripts/capture-home-smoke-qa.mjs
 
       - name: Capture Solutions visual QA
         run: node scripts/capture-solutions-qa.mjs
 
-      - name: Upload Home visual QA
+      - name: Upload Home regression smoke
         uses: actions/upload-artifact@v4
         with:
-          name: hiltech-home-visual-qa
-          path: visual-qa/
+          name: hiltech-home-regression-smoke
+          path: visual-qa-home-smoke/
           retention-days: 7
 
       - name: Upload Solutions visual QA
