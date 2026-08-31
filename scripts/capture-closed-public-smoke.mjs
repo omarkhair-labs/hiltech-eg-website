@@ -14,6 +14,9 @@ const checks = [
   { name: 'solutions-detail', path: '/solutions/fiber-backbone', selector: '.hiltech-solution-detail-hero' },
   { name: 'services-top', path: '/services', selector: '.hiltech-services-hero' },
   { name: 'services-final', path: '/services', selector: '.hiltech-services-handover' },
+  { name: 'products-top', path: '/products-partners', selector: '.hiltech-products-hero' },
+  { name: 'products-world', path: '/products-partners', selector: '[data-product-world]' },
+  { name: 'products-intelligence', path: '/products-partners/intelligence/fiber-optic-systems', selector: '.hiltech-product-intelligence-hero' },
 ];
 
 await mkdir('visual-qa-closed-public-smoke', { recursive: true });
