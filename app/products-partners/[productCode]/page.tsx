@@ -220,7 +220,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
           <div className="hiltech-product-detail-project-grid">
             <div>
-              <h2>DON'T QUOTE<br /><em>THE PART IN ISOLATION.</em></h2>
+              <h2>DO NOT QUOTE<br /><em>THE PART IN ISOLATION.</em></h2>
               <p>
                 Infrastructure products are usually selected as part of a route, rack, endpoint, fiber, power, or testing scope. Add related project context before final quotation.
               </p>
