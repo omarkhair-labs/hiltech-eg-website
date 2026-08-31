@@ -12482,10 +12482,10 @@ body {
 
 
 /* ==========================================================================
-   COMPACT PHONE FINAL QA — 360PX NO-CLIP
+   PHONE FINAL QA — 360PX–430PX NO-CLIP
    ========================================================================== */
 
-@media (max-width: 374px) {
+@media (max-width: 430px) {
   .hiltech-hero-statement {
     width: calc(100vw - 2rem);
     max-width: calc(100vw - 2rem);
