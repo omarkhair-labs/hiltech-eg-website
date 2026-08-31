@@ -24,7 +24,12 @@ export default function Footer() {
       pathname.startsWith('/work') ||
       pathname.startsWith('/company') ||
       pathname.startsWith('/rfq') ||
-      pathname.startsWith('/contact'));
+      pathname.startsWith('/contact') ||
+      pathname.startsWith('/resources') ||
+      pathname.startsWith('/track') ||
+      pathname.startsWith('/scope-finder') ||
+      pathname.startsWith('/privacy-policy') ||
+      pathname.startsWith('/accessibility-statement'));
 
   const servicesHeading = isArabic ? 'الخدمات' : 'Services';
   const contactHeading = isArabic ? 'تواصل معنا' : 'Contact';
