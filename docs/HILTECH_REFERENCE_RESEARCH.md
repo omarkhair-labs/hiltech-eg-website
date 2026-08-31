@@ -264,3 +264,17 @@ Every section must still work as a strong screenshot with:
 - video paused
 
 Motion amplifies the art direction; it must not rescue it.
+
+
+## Primary reference URLs
+
+Re-check these visually before major art-direction changes:
+
+- HackFirst — https://hackfirst.io/
+- Shift5 / Non-Linear Studio — https://non-linear.studio/work/shift5
+- Integrated Reasoning / Non-Linear Studio — https://non-linear.studio/work/integrated-reasoning
+- Non-Linear Studio work archive — https://non-linear.studio/work
+- NRG / Build Your Data Center — current NRG interactive experience; re-verify live destination before implementation comparisons
+- Playwright visual QA documentation — https://playwright.dev/docs/screenshots
+
+These URLs are reference inputs only. HILTECH must not copy their visual identity.
