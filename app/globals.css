@@ -12396,3 +12396,41 @@ body {
 .hiltech-creative-mobile-panel .hiltech-creative-mobile-nav-link.is-active::after {
   color: #8ff257;
 }
+
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-project-link,
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-basket-link {
+  display: flex;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0;
+  padding: .8rem 0;
+  border-top: 1px solid rgba(225,241,228,.12);
+  border-bottom: 1px solid rgba(225,241,228,.12);
+  background: transparent;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .44rem;
+  font-weight: 650;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-project-link {
+  color: #a8ff79;
+  border-top-color: rgba(143,242,87,.42);
+  border-bottom-color: rgba(143,242,87,.42);
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-project-link::after {
+  content: "↗";
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-basket-link {
+  color: #b9c3bc;
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-basket-link::after {
+  content: "→";
+  color: #657169;
+}
