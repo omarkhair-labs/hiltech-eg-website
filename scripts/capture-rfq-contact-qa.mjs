@@ -142,7 +142,20 @@ try {
         fullPage: false,
       });
 
-      await page.locator('[data-rfq-submit-button]').click();
+      const projectActions = page.locator('[data-rfq-project-actions]');
+      await projectActions.waitFor();
+      const inlineSubmit = projectActions.locator('[data-rfq-submit-button]');
+      if ((await inlineSubmit.count()) !== 1) {
+        throw new Error('RFQ primary submit action is not attached directly under the project form');
+      }
+      await projectActions.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(200);
+      await page.screenshot({
+        path: `visual-qa-rfq-contact/${target.name}-rfq-inline-submit.png`,
+        fullPage: false,
+      });
+
+      await inlineSubmit.click();
       await page.locator('[data-rfq-field="fullName"]').waitFor();
       const fullNameError = await page.locator('[data-rfq-field="fullName"] + small').count();
       if (!fullNameError) throw new Error('RFQ required-field validation did not surface');
