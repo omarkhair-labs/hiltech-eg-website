@@ -775,3 +775,17 @@ body {
     opacity: 0.72;
   }
 }
+
+
+.hiltech-inline-link {
+  margin-top: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--hiltech-signal);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hiltech-inline-link:hover { color: #c6ffa5; }
