@@ -186,15 +186,17 @@ export default function ProductsClient({
   );
   const categoryStats = useMemo(
     () =>
-      productCategories.map((category) => {
-        const products = initialProducts.filter((item) => item.category === category);
-        return {
-          category,
-          count: products.length,
-          brands: Array.from(new Set(products.map((item) => item.brand))).filter(Boolean),
-          ...familyByCategory[category],
-        };
-      }),
+      productCategories
+        .map((category) => {
+          const products = initialProducts.filter((item) => item.category === category);
+          return {
+            category,
+            count: products.length,
+            brands: Array.from(new Set(products.map((item) => item.brand))).filter(Boolean),
+            ...familyByCategory[category],
+          };
+        })
+        .filter((entry) => entry.count > 0),
     [initialProducts],
   );
 
