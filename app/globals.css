@@ -11649,6 +11649,13 @@ body {
 
   .hiltech-system-footer-bottom {
     gap: .8rem;
+    font-size: .4rem;
+  }
+
+  .hiltech-system-footer-contact,
+  .hiltech-system-footer-project > span,
+  .hiltech-system-footer-identity > span {
+    font-size: .42rem;
   }
 }
 
@@ -12215,12 +12222,15 @@ body {
   }
 
   .hiltech-company-truth-index article {
-    grid-template-columns: 1.8rem minmax(0,1fr);
-    gap: .7rem;
+    grid-template-columns: 4.8rem minmax(0,1fr);
+    gap: .8rem;
   }
 
   .hiltech-company-truth-index article > span {
     grid-row: 1 / 4;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
   }
 
   .hiltech-company-truth-index article > strong,
