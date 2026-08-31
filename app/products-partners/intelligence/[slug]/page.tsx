@@ -196,7 +196,7 @@ export default async function ProductIntelligencePage({ params }: { params: Para
             <strong>CAPABILITIES / SOLUTIONS / CURRENT REFERENCES</strong>
           </div>
 
-          <div className="hiltech-product-intelligence-link-grid">
+          <div className={`hiltech-product-intelligence-link-grid${relatedSolutions ? '' : ' is-single'}`}>
             <div>
               <span>CAPABILITY TAGS</span>
               <div>
