@@ -12,20 +12,26 @@ Purpose:
 - create the strongest cinematic moment
 - position HILTECH as an engineered infrastructure company, not a generic IT vendor
 
-Core internal line:
-**BUILD IT. ROUTE IT. TEST IT. PROVE IT.**
+Primary H01 statement:
+**EVERY SIGNAL NEEDS A PHYSICAL PATH.**
+
+Internal lifecycle:
+**BUILD → ROUTE → TEST → PROVE**
+
+The lifecycle is a state/motion rail, not the giant hero headline.
 
 Visual behavior:
-- dormant environment
-- one signal activates
-- signal reveals the infrastructure world
+- dormant physical infrastructure environment
+- one signal activates through a fiber/termination world
+- typography and route line share the same spatial composition
+- signal reveals the physical path
 - camera begins to disclose system scale
 
 Motion:
-- atmospheric activation
+- authored clip/width/track typography reveal rather than generic fade-up
 - signal pulse
-- path reveal
-- restrained text choreography
+- path trace crossing the composition
+- text locks into final structure as the route becomes active
 - first scroll carries the signal into H02 instead of fading the page out
 
 Recommended implementation:
