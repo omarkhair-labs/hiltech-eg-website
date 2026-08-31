@@ -5935,14 +5935,22 @@ body {
   }
 
   .hiltech-solutions-index-list > a {
-    grid-template-columns: 2rem minmax(0,1fr) auto;
+    grid-template-columns: 1.6rem minmax(0,1fr) 1rem;
     min-height: 9rem;
-    gap: 0.65rem;
+    gap: 0.55rem;
     padding: 1.7rem 0;
   }
 
+  .hiltech-solutions-index-list > a:hover,
+  .hiltech-solutions-index-list > a:focus-visible,
+  .hiltech-solutions-index-list > a.is-active {
+    padding-left: 0;
+  }
+
   .hiltech-solutions-index-row-copy strong {
-    font-size: clamp(2rem, 10.4vw, 2.6rem);
+    max-width: 100%;
+    font-size: clamp(1.85rem, 9.5vw, 2.35rem);
+    overflow-wrap: anywhere;
   }
 
   .hiltech-solutions-index-row-copy p {
