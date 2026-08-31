@@ -186,11 +186,11 @@ export default function Header() {
             <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
               <Link
                 href={localizeHref('/rfq')}
-                className={`inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-sm font-bold transition ${isCreativePublic ? 'border border-[#8ff257]/45 bg-[#8ff257]/5 text-[#a9ff79] hover:bg-[#8ff257] hover:text-[#071006]' : 'bg-orange-600 text-white hover:bg-orange-500'}`}
+                className={isCreativePublic ? "hiltech-creative-mobile-project-link" : "inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-500"}
               >
                 {isArabic ? 'ابدأ طلب عرض السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
               </Link>
-              <Link href={localizeHref('/rfq')} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10">
+              <Link href={localizeHref('/rfq')} className={isCreativePublic ? "hiltech-creative-mobile-basket-link" : "inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10"}>
                 {isArabic ? `السلة (${rfqCount})` : `Basket (${rfqCount})`}
               </Link>
             </div>
