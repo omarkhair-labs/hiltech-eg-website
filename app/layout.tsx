@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { site } from '@/content/site';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import ProductRouteTransition from '@/components/products/ProductRouteTransition';
 
 const hiltechDisplay = Archivo({
   subsets: ['latin'],
@@ -54,6 +55,7 @@ export default function RootLayout({children}:{children:React.ReactNode}) {
     <html lang="en" className={`bg-slate-950 ${hiltechDisplay.variable} ${hiltechMono.variable}`}>
       <body className="bg-slate-950">
         <Header />
+        <ProductRouteTransition />
         {children}
         <Footer />
         <GoogleAnalytics />
