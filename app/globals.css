@@ -12337,3 +12337,62 @@ body {
   background: #8ff257;
   color: #071006;
 }
+
+
+/* ==========================================================================
+   CREATIVE MOBILE HEADER — ROUTE PANEL
+   ========================================================================== */
+
+.hiltech-creative-header .hiltech-creative-mobile-utility,
+.hiltech-creative-header .hiltech-creative-mobile-menu-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: 0;
+  padding: .65rem .75rem;
+  color: #c1cac4;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .44rem;
+  font-weight: 600;
+  letter-spacing: .055em;
+}
+
+.hiltech-creative-header .hiltech-creative-mobile-menu-button {
+  border: 1px solid rgba(225,241,228,.16);
+  background: transparent;
+}
+
+.hiltech-creative-mobile-panel {
+  border-top: 1px solid rgba(143,242,87,.14);
+  background: rgba(5,8,6,.985);
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-nav-link {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  min-height: 3.2rem;
+  align-items: center;
+  padding: .75rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.11);
+  color: #bbc5be;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .48rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-nav-link::after {
+  content: "↗";
+  color: #66736a;
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-nav-link.is-active {
+  color: #a8ff79;
+  border-bottom-color: rgba(143,242,87,.42);
+}
+
+.hiltech-creative-mobile-panel .hiltech-creative-mobile-nav-link.is-active::after {
+  color: #8ff257;
+}
