@@ -28,6 +28,7 @@ const secondaryNav = [
 export default function Header() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith('/ar');
+  const isCreativeHome = pathname === '/';
   const [open, setOpen] = useState(false);
   const [showLogoImage, setShowLogoImage] = useState(true);
   const [rfqCount, setRfqCount] = useState(0);
@@ -63,7 +64,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)] backdrop-blur-xl">
+    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isCreativeHome ? 'border-[#8ff257]/15 bg-[#050806]/90 shadow-[0_10px_40px_rgba(0,0,0,0.34)]' : 'border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)]'}`}>
       <div className="container flex h-16 items-center justify-between gap-3">
         <Link
           href={isArabic ? '/ar' : '/'}
@@ -86,7 +87,16 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={isArabic ? 'التنقل الرئيسي' : 'Primary navigation'}>
-          {primaryNav.map(([label, href, arLabel]) => {
+          {(isCreativeHome
+            ? [
+                ['Solutions', '/solutions', arNavigation.solutions],
+                ['Capabilities', '/services', arNavigation.services],
+                ['Products', '/products-partners', arNavigation.products],
+                ['Work', '/work', arNavigation.work],
+                ['Company', '/company', arNavigation.company],
+              ] as const
+            : primaryNav
+          ).map(([label, href, arLabel]) => {
             const active = isActive(href);
             return (
               <Link
@@ -94,7 +104,7 @@ export default function Header() {
                 href={localizeHref(href)}
                 translate="no"
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? (isCreativeHome ? 'bg-[#8ff257]/10 text-[#b8ff8c]' : 'bg-white/10 text-white') : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
               >
                 {isArabic ? arLabel : label}
               </Link>
@@ -113,9 +123,9 @@ export default function Header() {
           </Link>
           <Link
             href={localizeHref('/rfq')}
-            className="inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"
+            className={`inline-flex min-h-10 items-center rounded-lg px-4 py-2 text-sm font-bold transition ${isCreativeHome ? 'border border-[#8ff257]/45 bg-[#8ff257]/5 text-[#a9ff79] shadow-[0_10px_28px_rgba(91,200,53,0.08)] hover:bg-[#8ff257] hover:text-[#071006]' : 'bg-orange-600 text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] hover:bg-orange-500'}`}
           >
-            {isArabic ? 'ابدأ طلب السعر' : 'Start RFQ'}
+            {isArabic ? 'ابدأ طلب السعر' : isCreativeHome ? 'Start a Project' : 'Start RFQ'}
           </Link>
         </div>
 
