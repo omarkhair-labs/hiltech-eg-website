@@ -205,19 +205,34 @@ Product media gate:
 Rule:
 A procurement user must never be forced through cinematic interactions to buy/find a part.
 
-## H08 — Technology / Partners
+## H08 — Technology Ecosystem
 
 Purpose:
-- trust and ecosystem proof
+- trust and ecosystem proof without inventing partnership status
+- show the real multi-brand nature of the current 48-item catalog
+
+Evidence-backed brand presence includes catalog references from:
+- Leviton
+- DEMA Prolink
+- Panduit
+- HPE
+- Legrand
+- CommScope
+- Schneider Electric
+- Excel
+- Conteg
+- other current listed manufacturers
 
 Visual:
-- calm
-- minimal motion
-- no cheap logo ticker
+- calm light field after the dark H07 procurement chapter
+- oversized typographic brand index rather than a logo ticker
+- sticky inspector showing listing count and category coverage
+- minimal motion only
 
-Content:
-- only verified brands/partnership relationships
-- distinguish “products we sell/use” from formal “partner” status
+Relationship rule:
+- label this as catalog presence / technology ecosystem
+- do not say “partner”, “authorized”, “distributor”, or “certified” unless separate evidence proves it
+- brand listing count is catalog evidence, not endorsement or partnership proof
 
 ## H09 — Work / Evidence
 
