@@ -71,6 +71,8 @@ The site must never force a procurement user through cinematic interactions befo
 
 ## Master continuation
 
+- `HILTECH_FINAL_MASTER_CONTINUATION_HANDOFF_2026-08-31.md` — **current cross-chat continuation entry point; read this first.**
+
 - `HILTECH_MASTER_HANDOFF_2026-08-31.md` — full current cross-lane continuation state, Product V2 reset, QA state, research buckets, mistakes/lessons, and exact next action.
 
 ## Required companion docs
