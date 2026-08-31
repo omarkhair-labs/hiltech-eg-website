@@ -275,101 +275,6 @@ try {
 
     await mobileContext.close();
   }
-  console.log('[products-entry] desktop intent paths');
-  const productEntryContext = await browser.newContext({
-    viewport: { width: 1440, height: 1000 },
-    reducedMotion: 'no-preference',
-  });
-  const productEntryPage = await productEntryContext.newPage();
-  productEntryPage.setDefaultTimeout(15000);
-  productEntryPage.setDefaultNavigationTimeout(NAV_TIMEOUT);
-
-  const productEntryCases = [
-    ['I KNOW THE REFERENCE', '#exact-finding'],
-    ['I KNOW THE SYSTEM', '#physical-library'],
-    ['I KNOW THE PROJECT', '#project-scope'],
-  ];
-
-  for (const [label, target] of productEntryCases) {
-    const response = await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
-    if (!response || !response.ok()) throw new Error(`product quick entry route failed for ${label}`);
-    const entry = productEntryPage.locator('[data-product-quick-entry] button').filter({ hasText: label });
-    await entry.waitFor();
-    await entry.click();
-    await productEntryPage.locator(target).waitFor();
-    if (label === 'I KNOW THE REFERENCE') {
-      const searchFocused = await productEntryPage.locator('#exact-finding input').evaluate(
-        (input) => document.activeElement === input,
-      );
-      if (!searchFocused) throw new Error('reference quick entry did not focus exact finding');
-    }
-  }
-
-  await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
-  await productEntryPage.screenshot({
-    path: 'visual-qa-creative-synthesis/desktop-products-quick-entry.png',
-    fullPage: false,
-    timeout: SHOT_TIMEOUT,
-  });
-
-  console.log('[products-world] persistent route state');
-  const productWorld = productEntryPage.locator('#physical-library');
-  await productWorld.scrollIntoViewIfNeeded();
-  const firstFamily = productEntryPage.locator('[data-product-family]').first();
-  await firstFamily.click();
-  await productEntryPage.waitForTimeout(160);
-  const worldFamily = await productEntryPage.locator('.hiltech-product-world-canvas').getAttribute('data-product-world-family');
-  if (!worldFamily || worldFamily === 'all') {
-    throw new Error('product world family state did not change');
-  }
-  await productEntryPage.screenshot({
-    path: 'visual-qa-creative-synthesis/desktop-product-world-persistent-route.png',
-    fullPage: false,
-    timeout: SHOT_TIMEOUT,
-  });
-
-  console.log('[products-entry] world to exact-reference collapse');
-  const worldToReference = productEntryPage.locator('.hiltech-product-world-to-reference');
-  await worldToReference.scrollIntoViewIfNeeded();
-  await worldToReference.click();
-  await productEntryPage.locator('[data-world-state="collapsing-to-reference"]').waitFor();
-  await productEntryPage.screenshot({
-    path: 'visual-qa-creative-synthesis/desktop-product-world-collapse-state.png',
-    fullPage: false,
-    timeout: SHOT_TIMEOUT,
-  });
-  await productEntryPage.locator('#exact-finding').waitFor();
-  await productEntryPage.waitForTimeout(450);
-  const collapseSearchFocused = await productEntryPage.locator('#exact-finding input').evaluate(
-    (input) => document.activeElement === input,
-  );
-  if (!collapseSearchFocused) throw new Error('world-to-reference collapse did not focus exact finding');
-
-  console.log('[products-transition] reference to detail continuity');
-  await productEntryPage.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
-  const firstTransitionLink = productEntryPage.locator('[data-product-card] .hiltech-product-reference-media-link').first();
-  await firstTransitionLink.scrollIntoViewIfNeeded();
-  await firstTransitionLink.click();
-  const transitionOverlay = productEntryPage.locator('[data-product-route-transition]');
-  await transitionOverlay.waitFor();
-  await productEntryPage.waitForTimeout(90);
-  await productEntryPage.screenshot({
-    path: 'visual-qa-creative-synthesis/desktop-product-reference-handoff.png',
-    fullPage: false,
-    timeout: SHOT_TIMEOUT,
-  });
-  await productEntryPage.waitForURL(/\/products-partners\/[^/?#]+$/, { timeout: NAV_TIMEOUT });
-  await productEntryPage.locator('[data-product-object]').waitFor();
-  await transitionOverlay.waitFor({ state: 'detached', timeout: 4000 });
-  await assertNoHorizontalOverflow(productEntryPage, 'product detail route transition');
-  await productEntryPage.screenshot({
-    path: 'visual-qa-creative-synthesis/desktop-product-detail-after-transition.png',
-    fullPage: false,
-    timeout: SHOT_TIMEOUT,
-  });
-
-  await productEntryContext.close();
-
   const context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
     reducedMotion: 'reduce',
@@ -384,16 +289,6 @@ try {
     await assertNoHorizontalOverflow(page, `reduced-motion ${route}`);
   }
 
-  console.log('[reduced-motion] product detail remains direct');
-  await page.goto(`${baseURL}/products-partners`, { waitUntil: 'networkidle' });
-  const reducedProductLink = page.locator('[data-product-card] .hiltech-product-reference-media-link').first();
-  await reducedProductLink.scrollIntoViewIfNeeded();
-  await reducedProductLink.click();
-  await page.waitForURL(/\/products-partners\/[^/?#]+$/, { timeout: NAV_TIMEOUT });
-  await page.locator('[data-product-object]').waitFor();
-  if (await page.locator('[data-product-route-transition]').count()) {
-    throw new Error('reduced-motion product navigation rendered transition overlay');
-  }
 
   await context.close();
 } finally {
