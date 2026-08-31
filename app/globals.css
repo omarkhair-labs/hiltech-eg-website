@@ -3625,3 +3625,325 @@ body {
     width: fit-content;
   }
 }
+
+
+/* H08 — TECHNOLOGY ECOSYSTEM / CATALOG EVIDENCE */
+.hiltech-brand-section {
+  position: relative;
+  z-index: 7;
+  background: #eef0eb;
+  color: #0b0f0c;
+  border-top: 1px solid rgba(10, 14, 11, 0.16);
+}
+
+.hiltech-brand-shell {
+  width: min(94vw, 102rem);
+  margin-inline: auto;
+  padding: clamp(5rem, 8vw, 8rem) 0 clamp(5rem, 8vw, 8rem);
+}
+
+.hiltech-brand-topline {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  color: #667168;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hiltech-brand-topline span:first-child {
+  color: #2f6b21;
+}
+
+.hiltech-brand-topline span:nth-child(2) {
+  justify-self: center;
+}
+
+.hiltech-brand-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: end;
+  margin-top: clamp(2.8rem, 5vw, 5rem);
+  padding-bottom: clamp(3rem, 5vw, 5rem);
+  border-bottom: 1px solid rgba(10, 14, 11, 0.18);
+}
+
+.hiltech-brand-heading h2 {
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.82;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+  font-weight: 850;
+}
+
+.hiltech-brand-heading h2 span {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(10, 14, 11, 0.62);
+  text-stroke: 1px rgba(10, 14, 11, 0.62);
+}
+
+.hiltech-brand-heading > div {
+  display: grid;
+  gap: 1rem;
+}
+
+.hiltech-brand-heading p {
+  max-width: 29rem;
+  color: #59635b;
+  font-size: 0.88rem;
+  line-height: 1.62;
+}
+
+.hiltech-brand-heading small {
+  color: #356f26;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-brand-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.75fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  margin-top: clamp(3rem, 5vw, 5rem);
+}
+
+.hiltech-brand-list {
+  border-top: 1px solid rgba(10, 14, 11, 0.2);
+}
+
+.hiltech-brand-list button {
+  position: relative;
+  width: 100%;
+  min-height: clamp(6.2rem, 10vw, 9rem);
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid rgba(10, 14, 11, 0.16);
+  color: #8a938c;
+  text-align: left;
+  transition: color 220ms ease, padding-left 260ms ease;
+}
+
+.hiltech-brand-list button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -1px;
+  height: 1px;
+  background: #4e9534;
+  transition: right 320ms ease;
+}
+
+.hiltech-brand-list button:hover,
+.hiltech-brand-list button:focus-visible,
+.hiltech-brand-list button.is-active {
+  color: #0a0e0b;
+  padding-left: 0.7rem;
+}
+
+.hiltech-brand-list button:hover::before,
+.hiltech-brand-list button:focus-visible::before,
+.hiltech-brand-list button.is-active::before {
+  right: 0;
+}
+
+.hiltech-brand-list button > span,
+.hiltech-brand-list button > small {
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-brand-list button > span {
+  color: #3c6f2e;
+}
+
+.hiltech-brand-list button > small {
+  color: #68736a;
+}
+
+.hiltech-brand-list button > strong {
+  min-width: 0;
+  font-size: clamp(2.2rem, 4.4vw, 5.1rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  font-weight: 790;
+  text-transform: uppercase;
+}
+
+.hiltech-brand-inspector {
+  position: sticky;
+  top: 5.5rem;
+  align-self: start;
+  border-top: 1px solid rgba(10, 14, 11, 0.2);
+  border-bottom: 1px solid rgba(10, 14, 11, 0.2);
+  padding: 1rem 0 1.2rem;
+}
+
+.hiltech-brand-inspector-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #69746b;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-brand-inspector-head span:first-child {
+  color: #356f26;
+}
+
+.hiltech-brand-inspector-swap {
+  margin-top: clamp(2rem, 4vw, 4rem);
+  animation: hiltech-brand-inspector-in 380ms ease both;
+}
+
+@keyframes hiltech-brand-inspector-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.hiltech-brand-inspector-swap > strong {
+  display: block;
+  font-size: clamp(3.1rem, 5.7vw, 6.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.hiltech-brand-inspector-swap dl {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(10, 14, 11, 0.14);
+}
+
+.hiltech-brand-inspector-swap dl > div {
+  display: grid;
+  grid-template-columns: 7.2rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(10, 14, 11, 0.1);
+}
+
+.hiltech-brand-inspector-swap dt {
+  color: #3d772c;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.46rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-brand-inspector-swap dd {
+  color: #58635a;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.hiltech-brand-note {
+  margin-top: 1.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(66, 126, 44, 0.42);
+}
+
+.hiltech-brand-note span {
+  color: #3b772a;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+}
+
+.hiltech-brand-note p {
+  margin-top: 0.55rem;
+  color: #69736b;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .hiltech-brand-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-brand-body {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.7fr);
+    gap: 1.6rem;
+  }
+
+  .hiltech-brand-list button > strong {
+    font-size: clamp(1.8rem, 4.7vw, 3.2rem);
+  }
+}
+
+@media (max-width: 639px) {
+  .hiltech-brand-shell {
+    width: 90vw;
+    padding: 4rem 0;
+  }
+
+  .hiltech-brand-topline {
+    grid-template-columns: 1fr auto;
+    font-size: 0.43rem;
+  }
+
+  .hiltech-brand-topline span:nth-child(2) {
+    display: none;
+  }
+
+  .hiltech-brand-heading {
+    margin-top: 2.4rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hiltech-brand-heading h2 {
+    font-size: clamp(3rem, 14.4vw, 3.6rem);
+    line-height: 0.85;
+  }
+
+  .hiltech-brand-heading p {
+    font-size: 0.78rem;
+  }
+
+  .hiltech-brand-body {
+    display: block;
+    margin-top: 2.4rem;
+  }
+
+  .hiltech-brand-list button {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    min-height: 5rem;
+    gap: 0.55rem;
+  }
+
+  .hiltech-brand-list button > strong {
+    font-size: clamp(1.45rem, 7.8vw, 1.95rem);
+  }
+
+  .hiltech-brand-list button > span,
+  .hiltech-brand-list button > small {
+    font-size: 0.42rem;
+  }
+
+  .hiltech-brand-inspector {
+    position: relative;
+    top: auto;
+    margin-top: 2rem;
+  }
+
+  .hiltech-brand-inspector-swap {
+    margin-top: 1.6rem;
+  }
+
+  .hiltech-brand-inspector-swap > strong {
+    font-size: clamp(2.7rem, 13vw, 3.3rem);
+  }
+}
