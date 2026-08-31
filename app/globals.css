@@ -8260,69 +8260,415 @@ body {
   font-weight: 500;
 }
 
+.hiltech-product-intelligence-diagram .hiltech-product-intelligence-system-svg {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+}
+
 .hiltech-product-intelligence-client {
+  margin-top: clamp(4rem,7vw,7rem);
+}
+
+.hiltech-intel-procurement {
+  padding-top: 0;
+}
+
+.hiltech-intel-procurement-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1.12fr) minmax(18rem,.58fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: end;
   margin-top: clamp(3rem,5vw,5rem);
 }
-.hiltech-product-intelligence-client [data-intel-rfq],
-.hiltech-product-intelligence-client [data-intel-final] {
-  border-radius: 0 !important;
-  border-color: rgba(10,14,11,0.14) !important;
-  background: #f4f6f1 !important;
-  color: #0a0e0b !important;
+
+.hiltech-intel-procurement-grid > div:first-child > span,
+.hiltech-intel-reference-head > div > span,
+.hiltech-intel-no-live > span,
+.hiltech-intel-empty-index > span,
+.hiltech-intel-close > div:first-child > span {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .45rem;
+  letter-spacing: .075em;
+  text-transform: uppercase;
 }
-.hiltech-product-intelligence-client [data-intel-rfq] h2,
-.hiltech-product-intelligence-client [data-intel-final] h2,
-.hiltech-product-intelligence-client [data-intel-products] h2 {
-  color: #0a0e0b !important;
+
+.hiltech-intel-procurement h2,
+.hiltech-intel-reference-head h2,
+.hiltech-intel-close h2 {
+  margin-top: 1rem;
+  max-width: 12ch;
+  font-size: clamp(3.5rem,6.6vw,7.6rem);
+  line-height: .82;
+  letter-spacing: -.068em;
+  text-transform: uppercase;
+  font-weight: 850;
 }
-.hiltech-product-intelligence-client [data-intel-rfq] p,
-.hiltech-product-intelligence-client [data-intel-final] p,
-.hiltech-product-intelligence-client [data-intel-products] > p {
-  color: #667168 !important;
+
+.hiltech-intel-procurement h2 em,
+.hiltech-intel-reference-head h2 em,
+.hiltech-intel-close h2 em {
+  display: block;
+  color: transparent;
+  font-style: normal;
+  -webkit-text-stroke: 1px rgba(10,14,11,.55);
 }
-.hiltech-product-intelligence-client [data-intel-rfq] a,
-.hiltech-product-intelligence-client [data-intel-rfq] button,
-.hiltech-product-intelligence-client [data-intel-final] a {
-  border-radius: 0 !important;
+
+.hiltech-intel-procurement-grid > div:first-child > p,
+.hiltech-intel-reference-head > p {
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  color: #667168;
+  font-size: .76rem;
+  line-height: 1.65;
 }
-.hiltech-product-intelligence-client [data-intel-rfq] .btn-primary,
-.hiltech-product-intelligence-client [data-intel-product] .btn-primary {
-  background: #071008 !important;
-  color: #a8ff79 !important;
-  box-shadow: none !important;
+
+.hiltech-intel-procurement-state {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(10,14,11,.14);
+  border: 1px solid rgba(10,14,11,.14);
 }
-.hiltech-product-intelligence-client [data-intel-products] {
-  margin-top: 3rem !important;
+
+.hiltech-intel-procurement-state > div {
+  min-height: 11rem;
+  display: grid;
+  align-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f4f6f1;
 }
-.hiltech-product-intelligence-client [data-intel-products] > div {
-  gap: 1px !important;
-  background: rgba(10,14,11,0.13);
-  border: 1px solid rgba(10,14,11,0.13);
+
+.hiltech-intel-procurement-state span,
+.hiltech-intel-procurement-state small,
+.hiltech-intel-starters > div:first-child,
+.hiltech-intel-reference-index article > span,
+.hiltech-intel-reference-main small,
+.hiltech-intel-reference-spec span,
+.hiltech-intel-reference-spec small,
+.hiltech-intel-reference-actions button,
+.hiltech-intel-reference-actions a {
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  letter-spacing: .06em;
 }
-.hiltech-product-intelligence-client [data-intel-product] {
-  border-radius: 0 !important;
-  border: 0 !important;
-  background: #f7f8f4 !important;
-  box-shadow: none !important;
+
+.hiltech-intel-procurement-state span {
+  color: #397329;
+  font-size: .43rem;
 }
-.hiltech-product-intelligence-client [data-intel-product] h3 {
-  color: #0a0e0b !important;
+
+.hiltech-intel-procurement-state strong {
+  color: #0b100c;
+  font-size: clamp(2.8rem,5vw,5rem);
+  line-height: .9;
+  letter-spacing: -.055em;
 }
-.hiltech-product-intelligence-client [data-intel-product] p {
-  color: #667168 !important;
+
+.hiltech-intel-procurement-state small {
+  color: #748078;
+  font-size: .4rem;
+  line-height: 1.45;
 }
-.hiltech-product-intelligence-client [data-intel-product] > p:first-child {
-  border-color: rgba(10,14,11,0.13) !important;
-  background: transparent !important;
-  color: #397329 !important;
+
+.hiltech-intel-starters {
+  display: grid;
+  grid-template-columns: minmax(14rem,.42fr) minmax(0,1fr);
+  gap: 1px;
+  margin-top: clamp(2.5rem,4vw,4rem);
+  background: rgba(10,14,11,.14);
+  border: 1px solid rgba(10,14,11,.14);
 }
-.hiltech-product-intelligence-client [data-intel-final] {
-  margin-top: 3rem !important;
+
+.hiltech-intel-starters > div:first-child {
+  display: grid;
+  align-content: space-between;
+  gap: 1rem;
+  min-height: 12rem;
+  padding: 1rem;
+  background: #edf0ea;
+  color: #397329;
+  font-size: .43rem;
 }
-.hiltech-product-intelligence-client [data-intel-final] a {
-  border-color: rgba(10,14,11,0.16) !important;
-  background: transparent !important;
-  color: #356f26 !important;
+
+.hiltech-intel-starters > div:first-child strong {
+  color: #4c5850;
+  font-family: var(--font-hiltech-display), Arial, sans-serif;
+  font-size: clamp(1.15rem,1.8vw,1.65rem);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+
+.hiltech-intel-starters > div:last-child {
+  background: #f8f9f6;
+}
+
+.hiltech-intel-starters button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.3rem minmax(0,1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  min-height: 4.4rem;
+  padding: .85rem 1rem;
+  border-bottom: 1px solid rgba(10,14,11,.11);
+  text-align: left;
+  background: transparent;
+  color: #0b100c;
+  transition: background 160ms ease, padding-left 160ms ease;
+}
+
+.hiltech-intel-starters button:last-child {
+  border-bottom: 0;
+}
+
+.hiltech-intel-starters button:hover,
+.hiltech-intel-starters button:focus-visible {
+  padding-left: 1.35rem;
+  background: #eef2eb;
+}
+
+.hiltech-intel-starters button > span,
+.hiltech-intel-starters button small,
+.hiltech-intel-starters button em {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+  font-style: normal;
+}
+
+.hiltech-intel-starters button small {
+  display: block;
+  color: #6c776f;
+  margin-bottom: .25rem;
+}
+
+.hiltech-intel-starters button strong {
+  display: block;
+  color: #28332b;
+  font-size: .82rem;
+  line-height: 1.25;
+  font-weight: 620;
+}
+
+.hiltech-intel-no-live {
+  display: grid;
+  grid-template-columns: minmax(12rem,.3fr) minmax(0,1fr) auto;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: clamp(2.5rem,4vw,4rem);
+  padding: 1.2rem 0;
+  border-top: 1px solid rgba(10,14,11,.14);
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-intel-no-live p,
+.hiltech-intel-empty-index p {
+  color: #667168;
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+.hiltech-intel-no-live a {
+  color: #397329;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .48rem;
+  font-weight: 600;
+}
+
+.hiltech-intel-reference-section {
+  margin-top: clamp(5rem,8vw,8rem);
+}
+
+.hiltech-intel-reference-head {
+  display: grid;
+  grid-template-columns: minmax(0,1.05fr) minmax(18rem,.48fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: end;
+  margin-top: clamp(3rem,5vw,5rem);
+}
+
+.hiltech-intel-reference-index {
+  margin-top: clamp(3rem,5vw,5rem);
+  border-top: 1px solid rgba(10,14,11,.15);
+}
+
+.hiltech-intel-reference-index article {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0,1.15fr) minmax(15rem,.75fr) auto;
+  gap: 1.2rem;
+  align-items: center;
+  min-height: 8.4rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-intel-reference-index article > span {
+  color: #397329;
+  font-size: .4rem;
+}
+
+.hiltech-intel-reference-main {
+  min-width: 0;
+}
+
+.hiltech-intel-reference-main small,
+.hiltech-intel-reference-spec span,
+.hiltech-intel-reference-spec small {
+  display: block;
+  color: #69756d;
+  font-size: .4rem;
+}
+
+.hiltech-intel-reference-main h3 {
+  margin-top: .45rem;
+  color: #111713;
+  font-size: clamp(1.15rem,1.8vw,1.55rem);
+  line-height: 1.06;
+  letter-spacing: -.035em;
+  font-weight: 690;
+  overflow-wrap: anywhere;
+}
+
+.hiltech-intel-reference-main p {
+  max-width: 38rem;
+  margin-top: .55rem;
+  color: #68736b;
+  font-size: .68rem;
+  line-height: 1.5;
+}
+
+.hiltech-intel-reference-spec {
+  min-width: 0;
+  display: grid;
+  gap: .45rem;
+}
+
+.hiltech-intel-reference-spec span {
+  color: #397329;
+}
+
+.hiltech-intel-reference-spec strong {
+  color: #435047;
+  font-size: .7rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.hiltech-intel-reference-actions {
+  display: grid;
+  gap: .45rem;
+  min-width: 8.8rem;
+}
+
+.hiltech-intel-reference-actions button,
+.hiltech-intel-reference-actions a {
+  min-height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .55rem .7rem;
+  border: 1px solid rgba(10,14,11,.16);
+  color: #3f4a42;
+  background: transparent;
+  font-size: .4rem;
+  font-weight: 600;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.hiltech-intel-reference-actions button {
+  border-color: #1f4519;
+  background: #071008;
+  color: #a8ff79;
+}
+
+.hiltech-intel-reference-actions button:hover,
+.hiltech-intel-reference-actions button:focus-visible {
+  background: #8ff257;
+  color: #071008;
+}
+
+.hiltech-intel-reference-actions a:hover,
+.hiltech-intel-reference-actions a:focus-visible {
+  border-color: #397329;
+  color: #397329;
+}
+
+.hiltech-intel-empty-index {
+  display: grid;
+  grid-template-columns: minmax(12rem,.3fr) minmax(16rem,.55fr) minmax(0,1fr);
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: clamp(3rem,5vw,5rem);
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(10,14,11,.14);
+  border-bottom: 1px solid rgba(10,14,11,.14);
+}
+
+.hiltech-intel-empty-index strong {
+  color: #28332b;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.hiltech-intel-close {
+  display: grid;
+  grid-template-columns: minmax(0,1.15fr) minmax(18rem,.5fr);
+  gap: clamp(3rem,7vw,8rem);
+  align-items: end;
+  margin-top: clamp(5rem,8vw,8rem);
+  padding: clamp(4rem,6vw,6rem);
+  background: #050806;
+  color: #eef3ee;
+}
+
+.hiltech-intel-close > div:first-child > span {
+  color: #8ff257;
+}
+
+.hiltech-intel-close h2 {
+  color: #eef3ee;
+}
+
+.hiltech-intel-close h2 em {
+  -webkit-text-stroke-color: rgba(238,243,238,.62);
+}
+
+.hiltech-intel-close > div:last-child > p {
+  color: #89958d;
+  font-size: .76rem;
+  line-height: 1.65;
+}
+
+.hiltech-intel-close > div:last-child > div {
+  display: grid;
+  margin-top: 1.8rem;
+  border-top: 1px solid rgba(225,241,228,.13);
+}
+
+.hiltech-intel-close a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 0;
+  border-bottom: 1px solid rgba(225,241,228,.13);
+  color: #d3dcd5;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .43rem;
+  letter-spacing: .055em;
+  font-weight: 600;
+}
+
+.hiltech-intel-close a:first-child {
+  color: #a8ff79;
+}
+
+.hiltech-intel-close a:hover,
+.hiltech-intel-close a:focus-visible {
+  color: #8ff257;
 }
 
 .hiltech-product-intelligence-disclaimer {
@@ -8357,6 +8703,36 @@ body {
   }
 
   .hiltech-product-intelligence-compatibility-grid > div:last-child {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .hiltech-intel-procurement-grid,
+  .hiltech-intel-reference-head,
+  .hiltech-intel-close {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-intel-starters {
+    grid-template-columns: 1fr;
+  }
+
+  .hiltech-intel-reference-index article {
+    grid-template-columns: 2rem minmax(0,1fr);
+  }
+
+  .hiltech-intel-reference-spec,
+  .hiltech-intel-reference-actions {
+    grid-column: 2;
+  }
+
+  .hiltech-intel-reference-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hiltech-intel-empty-index,
+  .hiltech-intel-no-live {
     grid-template-columns: 1fr;
   }
 }
@@ -8434,6 +8810,45 @@ body {
   .hiltech-product-intelligence-disclaimer {
     grid-template-columns: 1fr;
     gap: 0.45rem;
+  }
+
+  .hiltech-intel-procurement h2,
+  .hiltech-intel-reference-head h2,
+  .hiltech-intel-close h2 {
+    max-width: 100%;
+    font-size: clamp(2.8rem,12.5vw,3.4rem);
+    line-height: .84;
+    overflow-wrap: anywhere;
+  }
+
+  .hiltech-intel-procurement-state {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hiltech-intel-procurement-state > div {
+    min-height: 8.5rem;
+  }
+
+  .hiltech-intel-starters button {
+    grid-template-columns: 1.8rem minmax(0,1fr) auto;
+    gap: .65rem;
+    padding: .8rem .7rem;
+  }
+
+  .hiltech-intel-reference-index article {
+    gap: .7rem;
+    min-height: 0;
+    padding: 1rem 0;
+  }
+
+  .hiltech-intel-reference-actions {
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
+  .hiltech-intel-close {
+    margin-inline: -5vw;
+    padding: 4rem 5vw;
   }
 }
 
