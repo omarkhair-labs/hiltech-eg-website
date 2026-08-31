@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ProductDetailActions from '@/components/ProductDetailActions';
-import { SectionShell } from '@/components/ui/primitives';
 import { productIntelligenceSlugByCategory } from '@/content/product-intelligence';
 import { productVisuals } from '@/content/product-visuals';
 import { site } from '@/content/site';
@@ -67,6 +66,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ProductDetailPage({ params }: { params: Params }) {
   const { product, products } = await getProduct(params.productCode);
   if (!product) notFound();
+
   const intelligenceSlug = productIntelligenceSlugByCategory[product.category];
   const mappedVisual = visualsByProductId.get(product.id);
   const productImageSrc = product.image || mappedVisual?.imagePath;
@@ -76,46 +76,228 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   const categoryLower = product.category.toLowerCase();
   const oftenQuotedWith = categoryLower.includes('fiber')
-    ? ['ODF', 'Patch cords', 'Testing']
+    ? ['ODF / enclosure', 'Fiber patch cords', 'Testing / OTDR context']
     : categoryLower.includes('copper') || categoryLower.includes('cat6')
-      ? ['Patch panels', 'Faceplates', 'Racks', 'Testing']
+      ? ['Patch panels', 'Faceplates / keystone', 'Rack / cabinet', 'Testing']
       : categoryLower.includes('rack') || categoryLower.includes('cabinet') || categoryLower.includes('pdu')
-        ? ['PDU', 'Cable management', 'Patch panels']
+        ? ['PDU / power', 'Cable management', 'Patch panels']
         : categoryLower.includes('cctv') || categoryLower.includes('security')
-          ? ['Cabling', 'Network points', 'Racks']
-          : ['Cable/fiber scope support', 'Testing', 'Patching accessories'];
+          ? ['Camera cabling', 'Network points', 'Rack / control-room context']
+          : ['Cable / fiber scope support', 'Testing', 'Patching accessories'];
 
-  const related = products.filter((item) => item.id !== product.id).sort((a, b) => {
-    const aScore = Number(a.category === product.category) * 2 + Number(a.brand === product.brand);
-    const bScore = Number(b.category === product.category) * 2 + Number(b.brand === product.brand);
-    return bScore - aScore;
-  }).slice(0, 6);
+  const related = products
+    .filter((item) => item.id !== product.id)
+    .sort((a, b) => {
+      const aScore = Number(a.category === product.category) * 2 + Number(a.brand === product.brand);
+      const bScore = Number(b.category === product.category) * 2 + Number(b.brand === product.brand);
+      return bScore - aScore;
+    })
+    .slice(0, 6);
 
   return (
-    <main className="bg-slate-950">
+    <main className="hiltech-product-detail-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }} />
-      <SectionShell>
-        <nav className="mb-4 overflow-x-auto whitespace-nowrap text-xs text-slate-400 sm:text-sm">
-          <Link href="/products-partners" className="hover:text-white transition">Products</Link><span className="mx-2">/</span><span className="text-slate-400">{product.category}</span><span className="mx-2">/</span><span className="font-medium text-white">{product.name}</span>
-        </nav>
-        <section className="rounded-2xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-4 text-white md:p-8 backdrop-blur-sm">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="relative aspect-[4/3] max-h-[320px] overflow-hidden rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm">
-              {productImageSrc ? <Image src={productImageSrc} alt={productImageAlt} fill className="object-contain p-4" sizes="(max-width: 1024px) 100vw, 50vw" /> : <div className="flex h-full items-center justify-center text-center"><div><p className="text-xs uppercase tracking-wider text-slate-400">Illustrative visual</p><p className="mt-2 text-sm text-slate-200">{product.name}</p></div></div>}
+
+      <section className="hiltech-product-detail-hero">
+        <div className="hiltech-product-detail-shell">
+          <nav className="hiltech-product-detail-breadcrumb" aria-label="Breadcrumb">
+            <Link href="/products-partners">Products</Link>
+            <span>/</span>
+            <Link href={`/products-partners?category=${encodeURIComponent(product.category)}`}>{product.category}</Link>
+            <span>/</span>
+            <strong>{product.id}</strong>
+          </nav>
+
+          <div className="hiltech-product-detail-grid">
+            <div className="hiltech-product-detail-media">
+              {productImageSrc ? (
+                <Image
+                  src={productImageSrc}
+                  alt={productImageAlt}
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="(max-width: 900px) 90vw, 45vw"
+                />
+              ) : (
+                <div className="hiltech-product-detail-media-fallback">
+                  <span>ILLUSTRATIVE VISUAL</span>
+                  <strong>{product.name}</strong>
+                </div>
+              )}
+
+              <div className="hiltech-product-detail-media-label">
+                <span>PRODUCT REFERENCE</span>
+                <strong>{product.id}</strong>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-orange-400">{product.category}</p><h1 className="mt-2 text-2xl font-bold md:text-4xl text-white">{product.name}</h1>
-              <div className="mt-3 flex flex-wrap gap-2 text-xs"><span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-slate-300">Brand: {product.brand}</span><span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-slate-300">Category: {product.category}</span></div>
-              <div className="mt-4 space-y-2 text-sm"><p className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-slate-300">{product.priceNote?.trim() ? `Price reference: ${product.priceNote.trim()}` : 'Price on request'}</p><p className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-slate-300">Confirm availability before quotation</p></div>
-              <ProductDetailActions product={product} intelligenceHref={intelligenceSlug ? `/products-partners/intelligence/${intelligenceSlug}` : undefined} labels={{ addToRFQ: 'Add to RFQ', technicalNotes: 'Technical notes', backToProducts: 'Back to Products', addedToRFQ: 'Added to RFQ' }} />
+
+            <div className="hiltech-product-detail-summary">
+              <div className="hiltech-product-detail-summary-topline">
+                <span>{product.category}</span>
+                <strong>{product.brand}</strong>
+              </div>
+
+              <span className="hiltech-product-detail-code">{product.id}</span>
+              <h1>{product.name}</h1>
+              <p className="hiltech-product-detail-spec-lead">{product.shortSpecs}</p>
+
+              <dl className="hiltech-product-detail-facts">
+                <div>
+                  <dt>BRAND</dt>
+                  <dd>{product.brand}</dd>
+                </div>
+                <div>
+                  <dt>CATEGORY</dt>
+                  <dd>{product.category}</dd>
+                </div>
+                <div>
+                  <dt>PRICE CONTEXT</dt>
+                  <dd>{product.priceNote?.trim() || 'Price on request'}</dd>
+                </div>
+                <div>
+                  <dt>AVAILABILITY</dt>
+                  <dd>{product.availabilityNote?.trim() || 'Confirmed during RFQ review'}</dd>
+                </div>
+              </dl>
+
+              <ProductDetailActions
+                product={product}
+                intelligenceHref={intelligenceSlug ? `/products-partners/intelligence/${intelligenceSlug}` : undefined}
+                labels={{
+                  addToRFQ: 'Add to RFQ',
+                  technicalNotes: 'Technical notes',
+                  backToProducts: 'Back to products',
+                  addedToRFQ: 'Added to RFQ',
+                }}
+              />
             </div>
           </div>
-        </section>
-        {product.useCase ? <section className="mt-8 rounded-xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm"><h2 className="text-lg font-semibold text-white">Use Case</h2><p className="mt-2 text-slate-300">{product.useCase}</p></section> : null}
-        {product.shortSpecs ? <section className="mt-4 rounded-xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm"><h2 className="text-lg font-semibold text-white">Specifications</h2><p className="mt-2 text-slate-300">{product.shortSpecs}</p></section> : null}
-        {oftenQuotedWith.length > 0 ? <section className="mt-8"><h2 className="text-lg font-semibold text-white mb-4">Often quoted with</h2><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{oftenQuotedWith.map((tag) => <div key={tag} className="rounded-lg border border-white/15 bg-white/5 p-3 text-slate-300 text-sm backdrop-blur-sm">{tag}</div>)}</div></section> : null}
-        {related.length > 0 ? <section className="mt-8"><h2 className="text-lg font-semibold text-white mb-4">Related Products</h2><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{related.map((relProduct) => <Link key={relProduct.id} href={`/products-partners/${relProduct.id}`} className="group rounded-lg border border-white/15 bg-white/5 p-4 hover:border-orange-500/50 hover:bg-white/10 transition backdrop-blur-sm"><p className="text-xs font-semibold uppercase tracking-[0.1em] text-orange-400">{relProduct.category}</p><h3 className="mt-2 font-semibold text-white group-hover:text-orange-300 transition line-clamp-2">{relProduct.name}</h3><p className="mt-1 text-xs text-slate-400">{relProduct.brand}</p></Link>)}</div></section> : null}
-      </SectionShell>
+
+          <div className="hiltech-product-detail-hero-rail">
+            <span>REFERENCE</span><i />
+            <span>SPEC</span><i />
+            <span>PROJECT FIT</span><i />
+            <span>RFQ</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-detail-context">
+        <div className="hiltech-product-detail-shell">
+          <div className="hiltech-product-detail-section-label">
+            <span>01 / PRODUCT CONTEXT</span>
+            <strong>WHAT IT IS / WHERE IT FITS</strong>
+          </div>
+
+          <div className="hiltech-product-detail-context-grid">
+            <article>
+              <span>SPECIFICATION SUMMARY</span>
+              <h2>{product.shortSpecs}</h2>
+            </article>
+
+            <article>
+              <span>TYPICAL USE CASE</span>
+              <h2>{product.useCase}</h2>
+            </article>
+
+            {product.technicalNotes?.trim() ? (
+              <article>
+                <span>TECHNICAL NOTE</span>
+                <h2>{product.technicalNotes.trim()}</h2>
+              </article>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-detail-project">
+        <div className="hiltech-product-detail-shell">
+          <div className="hiltech-product-detail-section-label is-dark">
+            <span>02 / PROJECT ADJACENCY</span>
+            <strong>OFTEN QUOTED AS PART OF A SYSTEM.</strong>
+          </div>
+
+          <div className="hiltech-product-detail-project-grid">
+            <div>
+              <h2>DON'T QUOTE<br /><em>THE PART IN ISOLATION.</em></h2>
+              <p>
+                Infrastructure products are usually selected as part of a route, rack, endpoint, fiber, power, or testing scope. Add related project context before final quotation.
+              </p>
+            </div>
+
+            <div className="hiltech-product-detail-adjacencies">
+              {oftenQuotedWith.map((item, index) => (
+                <div key={item}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{item}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-detail-related">
+        <div className="hiltech-product-detail-shell">
+          <div className="hiltech-product-detail-section-label">
+            <span>03 / RELATED REFERENCES</span>
+            <strong>SAME CATEGORY / BRAND PROXIMITY</strong>
+          </div>
+
+          <div className="hiltech-product-detail-related-grid">
+            {related.map((item) => {
+              const relatedVisual = visualsByProductId.get(item.id);
+              const image = item.image || relatedVisual?.imagePath;
+
+              return (
+                <Link key={item.id} href={`/products-partners/${item.id}`}>
+                  <div className="hiltech-product-detail-related-media">
+                    {image ? (
+                      <Image
+                        src={image}
+                        alt={relatedVisual?.alt || item.name}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 700px) 45vw, 20vw"
+                      />
+                    ) : (
+                      <span>NO PRODUCT VISUAL</span>
+                    )}
+                  </div>
+                  <small>{item.id}</small>
+                  <strong>{item.name}</strong>
+                  <span>{item.brand}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-detail-rfq">
+        <div className="hiltech-product-detail-shell">
+          <div>
+            <span>04 / QUOTATION PATH</span>
+            <h2>REFERENCE FOUND.<br /><em>NOW CONFIRM THE PROJECT.</em></h2>
+          </div>
+
+          <div>
+            <p>
+              Final specification, compatibility, quantity, price, and availability are confirmed during RFQ review. Add this reference to the basket, include adjacent items, and send the project scope as one request.
+            </p>
+            <div className="hiltech-product-detail-rfq-actions">
+              <Link href="/rfq">Review RFQ <span aria-hidden="true">↗</span></Link>
+              {intelligenceSlug ? (
+                <Link href={`/products-partners/intelligence/${intelligenceSlug}`}>
+                  Technical notes <span aria-hidden="true">↗</span>
+                </Link>
+              ) : null}
+              <Link href="/products-partners">Continue catalog <span aria-hidden="true">↗</span></Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
