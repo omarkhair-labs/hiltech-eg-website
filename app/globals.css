@@ -8237,6 +8237,9 @@ body {
 .hiltech-product-intelligence-link-grid > div {
   background: #f4f6f1;
 }
+.hiltech-product-intelligence-link-grid.is-single {
+  grid-template-columns: 1fr;
+}
 .hiltech-product-intelligence-link-grid > div > div {
   display: flex;
   flex-wrap: wrap;
