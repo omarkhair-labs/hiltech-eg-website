@@ -44,7 +44,7 @@ export default function CategoryIntelligenceClient({ category, relatedProducts }
   );
 
   const starterItems = relatedProducts.slice(0, 3);
-  const visibleReferences = relatedProducts.slice(0, 12);
+  const visibleReferences = relatedProducts;
 
   const addItem = (item: ProductItem) => {
     const normalized = toRFQItem(item);
