@@ -26,7 +26,7 @@ const preparation = [
 export default function Page() {
   return (
     <main className="hiltech-contact-page">
-      <section className="hiltech-contact-hero">
+      <section className="hiltech-contact-hero" data-route-identity="direct-endpoint">
         <div className="hiltech-contact-shell">
           <div className="hiltech-contact-topline">
             <span>CONTACT / ROUTE THE REQUEST</span>

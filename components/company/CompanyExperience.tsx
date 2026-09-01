@@ -196,7 +196,7 @@ export default function CompanyExperience() {
 
   return (
     <main className="hiltech-company-page">
-      <section className="hiltech-company-hero">
+      <section className="hiltech-company-hero" data-route-identity="operating-map">
         <div className="hiltech-company-shell">
           <div className="hiltech-company-topline">
             <span>COMPANY / OPERATING IDENTITY</span>

@@ -277,7 +277,7 @@ export default function RFQReviewClient({
       data-rfq-flow
       data-rfq-state={flowState}
     >
-      <header className="hiltech-rfq-hero" data-rfq-hero>
+      <header className="hiltech-rfq-hero" data-rfq-hero data-route-identity="request-state">
         <div className="hiltech-rfq-topline">
           <span>PROJECT REQUEST / RFQ</span>
           <strong>{flowState.toUpperCase()}</strong>
