@@ -13,17 +13,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'hiltech-eg.com',
-          },
-        ],
-        destination: 'https://www.hiltech-eg.com/:path*',
-        permanent: true,
-      },
-      {
         source: '/product-page/:slug',
         destination: '/products-partners/:slug',
         permanent: true,
