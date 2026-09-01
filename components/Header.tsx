@@ -2,13 +2,14 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { readRFQItems } from '@/lib/rfq';
 import SiteSearch from '@/components/SiteSearch';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { arNavigation } from '@/content/ar/navigation';
 import { getLocalizedPath } from '@/lib/i18n/routes';
+import { emitRouteContinuity, shouldInterceptRouteClick } from '@/lib/route-continuity';
 
 const primaryNav = [
   ['Solutions', '/solutions', arNavigation.solutions],
@@ -85,6 +86,33 @@ export default function Header() {
     return pathname === target || pathname.startsWith(`${target}/`);
   };
 
+  const handleCreativeRoute = (
+    event: ReactMouseEvent<HTMLElement>,
+    href: string,
+    label: string,
+  ) => {
+    if (!isCreativePublic || !shouldInterceptRouteClick(event)) return;
+
+    const target = localizeHref(href);
+    if (target === pathname) return;
+
+    event.preventDefault();
+    setOpen(false);
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    emitRouteContinuity({
+      kind: 'nav',
+      href: target,
+      label,
+      sourceRect: {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      },
+    });
+  };
+
   return (
     <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isCreativePublic ? 'hiltech-creative-header border-[#8ff257]/15 bg-[#050806]/90 shadow-[0_10px_40px_rgba(0,0,0,0.34)]' : 'border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)]'}`}>
       <div className="container flex h-16 items-center justify-between gap-3">
@@ -93,6 +121,8 @@ export default function Header() {
           translate="no"
           className="flex min-w-0 items-center gap-2 text-lg font-extrabold tracking-[0.12em] text-white"
           aria-label={isArabic ? 'العودة إلى الصفحة الرئيسية لهيلتك' : 'HILTECH home'}
+          data-route-continuity-link={isCreativePublic ? 'home' : undefined}
+          onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/', 'HOME') : undefined}
         >
           {showLogoImage ? (
             <Image
@@ -117,6 +147,8 @@ export default function Header() {
                 href={localizeHref(href)}
                 translate="no"
                 aria-current={active ? 'page' : undefined}
+                data-route-continuity-link={isCreativePublic ? label.toLowerCase() : undefined}
+                onClick={isCreativePublic ? (event) => handleCreativeRoute(event, href, label.toUpperCase()) : undefined}
                 className={isCreativePublic
                   ? `hiltech-creative-nav-link ${active ? 'is-active' : ''}`
                   : `rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`
@@ -174,6 +206,8 @@ export default function Header() {
                     key={href}
                     href={localizeHref(href)}
                     aria-current={active ? 'page' : undefined}
+                    data-route-continuity-link={isCreativePublic ? label.toLowerCase() : undefined}
+                    onClick={isCreativePublic ? (event) => handleCreativeRoute(event, href, label.toUpperCase()) : undefined}
                     className={isCreativePublic
                       ? `hiltech-creative-mobile-nav-link ${active ? 'is-active' : ''}`
                       : `flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`

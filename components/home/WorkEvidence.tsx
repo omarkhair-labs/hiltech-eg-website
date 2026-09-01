@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type MouseEvent as ReactMouseEvent } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { emitRouteContinuity, shouldInterceptRouteClick } from '@/lib/route-continuity';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,7 @@ const evidence = [
     image: '/rack-data-room.jpg',
     scope: 'Rack organization, patching, cable routing, and readiness checks for business network rooms.',
     proof: 'Maintainable infrastructure / handover context',
+    targetId: 'rack-data-room',
   },
   {
     id: 'copper',
@@ -26,6 +28,7 @@ const evidence = [
     image: '/copper-patch-panel.jpg',
     scope: 'Organized copper pathways, patch-panel termination, and routing discipline across technical spaces.',
     proof: 'Path clarity / patching discipline',
+    targetId: 'copper-route',
   },
   {
     id: 'fiber',
@@ -35,6 +38,7 @@ const evidence = [
     image: '/fiber-distribution-panel.jpg',
     scope: 'Fiber routing context, ODF organization, and connector preparation aligned with field execution.',
     proof: 'ODF organization / serviceability',
+    targetId: 'fiber-termination',
   },
   {
     id: 'test',
@@ -44,11 +48,40 @@ const evidence = [
     image: '/testing-otdr-device.jpg',
     scope: 'Field testing tools and validation checks used before operational handover.',
     proof: 'Testing context / acceptance readiness',
+    targetId: 'testing-validation',
   },
 ] as const;
 
 export default function WorkEvidence() {
   const rootRef = useRef<HTMLElement>(null);
+
+  const handleEvidenceRoute = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    item: (typeof evidence)[number],
+  ) => {
+    if (!shouldInterceptRouteClick(event)) return;
+
+    event.preventDefault();
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      event.currentTarget.dataset.routeCarrySourceActive = 'true';
+    }
+
+    emitRouteContinuity({
+      kind: 'work',
+      href: '/work',
+      label: item.label,
+      targetId: item.targetId,
+      src: item.image,
+      alt: item.scope,
+      sourceRect: {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      },
+    });
+  };
 
   useEffect(() => {
     const root = rootRef.current;
@@ -135,7 +168,13 @@ export default function WorkEvidence() {
               data-evidence-strip
               className={`hiltech-evidence-strip ${index % 2 ? 'is-reversed' : ''}`}
             >
-              <div className="hiltech-evidence-media">
+              <Link
+                href="/work"
+                className="hiltech-evidence-media"
+                data-work-carry-link={item.targetId}
+                aria-label={`Open field evidence archive: ${item.label}`}
+                onClick={(event) => handleEvidenceRoute(event, item)}
+              >
                 <Image
                   data-evidence-image
                   src={item.image}
@@ -146,7 +185,8 @@ export default function WorkEvidence() {
                 />
                 <span className="hiltech-evidence-corner hiltech-evidence-corner-a" />
                 <span className="hiltech-evidence-corner hiltech-evidence-corner-b" />
-              </div>
+                <span className="hiltech-evidence-open">OPEN EVIDENCE ↗</span>
+              </Link>
 
               <div className="hiltech-evidence-copy">
                 <div>

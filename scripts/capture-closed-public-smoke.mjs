@@ -47,6 +47,52 @@ try {
       });
     }
 
+    console.log(`[continuity] ${target.name} primary navigation keeps route context`);
+    await page.goto(baseURL, { waitUntil: 'networkidle' });
+    if (target.name === 'mobile') {
+      const menuButton = page.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
+      await menuButton.click();
+      await page.locator('.hiltech-creative-mobile-panel').waitFor();
+    }
+    const solutionsNav = page.locator('[data-route-continuity-link="solutions"]:visible').first();
+    await solutionsNav.click();
+    const navContinuity = page.locator('[data-route-continuity-kind="nav"]');
+    await navContinuity.waitFor({ state: 'attached' });
+    await page.waitForURL('**/solutions');
+    await navContinuity.waitFor({ state: 'detached' });
+
+    console.log(`[continuity] ${target.name} Solutions carries system model into detail`);
+    const fiberRow = page.locator('[data-solution-carry-link="fiber-backbone"]');
+    await fiberRow.scrollIntoViewIfNeeded();
+    if (target.name === 'desktop') await fiberRow.hover();
+    await page.waitForTimeout(140);
+    await fiberRow.click();
+    const solutionCarry = page.locator('[data-route-continuity-kind="solution"]');
+    await solutionCarry.waitFor({ state: 'attached' });
+    await page.screenshot({
+      path: `visual-qa-closed-public-smoke/${target.name}-solution-route-carry.png`,
+      fullPage: false,
+    });
+    await page.waitForURL('**/solutions/fiber-backbone');
+    await page.locator('[data-solution-carry-target="fiber-backbone"]').waitFor();
+    await solutionCarry.waitFor({ state: 'detached' });
+
+    console.log(`[continuity] ${target.name} Home evidence carries into Work archive`);
+    await page.goto(baseURL, { waitUntil: 'networkidle' });
+    const workCarryLink = page.locator('[data-work-carry-link="rack-data-room"]');
+    await workCarryLink.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(120);
+    await workCarryLink.click();
+    const workCarry = page.locator('[data-route-continuity-kind="work"]');
+    await workCarry.waitFor({ state: 'attached' });
+    await page.screenshot({
+      path: `visual-qa-closed-public-smoke/${target.name}-work-route-carry.png`,
+      fullPage: false,
+    });
+    await page.waitForURL('**/work');
+    await page.locator('[data-work-carry-target="rack-data-room"]').waitFor();
+    await workCarry.waitFor({ state: 'detached' });
+
     if (target.name === 'mobile') {
       console.log('[mobile-contract] H07 selector stays image-adjacent');
       await page.goto(baseURL, { waitUntil: 'networkidle' });
@@ -158,6 +204,27 @@ try {
 
     await context.close();
   }
+
+  console.log('[continuity] reduced-motion route navigation remains direct');
+  const reducedContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 1,
+    reducedMotion: 'reduce',
+    isMobile: true,
+    hasTouch: true,
+  });
+  const reducedPage = await reducedContext.newPage();
+  await reducedPage.goto(baseURL, { waitUntil: 'networkidle' });
+  const reducedMenu = reducedPage.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
+  await reducedMenu.click();
+  await reducedPage.locator('.hiltech-creative-mobile-panel').waitFor();
+  await reducedPage.locator('[data-route-continuity-link="solutions"]:visible').first().click();
+  await reducedPage.waitForURL('**/solutions');
+  const reducedOverlay = await reducedPage.locator('[data-route-continuity]').count();
+  if (reducedOverlay) {
+    throw new Error('reduced-motion route navigation rendered a continuity overlay');
+  }
+  await reducedContext.close();
 } finally {
   await browser.close();
 }

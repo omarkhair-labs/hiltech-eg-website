@@ -14806,3 +14806,235 @@ body:has(.hiltech-creative-header)
     line-height: .95;
   }
 }
+
+
+/* ==========================================================================
+   AWARD STEP 1 — SITE CONTINUITY / CARRY-CONTENT ROUTING
+   ========================================================================== */
+
+.hiltech-route-continuity-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 128;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 1;
+  background: linear-gradient(180deg, rgba(5,8,6,.78) 0, rgba(5,8,6,.3) 7.8rem, transparent 15rem);
+  transition: opacity 260ms ease;
+}
+
+.hiltech-route-continuity-nav svg {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 9.75rem;
+  overflow: visible;
+}
+
+.hiltech-route-continuity-nav path {
+  fill: none;
+  stroke: #8ff257;
+  stroke-width: 1.15;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke-dashoffset 260ms cubic-bezier(.22,.61,.36,1);
+}
+
+.hiltech-route-continuity-nav circle {
+  fill: #071006;
+  stroke: #8ff257;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  opacity: .9;
+}
+
+.hiltech-route-continuity-nav > div {
+  position: absolute;
+  left: 50%;
+  top: 7.7rem;
+  display: flex;
+  gap: .8rem;
+  transform: translateX(-50%);
+  color: #7e8c83;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .065em;
+  white-space: nowrap;
+}
+
+.hiltech-route-continuity-nav > div span { color: #8ff257; }
+
+.hiltech-route-continuity-nav > div strong {
+  color: #c7d1c9;
+  font-weight: 500;
+}
+
+.hiltech-route-continuity-nav.is-handoff path,
+.hiltech-route-continuity-nav.is-arriving path {
+  stroke-dashoffset: 0;
+}
+
+.hiltech-route-continuity-nav.is-arriving { opacity: 0; }
+
+.hiltech-route-carry-object {
+  position: fixed;
+  z-index: 129;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  border: 1px solid rgba(143,242,87,.34);
+  background: #071008;
+  box-shadow: 0 24px 90px rgba(0,0,0,.38);
+  transition:
+    left 430ms cubic-bezier(.22,.61,.36,1),
+    top 430ms cubic-bezier(.22,.61,.36,1),
+    width 430ms cubic-bezier(.22,.61,.36,1),
+    height 430ms cubic-bezier(.22,.61,.36,1),
+    border-color 220ms ease,
+    opacity 220ms ease;
+}
+
+.hiltech-route-carry-object::before,
+.hiltech-route-carry-object::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(143,242,87,.62), transparent);
+}
+
+.hiltech-route-carry-object::before { top: 0; }
+.hiltech-route-carry-object::after { bottom: 0; }
+
+.hiltech-route-carry-object.is-handoff { border-color: rgba(143,242,87,.58); }
+.hiltech-route-carry-object.is-arriving { border-color: rgba(143,242,87,.12); }
+
+.hiltech-route-carry-object.is-work > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.82) contrast(1.05);
+}
+
+.hiltech-route-carry-object.is-solution {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(143,242,87,.11), transparent 36%),
+    #dfe4de;
+}
+
+.hiltech-route-carry-diagram,
+.hiltech-route-carry-diagram svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hiltech-route-carry-diagram {
+  display: grid;
+  place-items: center;
+}
+
+.hiltech-route-carry-diagram .hiltech-solutions-diagram-main {
+  fill: none;
+  stroke: #27362b;
+  stroke-width: 1.35;
+  vector-effect: non-scaling-stroke;
+}
+
+.hiltech-route-carry-diagram .hiltech-solutions-diagram-main circle {
+  fill: rgba(80,153,52,.1);
+  stroke: #4f8d39;
+}
+
+.hiltech-route-carry-meta {
+  position: absolute;
+  z-index: 4;
+  left: .75rem;
+  right: .75rem;
+  bottom: .65rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: .45rem;
+  border-top: 1px solid rgba(225,241,228,.2);
+  color: #748178;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .4rem;
+  letter-spacing: .06em;
+}
+
+.is-solution .hiltech-route-carry-meta {
+  border-top-color: rgba(10,14,11,.18);
+  color: #5f6c63;
+}
+
+.hiltech-route-carry-meta span { color: #397329; }
+.is-work .hiltech-route-carry-meta span { color: #8ff257; }
+
+.hiltech-route-carry-meta strong {
+  color: #bcc7bf;
+  font-weight: 500;
+}
+
+.is-solution .hiltech-route-carry-meta strong { color: #263129; }
+
+.hiltech-evidence-media[data-work-carry-link] {
+  display: block;
+  cursor: pointer;
+}
+
+[data-route-carry-source-active="true"] {
+  opacity: 0 !important;
+  transition: opacity 90ms linear !important;
+}
+
+.hiltech-evidence-open {
+  position: absolute;
+  z-index: 4;
+  right: .7rem;
+  bottom: .7rem;
+  padding: .45rem .55rem;
+  border: 1px solid rgba(143,242,87,.34);
+  background: rgba(5,8,6,.78);
+  color: #a8ff79;
+  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
+  font-size: .36rem;
+  letter-spacing: .06em;
+  opacity: .78;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.hiltech-evidence-media[data-work-carry-link]:hover .hiltech-evidence-open,
+.hiltech-evidence-media[data-work-carry-link]:focus-visible .hiltech-evidence-open {
+  opacity: 1;
+  transform: translate(-.15rem,-.15rem);
+}
+
+@media (max-width: 767px) {
+  .hiltech-route-continuity-nav > div,
+  .hiltech-route-carry-meta {
+    font-size: .36rem;
+  }
+
+  .hiltech-route-carry-meta strong {
+    max-width: 48vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hiltech-evidence-open { font-size: .34rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hiltech-route-continuity-nav,
+  .hiltech-route-carry-object {
+    display: none !important;
+    transition: none !important;
+  }
+
+  .hiltech-evidence-open { transition: none; }
+}

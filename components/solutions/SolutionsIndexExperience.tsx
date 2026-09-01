@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { solutions } from '@/content/solutions';
+import { emitRouteContinuity, shouldInterceptRouteClick } from '@/lib/route-continuity';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,6 +141,41 @@ export default function SolutionsIndexExperience() {
   const entries = useMemo(() => solutions.map((solution) => ({ ...solution, ...profileBySlug[solution.slug] })), []);
   const active = entries[activeIndex];
 
+  const handleSolutionRoute = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    solution: (typeof entries)[number],
+    index: number,
+  ) => {
+    if (!shouldInterceptRouteClick(event)) return;
+
+    event.preventDefault();
+    setActiveIndex(index);
+
+    const rowRect = event.currentTarget.getBoundingClientRect();
+    window.requestAnimationFrame(() => {
+      const source = rootRef.current?.querySelector<HTMLElement>('.hiltech-solutions-index-diagram');
+      const svg = source?.querySelector('svg');
+      const rect = source?.getBoundingClientRect() ?? rowRect;
+      if (source && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        source.dataset.routeCarrySourceActive = 'true';
+      }
+
+      emitRouteContinuity({
+        kind: 'solution',
+        href: `/solutions/${solution.slug}`,
+        label: solution.shortTitle,
+        targetId: solution.slug,
+        markup: svg?.outerHTML ?? '',
+        sourceRect: {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        },
+      });
+    });
+  };
+
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -241,7 +277,9 @@ export default function SolutionsIndexExperience() {
                 key={solution.slug}
                 href={`/solutions/${solution.slug}`}
                 data-solution-row
+                data-solution-carry-link={solution.slug}
                 className={activeIndex === index ? 'is-active' : undefined}
+                onClick={(event) => handleSolutionRoute(event, solution, index)}
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
               >
