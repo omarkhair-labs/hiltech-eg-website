@@ -35,7 +35,7 @@ concurrency:
 jobs:
   build:
     if: github.head_ref == 'redesign/creative-system-20260831'
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 20
     steps:
       - name: Checkout
