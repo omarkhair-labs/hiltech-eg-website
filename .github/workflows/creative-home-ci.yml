@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.head_ref == 'redesign/creative-system-20260831'
+    if: github.head_ref == 'redesign/creative-system-20260831' || startsWith(github.head_ref, 'award/')
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 20
     steps:
