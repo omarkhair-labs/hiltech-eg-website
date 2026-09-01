@@ -3,22 +3,19 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { popularSearchShortcuts, siteSearchIndex, type SearchEntry, type SearchType } from '@/lib/site-search';
+import { createPortal } from 'react-dom';
+import {
+  popularSearchShortcuts,
+  siteSearchIndex,
+  type SearchEntry,
+  type SearchType,
+} from '@/lib/site-search';
 import { getLocalizedPath } from '@/lib/i18n/routes';
 
 interface SiteSearchProps {
   onNavigate?: () => void;
   className?: string;
 }
-
-const typeStyles: Record<SearchType, string> = {
-  Products: 'bg-cyan-50 text-cyan-700 border-cyan-100',
-  Solutions: 'bg-indigo-50 text-indigo-700 border-indigo-100',
-  Services: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  Resources: 'bg-amber-50 text-amber-700 border-amber-100',
-  Guides: 'bg-violet-50 text-violet-700 border-violet-100',
-  Pages: 'bg-slate-100 text-slate-700 border-slate-200',
-};
 
 export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
   const pathname = usePathname();
@@ -29,14 +26,20 @@ export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
 
   useEffect(() => {
     if (!open) return;
+
     const timeout = window.setTimeout(() => inputRef.current?.focus(), 20);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setOpen(false);
     };
+
     window.addEventListener('keydown', handleEsc);
     return () => {
       window.clearTimeout(timeout);
       window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
@@ -44,12 +47,12 @@ export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return popularSearchShortcuts;
 
-    const scored = siteSearchIndex
+    return siteSearchIndex
       .map((entry) => ({ entry, score: scoreEntry(entry, normalized) }))
       .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title));
-
-    return scored.slice(0, 10).map((item) => item.entry);
+      .sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title))
+      .slice(0, 12)
+      .map((item) => item.entry);
   }, [query]);
 
   const grouped = useMemo(() => {
@@ -68,53 +71,122 @@ export default function SiteSearch({ onNavigate, className }: SiteSearchProps) {
     <>
       <button
         type="button"
-        className={className ?? 'inline-flex items-center rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50'}
+        className={
+          className ??
+          'inline-flex items-center border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700'
+        }
         onClick={() => setOpen(true)}
         aria-expanded={open}
         aria-haspopup="dialog"
       >
         {isArabic ? 'بحث' : 'Search'}
       </button>
-      {open ? (
-        <div className="fixed inset-0 z-[60] bg-slate-900/35 p-3 sm:p-6" role="dialog" aria-modal="true" onClick={() => setOpen(false)}>
-          <div className="mx-auto mt-10 w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <div className="border-b border-slate-200 p-3 sm:p-4">
+
+      {open && typeof document !== 'undefined' ? createPortal(
+        <div
+          className="hiltech-search-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={isArabic ? 'بحث هيلتك' : 'HILTECH search'}
+          dir={isArabic ? 'rtl' : 'ltr'}
+          onClick={() => setOpen(false)}
+        >
+          <div className="hiltech-search-panel" onClick={(event) => event.stopPropagation()}>
+            <div className="hiltech-search-topline">
+              <span>{isArabic ? 'هيلتك / فهرس البحث' : 'HILTECH / SEARCH INDEX'}</span>
+              <span>{query.trim() ? results.length + ' MATCHES' : 'PUBLIC SYSTEM'}</span>
+              <button type="button" onClick={() => setOpen(false)}>
+                {isArabic ? 'إغلاق' : 'CLOSE'} <b aria-hidden="true">×</b>
+              </button>
+            </div>
+
+            <label className="hiltech-search-query">
+              <span>{isArabic ? 'الاستعلام' : 'QUERY / PRODUCT / SYSTEM / RFQ'}</span>
               <input
                 ref={inputRef}
-                type="text"
+                type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder={isArabic ? 'ابحث عن المنتجات أو الحلول أو طلب عرض السعر...' : 'Search products, solutions, RFQ, resources...'}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none ring-orange-500/60 placeholder:text-slate-400 focus:ring"
+                placeholder={
+                  isArabic
+                    ? 'ابحث بالكود، المنتج، الحل، أو طلب عرض السعر...'
+                    : 'TYPE A CODE, PRODUCT, SYSTEM, OR PROJECT ROUTE...'
+                }
+                autoComplete="off"
               />
-            </div>
-            <div className="max-h-[70vh] overflow-y-auto p-3 sm:p-4">
-              {grouped.length === 0 ? <p className="text-sm text-slate-500">{isArabic ? 'لا توجد نتائج مطابقة.' : 'No matching results found.'}</p> : null}
-              <div className="space-y-5">
-                {grouped.map((group) => (
-                  <section key={group.type}>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{getTypeLabel(group.type, Boolean(isArabic))}</h3>
-                    <div className="space-y-2">
-                      {group.items.map((item) => (
-                        <Link key={`${group.type}-${item.title}-${item.href}`} href={getLocalizedHref(item.href, Boolean(isArabic))} onClick={closeSearch} className="block rounded-lg border border-slate-200 bg-white p-3 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500/40">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="text-sm font-semibold text-slate-900">{Boolean(isArabic) ? getArabicPageTitle(item.title) : item.title}</p>
-                            <span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${typeStyles[item.type]}`}>{getTypeLabel(item.type, Boolean(isArabic))}</span>
+              <small>
+                {query.trim()
+                  ? isArabic
+                    ? results.length + ' نتيجة حالية'
+                    : results.length + ' CURRENT MATCHES'
+                  : isArabic
+                    ? 'ابدأ من مسار شائع أو اكتب ما تبحث عنه.'
+                    : 'START FROM A COMMON ROUTE OR TYPE WHAT YOU ALREADY KNOW.'}
+              </small>
+            </label>
+
+            <div className="hiltech-search-results">
+              {grouped.length === 0 ? (
+                <div className="hiltech-search-empty">
+                  <span>00 / NO MATCH</span>
+                  <strong>{isArabic ? 'لا يوجد مسار مطابق.' : 'NO CURRENT ROUTE MATCHES THIS QUERY.'}</strong>
+                  <p>
+                    {isArabic
+                      ? 'جرّب كود منتج، اسم نظام، أو ابدأ من المنتجات وطلب عرض السعر.'
+                      : 'Try a product code, system name, or enter through Products / RFQ.'}
+                  </p>
+                </div>
+              ) : (
+                grouped.map((group, groupIndex) => (
+                  <section key={group.type} className="hiltech-search-group">
+                    <header>
+                      <span>{String(groupIndex + 1).padStart(2, '0')}</span>
+                      <strong>{getTypeLabel(group.type, Boolean(isArabic))}</strong>
+                      <small>{group.items.length} / INDEX</small>
+                    </header>
+
+                    <div>
+                      {group.items.map((item, index) => (
+                        <Link
+                          key={group.type + '-' + item.title + '-' + item.href}
+                          href={getLocalizedHref(item.href, Boolean(isArabic))}
+                          onClick={closeSearch}
+                          className="hiltech-search-result"
+                        >
+                          <span>{String(index + 1).padStart(2, '0')}</span>
+                          <div>
+                            <strong>
+                              {Boolean(isArabic) ? getArabicPageTitle(item.title) : item.title}
+                            </strong>
+                            <p>
+                              {Boolean(isArabic)
+                                ? getArabicPageDescription(item)
+                                : item.description}
+                            </p>
                           </div>
-                          <p className="mt-1 text-xs text-slate-600">{Boolean(isArabic) ? getArabicPageDescription(item) : item.description}</p>
-                          <div className="mt-2 flex items-center justify-between gap-2"> 
-                            <p className="truncate text-xs font-medium text-slate-500">{getLocalizedHref(item.href, Boolean(isArabic))}</p>
-                            {item.type === 'Products' ? <span className="text-[11px] font-semibold text-orange-700">فتح ضمن المنتجات</span> : null}
-                          </div>
+                          <small>{getTypeLabel(item.type, Boolean(isArabic))}</small>
+                          <em>
+                            {getLocalizedHref(item.href, Boolean(isArabic))} <b aria-hidden="true">↗</b>
+                          </em>
                         </Link>
                       ))}
                     </div>
                   </section>
-                ))}
-              </div>
+                ))
+              )}
+            </div>
+
+            <div className="hiltech-search-endplate">
+              <span>{isArabic ? 'ESC / إغلاق' : 'ESC / CLOSE'}</span>
+              <p>
+                {isArabic
+                  ? 'للبحث الدقيق عن المنتجات استخدم الكود أو المواصفة. للتخطيط ابدأ من النظام أو نطاق المشروع.'
+                  : 'KNOWN REFERENCE → SEARCH THE CODE. KNOWN SYSTEM → OPEN THE SYSTEM. KNOWN PROJECT → START THE RFQ.'}
+              </p>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );
@@ -135,7 +207,6 @@ function scoreEntry(entry: SearchEntry, normalizedQuery: string): number {
   return 0;
 }
 
-
 const arabicTypeLabels: Record<SearchType, string> = {
   Products: 'المنتجات',
   Solutions: 'الحلول',
@@ -145,7 +216,19 @@ const arabicTypeLabels: Record<SearchType, string> = {
   Pages: 'الصفحات',
 };
 
-const arabicPageTitleMap: Record<string, string> = { Home: 'الرئيسية', 'Products & Partners': 'المنتجات', 'Start RFQ': 'طلب عرض سعر', 'Track RFQ': 'تتبع طلب العرض', Company: 'الشركة', Contact: 'تواصل معنا', 'Field Work & References': 'أعمالنا', Services: 'الخدمات', Solutions: 'الحلول', 'Browse Products': 'المنتجات' };
+const arabicPageTitleMap: Record<string, string> = {
+  Home: 'الرئيسية',
+  'Products & Partners': 'المنتجات',
+  'Start RFQ': 'طلب عرض سعر',
+  'Track RFQ': 'تتبع طلب العرض',
+  Company: 'الشركة',
+  Contact: 'تواصل معنا',
+  'Field Work & References': 'أعمالنا',
+  Services: 'الخدمات',
+  Solutions: 'الحلول',
+  'Browse Products': 'المنتجات',
+};
+
 const arabicPageDescriptionMap: Record<string, string> = {
   Home: 'الصفحة الرئيسية مع نبذة عن قدرات هيلتك وروابط سريعة.',
   'Products & Partners': 'تصفح المنتجات والعلامات التجارية وأضف العناصر إلى سلة طلب عرض السعر.',
@@ -170,4 +253,6 @@ function getArabicPageTitle(title: string): string {
   return arabicPageTitleMap[title] || title;
 }
 
-function getArabicPageDescription(item: SearchEntry): string { return arabicPageDescriptionMap[item.title] || item.description; }
+function getArabicPageDescription(item: SearchEntry): string {
+  return arabicPageDescriptionMap[item.title] || item.description;
+}

@@ -15,6 +15,21 @@ const footerServices = [
 export default function Footer() {
   const pathname = usePathname();
   const isArabic = pathname?.startsWith('/ar');
+  const isCreativePublic =
+    !isArabic &&
+    (pathname === '/' ||
+      pathname.startsWith('/solutions') ||
+      pathname.startsWith('/services') ||
+      pathname.startsWith('/products-partners') ||
+      pathname.startsWith('/work') ||
+      pathname.startsWith('/company') ||
+      pathname.startsWith('/rfq') ||
+      pathname.startsWith('/contact') ||
+      pathname.startsWith('/resources') ||
+      pathname.startsWith('/track') ||
+      pathname.startsWith('/scope-finder') ||
+      pathname.startsWith('/privacy-policy') ||
+      pathname.startsWith('/accessibility-statement'));
 
   const servicesHeading = isArabic ? 'الخدمات' : 'Services';
   const contactHeading = isArabic ? 'تواصل معنا' : 'Contact';
@@ -50,6 +65,83 @@ export default function Footer() {
         { label: 'Privacy Policy', href: '/privacy-policy' },
         { label: 'Accessibility Statement', href: '/accessibility-statement' },
       ];
+
+  if (isCreativePublic) {
+    return (
+      <footer className="hiltech-system-footer">
+        <div className="hiltech-system-footer-shell">
+          <div className="hiltech-system-footer-topline">
+            <span>HILTECH / PHYSICAL LAYER</span>
+            <span>CAIRO / EGYPT</span>
+          </div>
+
+          <div className="hiltech-system-footer-main">
+            <div className="hiltech-system-footer-identity">
+              <Link href="/" translate="no" aria-label="HILTECH home">
+                <Image
+                  src="/logo-dark.png"
+                  alt="HILTECH logo"
+                  width={152}
+                  height={44}
+                  className="h-8 w-auto object-contain"
+                />
+              </Link>
+              <p>{site.officialName}</p>
+              <span>BUILD → ROUTE → TEST → PROVE</span>
+            </div>
+
+            <nav aria-label="HILTECH primary footer navigation" className="hiltech-system-footer-routes">
+              {[
+                ['01', 'Solutions', '/solutions'],
+                ['02', 'Capabilities', '/services'],
+                ['03', 'Products', '/products-partners'],
+                ['04', 'Work', '/work'],
+                ['05', 'Company', '/company'],
+              ].map(([index, label, href]) => (
+                <Link key={href} href={href}>
+                  <span>{index}</span>
+                  <strong>{label}</strong>
+                  <em aria-hidden="true">↗</em>
+                </Link>
+              ))}
+            </nav>
+
+            <div className="hiltech-system-footer-project">
+              <span>PROJECT ENTRY</span>
+              <Link href="/rfq">
+                START A PROJECT
+                <em aria-hidden="true">↗</em>
+              </Link>
+              <p>Exact references when you have them. Project context when you do not.</p>
+            </div>
+          </div>
+
+          <div className="hiltech-system-footer-contact">
+            <span>VERIFIED CONTACT</span>
+            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+            <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a>
+            <a href={site.contact.whatsappGeneralLink} target="_blank" rel="noreferrer">
+              WHATSAPP {site.contact.whatsappLocal}
+            </a>
+            <strong>{site.contact.addressEn}</strong>
+          </div>
+
+          <div className="hiltech-system-footer-bottom">
+            <div>
+              <Link href="/resources">Resources</Link>
+              <Link href="/track">Track RFQ</Link>
+              <Link href="/privacy-policy">Privacy</Link>
+              <Link href="/accessibility-statement">Accessibility</Link>
+            </div>
+            <p>
+              Product and brand references describe technical ecosystems unless a formal relationship is explicitly verified.
+            </p>
+            <span>© HILTECH</span>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="bg-slate-950 text-slate-100">

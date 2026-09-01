@@ -1,3 +1,7 @@
+> **SUPERSEDED FOR PUBLIC CREATIVE DIRECTION — 2026-08-31**
+>
+> This document remains as historical/product-audit context. Where it conflicts with the new creative system, use `docs/HILTECH_CREATIVE_SYSTEM_INDEX.md` and its companion docs as the active source of truth. In particular, the older procurement-first, navy/orange, field-photo-first, short-home direction is no longer the final public creative target.
+
 # HILTECH Public Website Redesign Audit & Action Plan
 
 ## 1) Executive Diagnosis

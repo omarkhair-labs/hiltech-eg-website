@@ -1,33 +1,231 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { NoticeBox, PremiumCard, SectionShell } from '@/components/ui/primitives';
-import { CCTVInfrastructureDiagram, DataRoomDiagram, FiberBackboneDiagram, StructuredCablingDiagram, TechnicalDiagramPanel } from '@/components/diagrams';
+import ProductIntelligenceSystemDiagram from '@/components/products/ProductIntelligenceSystemDiagram';
 import { productIntelligenceBySlug, productIntelligenceCategories } from '@/content/product-intelligence';
 import { productDisclaimer } from '@/content/products';
-import { wixCatalogProducts as products } from '@/content/wix-catalog-products';
 import { site } from '@/content/site';
+import { getPublicProducts } from '@/lib/server/products-public';
 import CategoryIntelligenceClient from './CategoryIntelligenceClient';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const relatedSolutionsByIntelligenceSlug = {
-  'fiber-optic-systems': [{ label: 'Fiber Backbone', slug: 'fiber-backbone' }, { label: 'Data Room Infrastructure', slug: 'data-rooms' }],
+  'fiber-optic-systems': [
+    { label: 'Fiber Backbone', slug: 'fiber-backbone' },
+    { label: 'Data Room Infrastructure', slug: 'data-rooms' },
+  ],
   'copper-cat6-cabling': [{ label: 'Structured Cabling', slug: 'structured-cabling' }],
   'cctv-security': [{ label: 'CCTV Infrastructure', slug: 'cctv-infrastructure' }],
 } as const;
-const categoryDiagramBySlug = {
-  'fiber-optic-systems': { title: 'Fiber Route Context', subtitle: 'Compact backbone visual for route planning context.', node: <FiberBackboneDiagram /> },
-  'copper-cat6-cabling': { title: 'Copper Path Context', subtitle: 'Endpoint to patching and rack uplink flow.', node: <StructuredCablingDiagram /> },
-  'cabinets-racks-pdu': { title: 'Rack Readiness Context', subtitle: 'Rack zones and power distribution hint.', node: <DataRoomDiagram /> },
-  'cctv-security': { title: 'Security Path Context', subtitle: 'Camera-to-control room network route visual.', node: <CCTVInfrastructureDiagram /> },
-} as const;
-interface Params { slug: string }
-export function generateStaticParams() { return productIntelligenceCategories.map((category) => ({ slug: category.slug })); }
-export function generateMetadata({ params }: { params: Params }): Metadata { const category = productIntelligenceBySlug[params.slug]; if (!category) return {}; const url = `${site.siteUrl}/products-partners/${category.slug}`; const title = `${category.title} | HILTECH`; return { title, description: category.intro, alternates: { canonical: url }, openGraph: { title, description: category.intro, url, images: [site.ogImage] }, twitter: { card: 'summary_large_image', images: [site.ogImage] } }; }
 
-export default function ProductIntelligencePage({ params }: { params: Params }) {
-  const category = productIntelligenceBySlug[params.slug]; if (!category) notFound();
+const systemLabelBySlug: Record<string, string> = {
+  'fiber-optic-systems': 'CABLE / ODF / CONNECTOR / TRACE',
+  'copper-cat6-cabling': 'PAIR / CABLE / TERMINATE / TEST',
+  'patch-cords-connectivity': 'PORT / PATCH / EQUIPMENT',
+  'faceplates-keystone-rj45': 'BOX / MODULE / OUTLET / DEVICE',
+  'cabinets-racks-pdu': 'ENCLOSURE / POWER / PATCH / ACCESS',
+  'cable-management-duct-systems': 'PATH / BEND / SEPARATE / ACCESS',
+  'cctv-security': 'CAMERA / LINK / CONTROL / REVIEW',
+};
+
+interface Params { slug: string }
+
+export function generateStaticParams() {
+  return productIntelligenceCategories.map((category) => ({ slug: category.slug }));
+}
+
+export function generateMetadata({ params }: { params: Params }): Metadata {
+  const category = productIntelligenceBySlug[params.slug];
+  if (!category) return {};
+
+  const url = `${site.siteUrl}/products-partners/intelligence/${category.slug}`;
+  const title = `${category.title} Technical Guide | HILTECH`;
+
+  return {
+    title,
+    description: category.intro,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: category.intro,
+      url,
+      images: [site.ogImage],
+    },
+    twitter: { card: 'summary_large_image', images: [site.ogImage] },
+  };
+}
+
+export default async function ProductIntelligencePage({ params }: { params: Params }) {
+  const category = productIntelligenceBySlug[params.slug];
+  if (!category) notFound();
+
+  const { products } = await getPublicProducts();
   const relatedProducts = products.filter((item) => item.category === category.title);
-  const diagram = categoryDiagramBySlug[category.slug as keyof typeof categoryDiagramBySlug];
   const relatedSolutions = relatedSolutionsByIntelligenceSlug[category.slug as keyof typeof relatedSolutionsByIntelligenceSlug];
-  return <main><SectionShell><nav className="mb-4 text-sm text-slate-300"><Link className="hover:text-white" href="/products-partners">Products &amp; Project Supply</Link><span className="mx-2">/</span><span className="break-words font-medium text-white">{category.title}</span></nav><section className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#0b1f3a] via-[#0d2444] to-[#101a2d] p-6 text-white md:p-8"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-300">{category.eyebrow}</p><h1 className="mt-2 text-3xl font-bold md:text-4xl">{category.title}</h1><p className="mt-3 max-w-3xl text-sm text-slate-200 md:text-base">{category.intro}</p></section>{diagram ? <section className="mt-8"><TechnicalDiagramPanel surface="dark" title={diagram.title} subtitle={diagram.subtitle} note="Conceptual category context only. Final topology and components are confirmed during RFQ review."><div className="-mx-1 overflow-x-auto px-1 pb-1">{diagram.node}</div></TechnicalDiagramPanel></section> : null}<section className="mt-8"><h2 className="text-2xl font-bold text-white">Where this fits in the infrastructure stack</h2><p className="mt-3 rounded-xl border border-white/10 bg-slate-900/70 p-4 text-sm leading-relaxed text-slate-300">{category.strategicSummary}</p></section><section className="mt-8 grid gap-4 md:grid-cols-2"><PremiumCard><h2 className="text-lg font-bold text-white">Typical components</h2><ul className="mt-3 space-y-2 text-sm text-slate-300">{category.typicalComponents.map((item) => <li key={item}>• {item}</li>)}</ul></PremiumCard><PremiumCard><h2 className="text-lg font-bold text-white">Common use cases</h2><ul className="mt-3 space-y-2 text-sm text-slate-300">{category.commonUseCases.map((item) => <li key={item}>• {item}</li>)}</ul></PremiumCard></section><section className="mt-8 grid gap-4 md:grid-cols-2"><PremiumCard accent><h2 className="text-lg font-bold text-white">What to include in your RFQ</h2><ul className="mt-3 space-y-2 text-sm text-slate-300">{category.requestChecklist.map((item) => <li key={item}>✓ {item}</li>)}</ul></PremiumCard><PremiumCard><h2 className="text-lg font-bold text-white">Compatibility &amp; project notes</h2><ul className="mt-3 space-y-2 text-sm text-slate-300">{category.compatibilityNotes.map((item) => <li key={item}>• {item}</li>)}</ul><h3 className="mt-4 text-sm font-semibold text-white">Handover notes</h3><ul className="mt-2 space-y-2 text-sm text-slate-300">{category.handoverNotes.map((item) => <li key={item}>• {item}</li>)}</ul></PremiumCard></section><section className="mt-8 rounded-2xl border border-white/10 bg-slate-900/70 p-5"><h2 className="text-lg font-bold text-white">Related capability tags</h2><div className="mt-3 flex flex-wrap gap-2">{category.relatedCapabilityTags.map((tag) => <span key={tag} className="rounded-full border border-white/15 bg-slate-950/70 px-3 py-1 text-xs font-semibold text-slate-200">{tag}</span>)}</div>{relatedSolutions ? <div className="mt-5"><h3 className="text-sm font-semibold text-white">Related solutions</h3><div className="mt-2 flex flex-wrap gap-2">{relatedSolutions.map((solution) => <Link key={solution.slug} href={`/solutions/${solution.slug}`} className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold text-slate-200 hover:bg-slate-950/70">{solution.label}</Link>)}</div></div> : null}<p className="mt-4 text-xs text-slate-400">{category.disclaimer}</p></section><CategoryIntelligenceClient category={category} relatedProducts={relatedProducts} /><div className="mt-6"><NoticeBox tone="highlight">{productDisclaimer}</NoticeBox></div></SectionShell></main>;
+
+  return (
+    <main className="hiltech-product-intelligence-page">
+      <section className="hiltech-product-intelligence-hero">
+        <div className="hiltech-product-intelligence-shell">
+          <nav className="hiltech-product-intelligence-breadcrumb">
+            <Link href="/products-partners">Products</Link>
+            <span>/</span>
+            <strong>{category.title}</strong>
+          </nav>
+
+          <div className="hiltech-product-intelligence-hero-grid">
+            <div>
+              <span>{category.eyebrow}</span>
+              <h1>{category.title}</h1>
+              <p>{category.intro}</p>
+            </div>
+
+            <div className="hiltech-product-intelligence-summary">
+              <span>TECHNICAL CATEGORY GUIDE</span>
+              <strong>{category.strategicSummary}</strong>
+              <small>Category context supports RFQ preparation; final product, topology, and compatibility are confirmed per project.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-intelligence-diagram-section">
+        <div className="hiltech-product-intelligence-shell">
+          <div className="hiltech-product-intelligence-label">
+            <span>01 / SYSTEM CONTEXT</span>
+            <strong>{systemLabelBySlug[category.slug]}</strong>
+          </div>
+
+          <div className="hiltech-product-intelligence-diagram">
+            <div>
+              <span>SEMANTIC SYSTEM MODEL / ILLUSTRATIVE</span>
+              <strong>{category.title}</strong>
+            </div>
+            <div>
+              <ProductIntelligenceSystemDiagram slug={category.slug} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-intelligence-planning">
+        <div className="hiltech-product-intelligence-shell">
+          <div className="hiltech-product-intelligence-label">
+            <span>02 / CATEGORY PLANNING</span>
+            <strong>COMPONENTS / USE CASES / RFQ INPUTS</strong>
+          </div>
+
+          <div className="hiltech-product-intelligence-columns">
+            <article>
+              <span>TYPICAL COMPONENTS</span>
+              {category.typicalComponents.map((item, index) => (
+                <div key={item}>
+                  <small>{String(index + 1).padStart(2, '0')}</small>
+                  <strong>{item}</strong>
+                </div>
+              ))}
+            </article>
+
+            <article>
+              <span>COMMON USE CASES</span>
+              {category.commonUseCases.map((item, index) => (
+                <div key={item}>
+                  <small>{String(index + 1).padStart(2, '0')}</small>
+                  <strong>{item}</strong>
+                </div>
+              ))}
+            </article>
+
+            <article>
+              <span>WHAT TO INCLUDE IN RFQ</span>
+              {category.requestChecklist.map((item, index) => (
+                <div key={item}>
+                  <small>{String(index + 1).padStart(2, '0')}</small>
+                  <strong>{item}</strong>
+                </div>
+              ))}
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-intelligence-compatibility">
+        <div className="hiltech-product-intelligence-shell">
+          <div className="hiltech-product-intelligence-label is-dark">
+            <span>03 / COMPATIBILITY & HANDOVER</span>
+            <strong>DETAILS THAT CHANGE THE QUOTE.</strong>
+          </div>
+
+          <div className="hiltech-product-intelligence-compatibility-grid">
+            <div>
+              <h2>COMPATIBILITY<br /><em>BEFORE CONFIRMATION.</em></h2>
+              <p>{category.disclaimer}</p>
+            </div>
+
+            <div>
+              <section>
+                <span>COMPATIBILITY NOTES</span>
+                {category.compatibilityNotes.map((item, index) => (
+                  <div key={item}>
+                    <small>{String(index + 1).padStart(2, '0')}</small>
+                    <strong>{item}</strong>
+                  </div>
+                ))}
+              </section>
+
+              <section>
+                <span>HANDOVER NOTES</span>
+                {category.handoverNotes.map((item, index) => (
+                  <div key={item}>
+                    <small>{String(index + 1).padStart(2, '0')}</small>
+                    <strong>{item}</strong>
+                  </div>
+                ))}
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="hiltech-product-intelligence-links">
+        <div className="hiltech-product-intelligence-shell">
+          <div className="hiltech-product-intelligence-label">
+            <span>04 / CONNECT THE CATEGORY</span>
+            <strong>CAPABILITIES / SOLUTIONS / CURRENT REFERENCES</strong>
+          </div>
+
+          <div className={`hiltech-product-intelligence-link-grid${relatedSolutions ? '' : ' is-single'}`}>
+            <div>
+              <span>CAPABILITY TAGS</span>
+              <div>
+                {category.relatedCapabilityTags.map((tag) => <strong key={tag}>{tag}</strong>)}
+              </div>
+            </div>
+
+            {relatedSolutions ? (
+              <div>
+                <span>RELATED SOLUTIONS</span>
+                <div>
+                  {relatedSolutions.map((solution) => (
+                    <Link key={solution.slug} href={`/solutions/${solution.slug}`}>
+                      {solution.label} <b aria-hidden="true">↗</b>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <CategoryIntelligenceClient category={category} relatedProducts={relatedProducts} />
+
+          <div className="hiltech-product-intelligence-disclaimer">
+            <span>CATALOG RULE</span>
+            <p>{productDisclaimer}</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }

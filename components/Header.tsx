@@ -18,6 +18,14 @@ const primaryNav = [
   ['Contact', '/contact', arNavigation.contact],
 ] as const;
 
+const creativeNav = [
+  ['Solutions', '/solutions', arNavigation.solutions],
+  ['Capabilities', '/services', arNavigation.services],
+  ['Products', '/products-partners', arNavigation.products],
+  ['Work', '/work', arNavigation.work],
+  ['Company', '/company', arNavigation.company],
+] as const;
+
 const secondaryNav = [
   ['Company', '/company', arNavigation.company],
   ['Resources', '/resources', 'المصادر'],
@@ -28,6 +36,21 @@ const secondaryNav = [
 export default function Header() {
   const pathname = usePathname();
   const isArabic = pathname.startsWith('/ar');
+  const isCreativePublic =
+    !isArabic &&
+    (pathname === '/' ||
+      pathname.startsWith('/solutions') ||
+      pathname.startsWith('/services') ||
+      pathname.startsWith('/products-partners') ||
+      pathname.startsWith('/work') ||
+      pathname.startsWith('/company') ||
+      pathname.startsWith('/rfq') ||
+      pathname.startsWith('/contact') ||
+      pathname.startsWith('/resources') ||
+      pathname.startsWith('/track') ||
+      pathname.startsWith('/scope-finder') ||
+      pathname.startsWith('/privacy-policy') ||
+      pathname.startsWith('/accessibility-statement'));
   const [open, setOpen] = useState(false);
   const [showLogoImage, setShowLogoImage] = useState(true);
   const [rfqCount, setRfqCount] = useState(0);
@@ -63,7 +86,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)] backdrop-blur-xl">
+    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${isCreativePublic ? 'hiltech-creative-header border-[#8ff257]/15 bg-[#050806]/90 shadow-[0_10px_40px_rgba(0,0,0,0.34)]' : 'border-white/10 bg-slate-950/90 shadow-[0_8px_30px_rgba(2,6,23,0.28)]'}`}>
       <div className="container flex h-16 items-center justify-between gap-3">
         <Link
           href={isArabic ? '/ar' : '/'}
@@ -86,7 +109,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={isArabic ? 'التنقل الرئيسي' : 'Primary navigation'}>
-          {primaryNav.map(([label, href, arLabel]) => {
+          {(isCreativePublic ? creativeNav : primaryNav).map(([label, href, arLabel]) => {
             const active = isActive(href);
             return (
               <Link
@@ -94,7 +117,10 @@ export default function Header() {
                 href={localizeHref(href)}
                 translate="no"
                 aria-current={active ? 'page' : undefined}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`}
+                className={isCreativePublic
+                  ? `hiltech-creative-nav-link ${active ? 'is-active' : ''}`
+                  : `rounded-lg px-3 py-2 text-sm font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'}`
+                }
               >
                 {isArabic ? arLabel : label}
               </Link>
@@ -103,30 +129,30 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-1.5 lg:flex">
-          <SiteSearch className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
-          <LanguageSwitcher className="inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white" />
+          <SiteSearch className={isCreativePublic ? "hiltech-creative-utility-link" : "inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"} />
+          <LanguageSwitcher className={isCreativePublic ? "hiltech-creative-utility-link" : "inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"} />
           <Link
             href={localizeHref('/rfq')}
-            className="inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-rfq-count" : "inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"}
           >
             {isArabic ? `السلة ${rfqCount}` : `RFQ ${rfqCount}`}
           </Link>
           <Link
             href={localizeHref('/rfq')}
-            className="inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"
+            className={isCreativePublic ? "hiltech-creative-project-link" : "inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"}
           >
-            {isArabic ? 'ابدأ طلب السعر' : 'Start RFQ'}
+            {isArabic ? 'ابدأ طلب السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
           </Link>
         </div>
 
         <div className="flex shrink-0 items-center gap-1 lg:hidden">
           <SiteSearch
-            className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-mobile-utility" : "inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"}
             onNavigate={() => setOpen(false)}
           />
           <button
             type="button"
-            className="inline-flex min-h-11 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+            className={isCreativePublic ? "hiltech-creative-mobile-menu-button" : "inline-flex min-h-11 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"}
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -138,17 +164,20 @@ export default function Header() {
       </div>
 
       {open ? (
-        <div id="mobile-nav" className="border-t border-white/10 bg-slate-950/98 lg:hidden">
+        <div id="mobile-nav" className={isCreativePublic ? "hiltech-creative-mobile-panel lg:hidden" : "border-t border-white/10 bg-slate-950/98 lg:hidden"}>
           <div className="container max-h-[calc(100vh-4rem)] overflow-y-auto py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
             <nav aria-label={isArabic ? 'قائمة الهاتف' : 'Mobile navigation'} className="grid gap-1">
-              {primaryNav.map(([label, href, arLabel]) => {
+              {(isCreativePublic ? creativeNav : primaryNav).map(([label, href, arLabel]) => {
                 const active = isActive(href);
                 return (
                   <Link
                     key={href}
                     href={localizeHref(href)}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`}
+                    className={isCreativePublic
+                      ? `hiltech-creative-mobile-nav-link ${active ? 'is-active' : ''}`
+                      : `flex min-h-11 items-center rounded-xl px-4 py-2.5 text-base font-semibold transition ${active ? 'bg-white/10 text-white' : 'text-slate-200 hover:bg-white/5'}`
+                    }
                   >
                     {isArabic ? arLabel : label}
                   </Link>
@@ -159,19 +188,30 @@ export default function Header() {
             <div className="my-4 h-px bg-white/10" />
 
             <nav aria-label={isArabic ? 'روابط إضافية' : 'Secondary navigation'} className="grid grid-cols-2 gap-1">
-              {secondaryNav.map(([label, href, arLabel]) => (
-                <Link key={href} href={localizeHref(href)} className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white">
+              {(isCreativePublic
+                ? [
+                    ['Contact', '/contact', arNavigation.contact],
+                    ['Resources', '/resources', 'المصادر'],
+                    ['Track RFQ', '/track', arNavigation.trackRfq],
+                    ['Scope Finder', '/scope-finder', 'مساعد تحديد النطاق'],
+                  ] as const
+                : secondaryNav
+              ).map(([label, href, arLabel]) => (
+                <Link key={href} href={localizeHref(href)} className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"}>
                   {isArabic ? arLabel : label}
                 </Link>
               ))}
-              <LanguageSwitcher className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white" />
+              <LanguageSwitcher className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"} />
             </nav>
 
             <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
-              <Link href={localizeHref('/rfq')} className="inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white hover:bg-orange-500">
-                {isArabic ? 'ابدأ طلب عرض السعر' : 'Start RFQ'}
+              <Link
+                href={localizeHref('/rfq')}
+                className={isCreativePublic ? "hiltech-creative-mobile-project-link" : "inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-500"}
+              >
+                {isArabic ? 'ابدأ طلب عرض السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
               </Link>
-              <Link href={localizeHref('/rfq')} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10">
+              <Link href={localizeHref('/rfq')} className={isCreativePublic ? "hiltech-creative-mobile-basket-link" : "inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10"}>
                 {isArabic ? `السلة (${rfqCount})` : `Basket (${rfqCount})`}
               </Link>
             </div>

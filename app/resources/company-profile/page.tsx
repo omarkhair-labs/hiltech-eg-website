@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
-import { CTAButton, PremiumCard, SectionShell } from '@/components/ui/primitives';
+import Link from 'next/link';
 import { companyProfile } from '@/content/sales-materials';
 import { site } from '@/content/site';
 
 export const metadata: Metadata = {
   title: 'Company Profile | HILTECH Resources',
-  description: 'HILTECH company profile with positioning, service scope, solution areas, and RFQ workflow details.',
-  alternates: { canonical: `${site.siteUrl}/resources/company-profile` },
+  description:
+    'HILTECH company profile with positioning, service scope, solution areas, and RFQ workflow details.',
+  alternates: { canonical: site.siteUrl + '/resources/company-profile' },
   openGraph: {
     title: 'Company Profile | HILTECH',
-    description: 'PDF-ready company profile content prepared for client communication.',
-    url: `${site.siteUrl}/resources/company-profile`,
+    description: 'Company profile content prepared for client communication and project context.',
+    url: site.siteUrl + '/resources/company-profile',
     images: [site.ogImage],
   },
   twitter: { card: 'summary_large_image', images: [site.ogImage] },
@@ -18,71 +19,92 @@ export const metadata: Metadata = {
 
 export default function CompanyProfilePage() {
   return (
-    <main>
-      <SectionShell>
-        <article className="mx-auto max-w-4xl space-y-6 print:space-y-4">
-          <header className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-300">PDF-ready content</p>
-            <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">{companyProfile.title}</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">{companyProfile.intro}</p>
-          </header>
+    <main className="hiltech-utility-page">
+      <div className="hiltech-utility-shell">
+        <section className="hiltech-utility-hero">
+          <div className="hiltech-utility-topline">
+            <span>RESOURCES / COMPANY PROFILE</span>
+            <span>POSITION / CAPABILITY / PROJECT ENTRY</span>
+          </div>
 
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">Positioning</h2>
-            <p className="text-sm leading-7 text-slate-300">{companyProfile.positioning}</p>
-          </PremiumCard>
-
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">What HILTECH Provides</h2>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
-              {companyProfile.whatWeDo.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </PremiumCard>
-
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">Solutions Overview</h2>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
-              {companyProfile.solutionAreas.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </PremiumCard>
-
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">Product & Project Supply</h2>
-            <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
-              {companyProfile.productSupply.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </PremiumCard>
-
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">RFQ Workflow</h2>
-            <ol className="list-decimal space-y-2 pl-5 text-sm leading-7 text-slate-300">
-              {companyProfile.rfqWorkflow.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ol>
-          </PremiumCard>
-
-          <PremiumCard className="space-y-3 p-6">
-            <h2 className="text-lg font-semibold text-white">Compliance Note</h2>
-            <p className="text-sm leading-7 text-slate-300">{companyProfile.complianceNote}</p>
-          </PremiumCard>
-
-          <section className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 md:p-6">
-            <p className="text-sm leading-7 text-slate-300">{companyProfile.contactCta}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <CTAButton href="/contact">Request Project Quote</CTAButton>
-              <CTAButton href="/rfq" variant="secondary">Review RFQ Basket</CTAButton>
-              <CTAButton href={site.contact.whatsappGeneralLink} variant="ghost">WhatsApp HILTECH</CTAButton>
+          <div className="hiltech-utility-hero-grid">
+            <div className="hiltech-utility-hero-copy">
+              <span>COMPANY CONTEXT / CLIENT REFERENCE</span>
+              <h1>
+                ONE COMPANY.<br />
+                <em>ONE OPERATING LAYER.</em>
+              </h1>
+              <p>{companyProfile.intro}</p>
             </div>
-          </section>
-        </article>
-      </SectionShell>
+
+            <div className="hiltech-utility-hero-state">
+              <div><span>01</span><strong>POSITION</strong><small>WHAT HILTECH IS</small></div>
+              <div><span>02</span><strong>CAPABILITY</strong><small>WHAT HILTECH DOES</small></div>
+              <div><span>03</span><strong>SUPPLY</strong><small>REFERENCE / PROJECT</small></div>
+              <div><span>04</span><strong>RFQ</strong><small>REQUEST / REVIEW</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="hiltech-utility-section">
+          <div className="hiltech-utility-section-label">
+            <span>01 / COMPANY PROFILE</span>
+            <strong>CLIENT-SAFE OPERATING SUMMARY</strong>
+          </div>
+
+          <div className="hiltech-utility-ledger">
+            <article>
+              <span>01</span>
+              <h2>Positioning</h2>
+              <div><p>{companyProfile.positioning}</p></div>
+            </article>
+
+            <article>
+              <span>02</span>
+              <h2>What HILTECH Provides</h2>
+              <div>
+                <ul>{companyProfile.whatWeDo.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+            </article>
+
+            <article>
+              <span>03</span>
+              <h2>Solutions Overview</h2>
+              <div>
+                <ul>{companyProfile.solutionAreas.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+            </article>
+
+            <article>
+              <span>04</span>
+              <h2>Product & Project Supply</h2>
+              <div>
+                <ul>{companyProfile.productSupply.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+            </article>
+
+            <article>
+              <span>05</span>
+              <h2>RFQ Workflow</h2>
+              <div>
+                <ol>{companyProfile.rfqWorkflow.map((item) => <li key={item}>{item}</li>)}</ol>
+              </div>
+            </article>
+
+            <article>
+              <span>06</span>
+              <h2>Compliance Note</h2>
+              <div><p>{companyProfile.complianceNote}</p></div>
+            </article>
+          </div>
+
+          <div className="hiltech-utility-actions">
+            <Link href="/rfq">START A PROJECT <span aria-hidden="true">↗</span></Link>
+            <Link href="/company">OPEN COMPANY <span aria-hidden="true">↗</span></Link>
+            <a href={site.contact.whatsappGeneralLink}>WHATSAPP HILTECH <span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
