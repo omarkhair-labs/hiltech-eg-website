@@ -156,6 +156,9 @@ export default function SolutionsIndexExperience() {
       const source = rootRef.current?.querySelector<HTMLElement>('.hiltech-solutions-index-diagram');
       const svg = source?.querySelector('svg');
       const rect = source?.getBoundingClientRect() ?? rowRect;
+      if (source && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        source.dataset.routeCarrySourceActive = 'true';
+      }
 
       emitRouteContinuity({
         kind: 'solution',
