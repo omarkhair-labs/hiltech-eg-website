@@ -270,6 +270,13 @@ export default function RFQReviewClient({
       ? 'empty'
       : 'draft';
 
+  const moveToRFQStage = (selector: string) => {
+    document.querySelector<HTMLElement>(selector)?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <div
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
@@ -294,21 +301,27 @@ export default function RFQReviewClient({
           </div>
 
           <div className="hiltech-rfq-live-state">
-            <div>
+            <button type="button" onClick={() => moveToRFQStage('[data-rfq-ledger]')}>
               <span>REFERENCES</span>
               <strong>{items.length}</strong>
               <small>EXACT LINES IN THIS REQUEST</small>
-            </div>
-            <div>
+              <em>OPEN LEDGER ↓</em>
+            </button>
+            <button type="button" onClick={() => moveToRFQStage('[data-rfq-ledger]')}>
               <span>UNITS</span>
               <strong>{count}</strong>
               <small>EDITABLE BEFORE SUBMISSION</small>
-            </div>
-            <div>
+              <em>EDIT QUANTITY ↓</em>
+            </button>
+            <button
+              type="button"
+              onClick={() => moveToRFQStage(flowState === 'received' ? '[data-rfq-success]' : '[data-rfq-project]')}
+            >
               <span>QUOTE STATE</span>
-              <strong>REVIEW</strong>
+              <strong>{flowState === 'received' ? 'RECEIVED' : 'REVIEW'}</strong>
               <small>PRICE / AVAILABILITY CONFIRMED LATER</small>
-            </div>
+              <em>PROJECT SHEET ↓</em>
+            </button>
           </div>
         </div>
 

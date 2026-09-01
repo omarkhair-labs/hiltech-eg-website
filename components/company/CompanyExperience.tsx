@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { site } from '@/content/site';
@@ -35,6 +35,8 @@ const operatingInterfaces = [
   },
 ] as const;
 
+type OperatingInterface = (typeof operatingInterfaces)[number];
+
 const technicalTruths = [
   {
     code: 'ROUTE / 01',
@@ -66,14 +68,28 @@ const technicalTruths = [
   },
 ] as const;
 
-function CompanySystemMap() {
+function CompanySystemMap({
+  activeItem,
+  onSelect,
+}: {
+  activeItem: OperatingInterface;
+  onSelect: (index: number) => void;
+}) {
+  const interactiveNodes = [
+    { x: 74, y: 122, interfaceIndex: 0 },
+    { x: 224, y: 218, interfaceIndex: 1 },
+    { x: 420, y: 356, interfaceIndex: 2 },
+    { x: 690, y: 286, interfaceIndex: 3 },
+  ] as const;
+  const activeMapLabel = activeItem.label === 'SYSTEM' ? 'ROUTE' : activeItem.label;
+
   return (
-    <svg
-      className="hiltech-company-system-map"
-      viewBox="0 0 760 520"
-      role="img"
-      aria-label="Illustrative HILTECH operating map from project scope through handover"
-    >
+    <div className="hiltech-company-system-map-interactive" aria-label="Explore HILTECH operating interfaces">
+      <svg
+        className="hiltech-company-system-map"
+        viewBox="0 0 760 520"
+        aria-hidden="true"
+      >
       <rect width="760" height="520" fill="#08100a" />
       <path d="M0 104H760M0 260H760M0 416H760M152 0V520M380 0V520M608 0V520" stroke="#dce8df" strokeOpacity=".05" />
       <g className="hiltech-company-map-route">
@@ -94,6 +110,8 @@ function CompanySystemMap() {
         <g
           key={String(label)}
           data-company-system-node
+          data-company-interactive-node={['SCOPE', 'ROUTE', 'FIELD', 'VERIFY'].includes(String(label)) ? 'true' : undefined}
+          data-active={label === activeMapLabel ? 'true' : undefined}
           transform={'translate(' + x + ' ' + y + ')'}
         >
           <circle r="8" fill={label === 'VERIFY' ? '#8ff257' : '#0b140d'} stroke="#8ff257" strokeWidth="1.4" />
@@ -106,11 +124,44 @@ function CompanySystemMap() {
       <text x="34" y="482" fill="#6f7e74" fontSize="9" fontFamily="monospace" letterSpacing="1.2">
         PROJECT REQUIREMENT → PHYSICAL SYSTEM → FIELD CONDITION → VERIFICATION
       </text>
-    </svg>
+      </svg>
+
+      <div className="hiltech-company-map-controls">
+        {interactiveNodes.map((node) => {
+          const item = operatingInterfaces[node.interfaceIndex];
+          const active = item.index === activeItem.index;
+          return (
+            <button
+              key={item.index}
+              type="button"
+              className={active ? 'is-active' : undefined}
+              style={{ left: `${(node.x / 760) * 100}%`, top: `${(node.y / 520) * 100}%` }}
+              aria-pressed={active}
+              aria-label={`${item.label}: ${item.statement}`}
+              onMouseEnter={() => onSelect(node.interfaceIndex)}
+              onFocus={() => onSelect(node.interfaceIndex)}
+              onClick={() => onSelect(node.interfaceIndex)}
+            >
+              <span>{item.index}</span>
+              <strong>{item.label}</strong>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="hiltech-company-map-readout" aria-live="polite">
+        <span>{activeItem.index} / {activeItem.label}</span>
+        <strong>{activeItem.statement}</strong>
+        <p>{activeItem.note}</p>
+      </div>
+    </div>
   );
 }
 
 export default function CompanyExperience() {
+  const [activeInterfaceIndex, setActiveInterfaceIndex] = useState(0);
+  const activeInterface = operatingInterfaces[activeInterfaceIndex];
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -220,7 +271,10 @@ export default function CompanyExperience() {
                 <span>OPERATING MAP / ILLUSTRATIVE</span>
                 <strong>{site.officialName}</strong>
               </div>
-              <CompanySystemMap />
+              <CompanySystemMap
+                activeItem={activeInterface}
+                onSelect={setActiveInterfaceIndex}
+              />
             </div>
           </div>
         </div>
