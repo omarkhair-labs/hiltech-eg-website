@@ -86,9 +86,6 @@ jobs:
       - name: Capture Product visual R&D QA
         run: node scripts/capture-product-rnd-qa.mjs
 
-      - name: Capture English creative synthesis QA
-        run: node scripts/capture-creative-synthesis-qa.mjs
-
       - name: Upload closed public regression smoke
         uses: actions/upload-artifact@v4
         with:
@@ -131,6 +128,52 @@ jobs:
           path: visual-qa-product-rnd/
           retention-days: 7
 
+      - name: Stop production server
+        if: always()
+        run: |
+          if [ -f /tmp/hiltech-next.pid ]; then
+            kill "$(cat /tmp/hiltech-next.pid)" || true
+          fi
+
+
+  synthesis:
+    if: github.head_ref == 'redesign/creative-system-20260831' || startsWith(github.head_ref, 'award/')
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Chromium for synthesis QA
+        run: npx --yes playwright@1.55.0 install --with-deps chromium
+
+      - name: Start production server
+        run: |
+          npm run start -- -p 3000 > /tmp/hiltech-next-synthesis.log 2>&1 &
+          echo $! > /tmp/hiltech-next-synthesis.pid
+          for i in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:3000/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/hiltech-next-synthesis.log
+          exit 1
+
+      - name: Capture English creative synthesis QA
+        run: node scripts/capture-creative-synthesis-qa.mjs
+
       - name: Upload English creative synthesis QA
         uses: actions/upload-artifact@v4
         with:
@@ -141,6 +184,6 @@ jobs:
       - name: Stop production server
         if: always()
         run: |
-          if [ -f /tmp/hiltech-next.pid ]; then
-            kill "$(cat /tmp/hiltech-next.pid)" || true
+          if [ -f /tmp/hiltech-next-synthesis.pid ]; then
+            kill "$(cat /tmp/hiltech-next-synthesis.pid)" || true
           fi
