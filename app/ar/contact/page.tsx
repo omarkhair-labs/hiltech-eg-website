@@ -61,7 +61,7 @@ export default function Page() {
                       تتبع الطلب
                     </Link>
                     <span className="text-slate-500">/</span>
-                    <a href="/hiltech-company-profile.pdf" target="_blank" rel="noreferrer" className="text-orange-300 hover:text-orange-200 transition-colors text-sm font-semibold">
+                    <a href="https://raw.githubusercontent.com/omarkhair-labs/hiltech-eg-website/main/public/hiltech-company-profile.pdf" target="_blank" rel="noreferrer" className="text-orange-300 hover:text-orange-200 transition-colors text-sm font-semibold">
                       ملف الشركة
                     </a>
                   </div>
