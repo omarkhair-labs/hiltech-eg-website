@@ -15049,20 +15049,6 @@ body:has(.hiltech-creative-header)
   isolation: isolate;
 }
 
-[data-route-identity]::after {
-  content: attr(data-route-identity);
-  position: absolute;
-  z-index: 4;
-  right: max(3vw, calc((100vw - min(94vw, 102rem)) / 2));
-  top: 4.4rem;
-  color: rgba(143,242,87,.58);
-  font-family: var(--font-hiltech-mono), ui-monospace, monospace;
-  font-size: .36rem;
-  letter-spacing: .11em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
 /* Solutions = SYSTEM / PATH */
 .hiltech-solutions-hero-system {
   align-self: center;
@@ -15426,12 +15412,6 @@ body:has(.hiltech-creative-header)
 }
 
 @media (max-width: 899px) {
-  [data-route-identity]::after {
-    top: 4rem;
-    right: 3vw;
-    font-size: .32rem;
-  }
-
   .hiltech-solutions-hero-system,
   .hiltech-services-hero-grid,
   .hiltech-products-hero-grid,
@@ -15476,6 +15456,7 @@ body:has(.hiltech-creative-header)
   }
 
   .hiltech-services-hero-grid > div:first-child,
+  .hiltech-products-hero-grid > div:first-child,
   .hiltech-work-hero-copy,
   .hiltech-company-hero-system > div:first-child,
   .hiltech-rfq-hero-grid > div:first-child,
