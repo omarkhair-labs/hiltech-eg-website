@@ -77,6 +77,8 @@ try {
       if (!['auto', 'scroll'].includes(h07Layout.overflowX) || h07Layout.railScrollWidth <= h07Layout.railClientWidth) {
         throw new Error(`mobile H07 category rail is not swipeable: ${JSON.stringify(h07Layout)}`);
       }
+      await page.locator('.hiltech-catalog-category-rail').scrollIntoViewIfNeeded();
+      await page.waitForTimeout(120);
       const h07ScrollBefore = await page.evaluate(() => window.scrollY);
       await page.locator('[data-product-category]').nth(1).click();
       await page.waitForTimeout(220);
