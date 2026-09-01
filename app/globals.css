@@ -14986,6 +14986,11 @@ body:has(.hiltech-creative-header)
   cursor: pointer;
 }
 
+[data-route-carry-source-active="true"] {
+  opacity: 0 !important;
+  transition: opacity 90ms linear !important;
+}
+
 .hiltech-evidence-open {
   position: absolute;
   z-index: 4;
