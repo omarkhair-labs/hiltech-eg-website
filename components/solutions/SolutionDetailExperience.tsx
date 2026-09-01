@@ -251,7 +251,7 @@ export default function SolutionDetailExperience({ solution }: Props) {
               <p>{solution.intro}</p>
             </div>
 
-            <div className="hiltech-solution-detail-diagram">
+            <div className="hiltech-solution-detail-diagram" data-solution-carry-target={solution.slug}>
               <div className="hiltech-solution-detail-diagram-head">
                 <span>SYSTEM MODEL / ILLUSTRATIVE</span>
                 <strong>{profile.code}</strong>
