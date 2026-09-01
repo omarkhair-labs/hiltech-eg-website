@@ -36,7 +36,7 @@ export default async function Page() {
 
   return (
     <main className="hiltech-products-page">
-      <section className="hiltech-products-hero">
+      <section className="hiltech-products-hero" data-route-identity="object-intent">
         <div className="hiltech-products-shell">
           <div className="hiltech-products-topline">
             <span>PRODUCTS / PROJECT SUPPLY</span>
@@ -56,21 +56,45 @@ export default async function Page() {
               </p>
             </div>
 
-            <div className="hiltech-products-hero-panel">
-              <div>
-                <span>CATALOG MODEL</span>
-                <strong>{count}</strong>
-                <small>CURRENT PUBLIC REFERENCES</small>
+            <div className="hiltech-products-object-dock" aria-label="Physical library entry model">
+              <div className="hiltech-products-object-dock-head">
+                <span>OBJECT / ENTRY DOCK</span>
+                <strong>{count} LIVE REFERENCES</strong>
               </div>
-              <div>
-                <span>CATEGORY COVERAGE</span>
-                <strong>{activeCategoryCount}</strong>
-                <small>ACTIVE INFRASTRUCTURE FAMILIES</small>
+
+              <div className="hiltech-products-object-visual" aria-hidden="true">
+                <svg viewBox="0 0 640 420">
+                  <rect x="170" y="48" width="300" height="320" rx="4" fill="none" stroke="#8ff257" strokeWidth="1.4" />
+                  <rect x="206" y="84" width="228" height="42" rx="2" fill="none" stroke="#607268" />
+                  <rect x="206" y="146" width="228" height="42" rx="2" fill="none" stroke="#607268" />
+                  <rect x="206" y="208" width="228" height="42" rx="2" fill="none" stroke="#607268" />
+                  <rect x="206" y="270" width="228" height="58" rx="2" fill="none" stroke="#607268" />
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <circle key={index} cx={236 + index * 24} cy="105" r="4" fill={index < 5 ? '#8ff257' : '#26342b'} />
+                  ))}
+                  <path d="M206 167 H132 V334 H68" fill="none" stroke="#8ff257" strokeWidth="1.5" />
+                  <path d="M434 229 H520 V106 H584" fill="none" stroke="#8ff257" strokeWidth="1.5" />
+                  <circle cx="68" cy="334" r="7" fill="#071008" stroke="#8ff257" strokeWidth="1.4" />
+                  <circle cx="584" cy="106" r="7" fill="#071008" stroke="#8ff257" strokeWidth="1.4" />
+                </svg>
               </div>
-              <div>
-                <span>PROCUREMENT STATE</span>
-                <strong>RFQ</strong>
-                <small>REFERENCE → SCOPE → CONFIRMATION</small>
+
+              <div className="hiltech-products-object-entries">
+                <div>
+                  <span>01 / EXACT</span>
+                  <strong>REFERENCE</strong>
+                  <small>{count} CURRENT CODES</small>
+                </div>
+                <div>
+                  <span>02 / SYSTEM</span>
+                  <strong>FAMILY</strong>
+                  <small>{activeCategoryCount} ACTIVE FAMILIES</small>
+                </div>
+                <div>
+                  <span>03 / PROJECT</span>
+                  <strong>FIT</strong>
+                  <small>REFERENCE → RFQ</small>
+                </div>
               </div>
             </div>
           </div>
