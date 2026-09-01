@@ -324,7 +324,7 @@ export default function CompanyExperience() {
             <nav>
               <Link href="/rfq">START RFQ <span aria-hidden="true">↗</span></Link>
               <Link href="/contact">CONTACT HILTECH <span aria-hidden="true">↗</span></Link>
-              <a href="/hiltech-company-profile.pdf" target="_blank" rel="noreferrer">COMPANY PROFILE <span aria-hidden="true">↗</span></a>
+              <a href="https://raw.githubusercontent.com/omarkhair-labs/hiltech-eg-website/main/public/hiltech-company-profile.pdf" target="_blank" rel="noreferrer">COMPANY PROFILE <span aria-hidden="true">↗</span></a>
             </nav>
           </div>
         </div>
