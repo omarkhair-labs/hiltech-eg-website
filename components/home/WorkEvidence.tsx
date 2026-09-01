@@ -63,6 +63,9 @@ export default function WorkEvidence() {
 
     event.preventDefault();
     const rect = event.currentTarget.getBoundingClientRect();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      event.currentTarget.dataset.routeCarrySourceActive = 'true';
+    }
 
     emitRouteContinuity({
       kind: 'work',
