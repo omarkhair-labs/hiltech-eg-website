@@ -114,24 +114,39 @@ try {
         fullPage: false,
       });
 
-      console.log('[mobile-contract] Company map motion triggers on viewport entry');
+      console.log('[mobile-contract] Company map is visible by default and triggers on downward entry');
       await page.goto(`${baseURL}/company`, { waitUntil: 'networkidle' });
       const companyStage = page.locator('.hiltech-company-system-stage');
-      await companyStage.scrollIntoViewIfNeeded();
-      await page.waitForTimeout(160);
+      const initialCompanyStageOpacity = await companyStage.evaluate(
+        (stage) => Number.parseFloat(getComputedStyle(stage).opacity || '1'),
+      );
+      if (initialCompanyStageOpacity < 0.99) {
+        throw new Error(`mobile Company map stage starts hidden: opacity=${initialCompanyStageOpacity}`);
+      }
+
+      const companyScrollTarget = await companyStage.evaluate((stage) => {
+        const absoluteTop = stage.getBoundingClientRect().top + window.scrollY;
+        return Math.max(0, absoluteTop - window.innerHeight * 0.88);
+      });
+
+      for (let y = 0; y < companyScrollTarget; y += 120) {
+        await page.evaluate((nextY) => window.scrollTo(0, nextY), y);
+        await page.waitForTimeout(16);
+      }
+      await page.evaluate((nextY) => window.scrollTo(0, nextY), companyScrollTarget);
+      await page.waitForTimeout(180);
+
+      const companyAnimated = await companyStage.getAttribute('data-company-map-animated');
+      if (companyAnimated !== 'true') {
+        throw new Error('mobile Company map did not trigger during normal downward scroll');
+      }
+
       const companyLine = page.locator('[data-company-system-line]');
-      const midDash = await companyLine.evaluate((line) => ({
-        dasharray: getComputedStyle(line).strokeDasharray,
-        dashoffset: getComputedStyle(line).strokeDashoffset,
-      }));
       await page.waitForTimeout(1450);
       const finalDash = await companyLine.evaluate((line) => ({
         dasharray: getComputedStyle(line).strokeDasharray,
         dashoffset: getComputedStyle(line).strokeDashoffset,
       }));
-      if (midDash.dasharray === 'none' && midDash.dashoffset === '0px') {
-        throw new Error(`mobile Company map did not enter animated state: ${JSON.stringify(midDash)}`);
-      }
       if (finalDash.dashoffset !== '0px' && finalDash.dashoffset !== '0') {
         throw new Error(`mobile Company map did not settle after animation: ${JSON.stringify(finalDash)}`);
       }

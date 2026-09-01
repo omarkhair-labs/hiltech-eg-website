@@ -123,27 +123,46 @@ export default function CompanyExperience() {
         ease: 'power3.out',
       });
 
-      const systemMapTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.hiltech-company-system-stage',
-          start: 'top 72%',
-          once: true,
-        },
-      });
+      const systemStage = document.querySelector<HTMLElement>('.hiltech-company-system-stage');
 
-      systemMapTimeline
-        .from('[data-company-system-line]', {
-          strokeDasharray: 900,
-          strokeDashoffset: 900,
-          duration: 1.35,
-          ease: 'power2.out',
-        })
-        .from('[data-company-system-node]', {
-          opacity: 0,
-          duration: 0.3,
-          stagger: 0.065,
-          ease: 'power2.out',
-        }, '-=0.72');
+      if (systemStage) {
+        const playSystemMap = () => {
+          if (systemStage.dataset.companyMapAnimated === 'true') return;
+          systemStage.dataset.companyMapAnimated = 'true';
+
+          const line = systemStage.querySelector<SVGPathElement>('[data-company-system-line]');
+          const nodes = systemStage.querySelectorAll<SVGGElement>('[data-company-system-node]');
+          const timeline = gsap.timeline();
+
+          if (line) {
+            timeline.fromTo(
+              line,
+              { strokeDasharray: 900, strokeDashoffset: 900 },
+              { strokeDasharray: 900, strokeDashoffset: 0, duration: 1.35, ease: 'power2.out' },
+            );
+          }
+
+          if (nodes.length) {
+            timeline.fromTo(
+              nodes,
+              { opacity: 0 },
+              { opacity: 1, duration: 0.3, stagger: 0.065, ease: 'power2.out' },
+              line ? '-=0.72' : 0,
+            );
+          }
+        };
+
+        ScrollTrigger.create({
+          trigger: systemStage,
+          start: () => window.matchMedia('(max-width: 639px)').matches ? 'top 92%' : 'top 72%',
+          once: true,
+          invalidateOnRefresh: true,
+          onEnter: playSystemMap,
+        });
+
+        window.requestAnimationFrame(() => ScrollTrigger.refresh());
+        document.fonts?.ready.then(() => ScrollTrigger.refresh()).catch(() => undefined);
+      }
 
       gsap.utils.toArray<HTMLElement>('[data-company-reveal]').forEach((element) => {
         gsap.from(element, {
@@ -196,7 +215,7 @@ export default function CompanyExperience() {
               </p>
             </div>
 
-            <div className="hiltech-company-system-stage" data-company-reveal>
+            <div className="hiltech-company-system-stage">
               <div>
                 <span>OPERATING MAP / ILLUSTRATIVE</span>
                 <strong>{site.officialName}</strong>
