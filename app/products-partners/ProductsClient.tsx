@@ -632,6 +632,7 @@ export default function ProductsClient({
               <label>
                 <span>REFERENCE / CODE / SPEC</span>
                 <input
+                  type="search"
                   value={query}
                   onChange={(event) => {
                     const next = event.target.value;
