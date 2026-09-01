@@ -262,7 +262,11 @@ try {
       await primeLazyImages(mobilePage, `${mobile.name} product detail ${index + 1}`);
       await assertAllImagesLoaded(mobilePage, `${mobile.name} product detail ${index + 1}`);
       if (mobile.name === 'baseline-touch') {
-        await mobilePage.screenshot({ path: `visual-qa-creative-synthesis/mobile-final-product-detail-${index + 1}.png`, fullPage: true, timeout: SHOT_TIMEOUT });
+        await mobilePage.screenshot({
+          path: `visual-qa-creative-synthesis/mobile-final-product-detail-${index + 1}.png`,
+          fullPage: false,
+          timeout: SHOT_TIMEOUT,
+        });
       }
     }
 
