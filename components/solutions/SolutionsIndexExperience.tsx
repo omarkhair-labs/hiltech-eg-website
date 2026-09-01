@@ -134,6 +134,51 @@ function SolutionDiagram({ kind }: { kind: DiagramKind }) {
   );
 }
 
+function SolutionsOpeningMap() {
+  const nodes = [
+    { x: 92, y: 164, code: '01', label: 'ACCESS' },
+    { x: 230, y: 112, code: '02', label: 'CORE' },
+    { x: 370, y: 220, code: '03', label: 'ROOM' },
+    { x: 510, y: 144, code: '04', label: 'SECURITY' },
+    { x: 654, y: 236, code: '05', label: 'VERIFY' },
+    { x: 786, y: 176, code: '06', label: 'PROCURE' },
+  ] as const;
+
+  return (
+    <div className="hiltech-solutions-hero-map" aria-label="HILTECH solution system routes">
+      <div className="hiltech-solutions-hero-map-head">
+        <span>LIVE SYSTEM INDEX</span>
+        <strong>06 ROUTES / ONE PHYSICAL LAYER</strong>
+      </div>
+      <svg viewBox="0 0 880 340" role="img" aria-label="Illustrative map of HILTECH solution routes">
+        <rect width="880" height="340" fill="#071008" />
+        <path d="M0 84H880M0 170H880M0 256H880M176 0V340M352 0V340M528 0V340M704 0V340" stroke="#dce8df" strokeOpacity=".045" />
+        <path
+          className="hiltech-solutions-hero-map-route"
+          d="M92 164 C152 164 170 112 230 112 S310 220 370 220 S448 144 510 144 S592 236 654 236 S726 176 786 176"
+          fill="none"
+          stroke="#8ff257"
+          strokeWidth="2"
+        />
+        <path d="M230 112 V272 H510" fill="none" stroke="#405347" strokeWidth="1.2" />
+        <path d="M510 144 V286 H786" fill="none" stroke="#405347" strokeWidth="1.2" />
+        {nodes.map((node) => (
+          <g key={node.code} transform={`translate(${node.x} ${node.y})`}>
+            <circle r="8" fill="#08100a" stroke="#8ff257" strokeWidth="1.4" />
+            <circle r="2.5" fill="#8ff257" />
+            <text x="14" y="-7" fill="#8ff257" fontSize="9" fontFamily="monospace" letterSpacing="1">{node.code}</text>
+            <text x="14" y="10" fill="#b9c5bd" fontSize="10" fontFamily="monospace" letterSpacing="1">{node.label}</text>
+          </g>
+        ))}
+      </svg>
+      <div className="hiltech-solutions-hero-map-foot">
+        <span>DISCOVER → UNDERSTAND → TRANSACT</span>
+        <strong>SYSTEM BEFORE SERVICE LABEL</strong>
+      </div>
+    </div>
+  );
+}
+
 export default function SolutionsIndexExperience() {
   const rootRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -226,7 +271,7 @@ export default function SolutionsIndexExperience() {
 
   return (
     <main ref={rootRef} className="hiltech-solutions-index">
-      <section className="hiltech-solutions-index-hero">
+      <section className="hiltech-solutions-index-hero" data-route-identity="system-path">
         <div className="hiltech-solutions-index-shell">
           <div className="hiltech-solutions-index-topline">
             <span>SOLUTIONS / 06 PATHS</span>
@@ -234,14 +279,17 @@ export default function SolutionsIndexExperience() {
             <span>CAIRO / EGYPT</span>
           </div>
 
-          <div className="hiltech-solutions-index-hero-grid">
-            <h1 data-solutions-title>
-              CHOOSE THE SYSTEM.<br />
-              <span>DEFINE THE PATH.</span>
-            </h1>
-            <p>
-              HILTECH solutions are organized by the physical system you need to build, validate, or procure — not by generic IT service labels.
-            </p>
+          <div className="hiltech-solutions-hero-system">
+            <SolutionsOpeningMap />
+            <div className="hiltech-solutions-index-hero-grid">
+              <h1 data-solutions-title>
+                CHOOSE THE SYSTEM.<br />
+                <span>DEFINE THE PATH.</span>
+              </h1>
+              <p>
+                HILTECH solutions are organized by the physical system you need to build, validate, or procure — not by generic IT service labels.
+              </p>
+            </div>
           </div>
 
           <div className="hiltech-solutions-index-axis" aria-hidden="true">
