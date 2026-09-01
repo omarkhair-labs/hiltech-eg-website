@@ -25,7 +25,7 @@ export default function Page() {
             <Link href="/ar/rfq" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors">
               اطلب عرض سعر
             </Link>
-            <a href="/hiltech-company-profile.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors">
+            <a href="https://raw.githubusercontent.com/omarkhair-labs/hiltech-eg-website/main/public/hiltech-company-profile.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors">
               تحميل ملف الشركة
             </a>
             <Link href="/ar/contact" className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white border border-white/30 hover:bg-white/10 rounded-md transition-colors">
