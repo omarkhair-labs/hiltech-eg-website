@@ -53,7 +53,7 @@ export default function Footer() {
         { label: 'اتصل بنا', href: '/ar/contact' },
         { label: 'سياسة الخصوصية', href: '/privacy-policy' },
         { label: 'بيان إمكانية الوصول', href: '/accessibility-statement' },
-        { label: 'تحميل ملف الشركة', href: '/hiltech-company-profile.pdf' },
+        { label: 'تحميل ملف الشركة', href: 'https://raw.githubusercontent.com/omarkhair-labs/hiltech-eg-website/main/public/hiltech-company-profile.pdf' },
       ]
     : [
         { label: 'Resources Hub', href: '/resources' },
