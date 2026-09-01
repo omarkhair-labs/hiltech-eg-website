@@ -187,7 +187,7 @@ export default function WorkEvidenceExperience() {
             <div className="hiltech-work-contact-sheet" data-work-contact-sheet>
               {evidenceRecords.map((record) => (
                 <div key={record.id}>
-                  <div>
+                  <div data-work-carry-target={record.id}>
                     <Image
                       src={record.image}
                       alt={record.alt}
