@@ -15903,3 +15903,280 @@ body:has(.hiltech-creative-header)
     transition: none;
   }
 }
+
+
+/* ==========================================================================
+   AWARD STEP 4 — HOME PACING / COMPRESSION
+   Keep every chapter and interaction; remove dead scroll and repeated air.
+   ========================================================================== */
+
+#hiltech-home #h02 {
+  min-height: 105svh;
+}
+
+#hiltech-home #h02 .hiltech-layer-frame {
+  min-height: 94svh;
+  padding-block: clamp(3.5rem, 6vw, 5.75rem);
+}
+
+#hiltech-home #h03 {
+  min-height: auto;
+}
+
+#hiltech-home #h03 .hiltech-scale-frame {
+  padding-block: clamp(4rem, 6.5vw, 6.25rem);
+  row-gap: clamp(2.4rem, 4vw, 4rem);
+}
+
+#hiltech-home #h03 .hiltech-scale-ladder li {
+  min-height: 6.5rem;
+}
+
+#hiltech-home #h04 .hiltech-systems-shell,
+#hiltech-home #h06 .hiltech-capabilities-shell,
+#hiltech-home #h07 .hiltech-catalog-shell,
+#hiltech-home #h08 .hiltech-brand-shell,
+#hiltech-home #h09 .hiltech-work-shell,
+#hiltech-home #h10 .hiltech-validation-shell {
+  padding-block: clamp(3.75rem, 5.5vw, 5.5rem);
+}
+
+#hiltech-home #h04 .hiltech-systems-heading,
+#hiltech-home #h06 .hiltech-capabilities-heading,
+#hiltech-home #h07 .hiltech-catalog-heading,
+#hiltech-home #h08 .hiltech-brand-heading,
+#hiltech-home #h09 .hiltech-work-heading,
+#hiltech-home #h10 .hiltech-validation-heading {
+  margin-top: clamp(2.1rem, 3.5vw, 3.5rem);
+  padding-bottom: clamp(2.1rem, 3.5vw, 3.5rem);
+}
+
+#hiltech-home #h04 .hiltech-systems-body,
+#hiltech-home #h06 .hiltech-capabilities-map,
+#hiltech-home #h07 .hiltech-catalog-stage,
+#hiltech-home #h08 .hiltech-brand-body,
+#hiltech-home #h10 .hiltech-validation-body {
+  margin-top: clamp(2.2rem, 3.5vw, 3.5rem);
+}
+
+#hiltech-home #h04 .hiltech-systems-body {
+  padding-top: 0;
+}
+
+#hiltech-home #h04 .hiltech-system-row {
+  min-height: clamp(7.25rem, 13vh, 9rem);
+}
+
+#hiltech-home #h04 .hiltech-validation-band {
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+  padding: clamp(1.35rem, 2vw, 2rem);
+}
+
+#hiltech-home #h05 {
+  min-height: 300svh;
+}
+
+#hiltech-home #h06 .hiltech-capability-stage {
+  min-height: clamp(12rem, 24vh, 16rem);
+  padding-block: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+#hiltech-home #h06 .hiltech-capabilities-foot {
+  margin-top: clamp(2rem, 3.5vw, 3.5rem);
+}
+
+#hiltech-home #h07 .hiltech-catalog-media {
+  min-height: clamp(25rem, 43vw, 34rem);
+}
+
+#hiltech-home #h07 .hiltech-catalog-category-rail button {
+  min-height: 5.7rem;
+}
+
+#hiltech-home #h08 .hiltech-brand-list button {
+  min-height: clamp(5.1rem, 7.4vw, 6.5rem);
+}
+
+#hiltech-home #h09 .hiltech-work-evidence {
+  gap: clamp(2.75rem, 4.5vw, 4.5rem);
+  margin-top: clamp(2.75rem, 4vw, 4rem);
+}
+
+#hiltech-home #h09 .hiltech-evidence-media {
+  min-height: clamp(20rem, 32vw, 30rem);
+}
+
+#hiltech-home #h09 .hiltech-work-foot {
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+}
+
+#hiltech-home #h10 .hiltech-validation-mode-tabs button {
+  min-height: 4.6rem;
+}
+
+#hiltech-home #h10 .hiltech-validation-mode-swap {
+  margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+#hiltech-home #h11 .hiltech-certainty-shell {
+  padding-block: clamp(4.5rem, 6.5vw, 6.5rem);
+}
+
+#hiltech-home #h11 .hiltech-certainty-heading {
+  margin-top: clamp(3rem, 5vw, 5rem);
+}
+
+#hiltech-home #h11 .hiltech-certainty-statement {
+  margin-top: clamp(2.5rem, 4vw, 4rem);
+}
+
+#hiltech-home #h11 .hiltech-certainty-principles {
+  margin-top: clamp(3.25rem, 5vw, 5rem);
+}
+
+#hiltech-home #h11 .hiltech-certainty-principles article {
+  min-height: 12.5rem;
+}
+
+#hiltech-home #h11 .hiltech-certainty-principles h3 {
+  margin-top: 2.6rem;
+}
+
+#hiltech-home #h11 .hiltech-certainty-foot {
+  margin-top: clamp(2.75rem, 4vw, 4rem);
+}
+
+@media (max-width: 900px) {
+  #hiltech-home #h05 {
+    min-height: 320svh;
+  }
+}
+
+@media (max-width: 639px) {
+  #hiltech-home #h02 {
+    min-height: auto;
+  }
+
+  #hiltech-home #h02 .hiltech-layer-frame,
+  #hiltech-home #h03 .hiltech-scale-frame {
+    min-height: auto;
+    padding-block: 3rem;
+  }
+
+  #hiltech-home #h03 .hiltech-scale-ladder li {
+    min-height: 5.8rem;
+    padding-block: .8rem;
+  }
+
+  #hiltech-home #h04 .hiltech-systems-shell,
+  #hiltech-home #h06 .hiltech-capabilities-shell,
+  #hiltech-home #h07 .hiltech-catalog-shell,
+  #hiltech-home #h08 .hiltech-brand-shell,
+  #hiltech-home #h09 .hiltech-work-shell,
+  #hiltech-home #h10 .hiltech-validation-shell,
+  #hiltech-home #h11 .hiltech-certainty-shell {
+    padding-block: 3.15rem;
+  }
+
+  #hiltech-home #h04 .hiltech-systems-heading,
+  #hiltech-home #h06 .hiltech-capabilities-heading,
+  #hiltech-home #h07 .hiltech-catalog-heading,
+  #hiltech-home #h08 .hiltech-brand-heading,
+  #hiltech-home #h09 .hiltech-work-heading,
+  #hiltech-home #h10 .hiltech-validation-heading {
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  #hiltech-home #h04 .hiltech-system-row {
+    min-height: 6.35rem;
+  }
+
+  #hiltech-home #h04 .hiltech-validation-band {
+    margin-top: 2.4rem;
+  }
+
+  #hiltech-home #h05 {
+    min-height: 340svh;
+  }
+
+  #hiltech-home #h06 .hiltech-capability-stage {
+    min-height: 0;
+    padding-block: 1.55rem 1.9rem;
+  }
+
+  #hiltech-home #h06 .hiltech-capabilities-foot {
+    margin-top: 2rem;
+  }
+
+  #hiltech-home #h07 .hiltech-catalog-media {
+    min-height: 20rem;
+  }
+
+  #hiltech-home #h07 .hiltech-catalog-category-rail button {
+    min-height: 3.9rem;
+  }
+
+  #hiltech-home #h08 .hiltech-brand-list button {
+    min-height: 4.35rem;
+  }
+
+  #hiltech-home #h09 .hiltech-work-evidence {
+    gap: 2rem;
+    margin-top: 2.2rem;
+  }
+
+  #hiltech-home #h09 .hiltech-evidence-strip,
+  #hiltech-home #h09 .hiltech-evidence-strip.is-reversed {
+    gap: 1rem;
+  }
+
+  #hiltech-home #h09 .hiltech-evidence-media {
+    min-height: 18rem;
+  }
+
+  #hiltech-home #h09 .hiltech-evidence-copy h3,
+  #hiltech-home #h09 .hiltech-evidence-copy p,
+  #hiltech-home #h09 .hiltech-evidence-copy > strong {
+    margin-top: .85rem;
+  }
+
+  #hiltech-home #h09 .hiltech-work-foot {
+    margin-top: 2.4rem;
+  }
+
+  #hiltech-home #h10 .hiltech-validation-body {
+    gap: 1.35rem;
+    margin-top: 2rem;
+  }
+
+  #hiltech-home #h10 .hiltech-validation-mode-tabs button {
+    min-height: 4.2rem;
+  }
+
+  #hiltech-home #h11 .hiltech-certainty-heading,
+  #hiltech-home #h11 .hiltech-certainty-statement,
+  #hiltech-home #h11 .hiltech-certainty-principles {
+    margin-top: 2.5rem;
+  }
+
+  #hiltech-home #h11 .hiltech-certainty-principles article,
+  #hiltech-home #h11 .hiltech-certainty-principles article:nth-child(2) {
+    min-height: 8rem;
+    padding-block: 1rem;
+  }
+
+  #hiltech-home #h11 .hiltech-certainty-principles h3 {
+    margin-top: 1.35rem;
+  }
+
+  #hiltech-home #h11 .hiltech-certainty-foot {
+    margin-top: 2.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hiltech-home #h05 {
+    min-height: 100svh;
+  }
+}
