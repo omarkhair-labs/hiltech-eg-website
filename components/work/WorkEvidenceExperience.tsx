@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -107,10 +107,48 @@ const notClaimed = [
 
 export default function WorkEvidenceExperience() {
   const [activeId, setActiveId] = useState(evidenceRecords[0].id);
+  const indexRef = useRef<HTMLElement>(null);
   const activeRecord = useMemo(
     () => evidenceRecords.find((record) => record.id === activeId) ?? evidenceRecords[0],
     [activeId],
   );
+  const activeIndex = evidenceRecords.findIndex((record) => record.id === activeRecord.id);
+
+  const selectRecord = useCallback((id: string, options?: { updateUrl?: boolean; revealIndex?: boolean }) => {
+    if (!evidenceRecords.some((record) => record.id === id)) return;
+    setActiveId(id);
+
+    if (options?.updateUrl) {
+      const url = new URL(window.location.href);
+      url.hash = `evidence-${id}`;
+      window.history.replaceState(window.history.state, '', url);
+    }
+
+    if (options?.revealIndex) {
+      window.requestAnimationFrame(() => {
+        indexRef.current?.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      });
+    }
+  }, []);
+
+  const previewRecord = (id: string) => {
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setActiveId(id);
+    }
+  };
+
+  useEffect(() => {
+    const syncFromHash = () => {
+      const id = window.location.hash.replace(/^#evidence-/, '');
+      if (id) selectRecord(id);
+    };
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [selectRecord]);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -186,7 +224,16 @@ export default function WorkEvidenceExperience() {
 
             <div className="hiltech-work-contact-sheet" data-work-contact-sheet>
               {evidenceRecords.map((record) => (
-                <div key={record.id}>
+                <button
+                  key={record.id}
+                  type="button"
+                  className={record.id === activeId ? 'is-active' : undefined}
+                  aria-controls="work-evidence-stage"
+                  aria-label={`Inspect ${record.discipline} evidence`}
+                  onMouseEnter={() => previewRecord(record.id)}
+                  onFocus={() => setActiveId(record.id)}
+                  onClick={() => selectRecord(record.id, { updateUrl: true, revealIndex: true })}
+                >
                   <div data-work-carry-target={record.id}>
                     <Image
                       src={record.image}
@@ -197,7 +244,8 @@ export default function WorkEvidenceExperience() {
                     />
                   </div>
                   <span>{record.index} / {record.discipline}</span>
-                </div>
+                  <em>{record.id === activeId ? 'ACTIVE' : 'OPEN'} ↘</em>
+                </button>
               ))}
             </div>
           </div>
@@ -211,7 +259,7 @@ export default function WorkEvidenceExperience() {
         </div>
       </section>
 
-      <section className="hiltech-work-index" data-work-reveal>
+      <section ref={indexRef} id="work-evidence-index" className="hiltech-work-index" data-work-reveal>
         <div className="hiltech-work-shell">
           <div className="hiltech-work-section-label">
             <span>01 / EVIDENCE INDEX</span>
@@ -228,8 +276,8 @@ export default function WorkEvidenceExperience() {
                     type="button"
                     className={active ? 'is-active' : undefined}
                     aria-pressed={active}
-                    onClick={() => setActiveId(record.id)}
-                    onMouseEnter={() => setActiveId(record.id)}
+                    onClick={() => selectRecord(record.id, { updateUrl: true })}
+                    onMouseEnter={() => previewRecord(record.id)}
                     onFocus={() => setActiveId(record.id)}
                   >
                     <span>{record.index}</span>
@@ -243,7 +291,7 @@ export default function WorkEvidenceExperience() {
               })}
             </div>
 
-            <div className="hiltech-work-record-stage" aria-live="polite">
+            <div id="work-evidence-stage" className="hiltech-work-record-stage" aria-live="polite">
               <div className="hiltech-work-record-media" key={activeRecord.id}>
                 <Image
                   src={activeRecord.image}
@@ -264,6 +312,21 @@ export default function WorkEvidenceExperience() {
                   <span>{activeRecord.trace}</span>
                   <i />
                 </div>
+                <nav className="hiltech-work-record-controls" aria-label="Evidence record controls">
+                  <button
+                    type="button"
+                    onClick={() => selectRecord(evidenceRecords[(activeIndex - 1 + evidenceRecords.length) % evidenceRecords.length].id, { updateUrl: true })}
+                  >
+                    ← PREVIOUS
+                  </button>
+                  <span>{activeRecord.index} / {String(evidenceRecords.length).padStart(2, '0')}</span>
+                  <button
+                    type="button"
+                    onClick={() => selectRecord(evidenceRecords[(activeIndex + 1) % evidenceRecords.length].id, { updateUrl: true })}
+                  >
+                    NEXT →
+                  </button>
+                </nav>
               </div>
             </div>
           </div>

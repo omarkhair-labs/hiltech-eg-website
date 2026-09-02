@@ -80,21 +80,24 @@ export default async function Page() {
               </div>
 
               <div className="hiltech-products-object-entries">
-                <div>
+                <Link href="#exact-finding" data-product-dock-entry="reference">
                   <span>01 / EXACT</span>
                   <strong>REFERENCE</strong>
                   <small>{count} CURRENT CODES</small>
-                </div>
-                <div>
+                  <em aria-hidden="true">ENTER ↓</em>
+                </Link>
+                <Link href="#physical-library" data-product-dock-entry="family">
                   <span>02 / SYSTEM</span>
                   <strong>FAMILY</strong>
                   <small>{activeCategoryCount} ACTIVE FAMILIES</small>
-                </div>
-                <div>
+                  <em aria-hidden="true">EXPLORE ↓</em>
+                </Link>
+                <Link href="#project-scope" data-product-dock-entry="fit">
                   <span>03 / PROJECT</span>
                   <strong>FIT</strong>
                   <small>REFERENCE → RFQ</small>
-                </div>
+                  <em aria-hidden="true">BUILD ↓</em>
+                </Link>
               </div>
             </div>
           </div>
@@ -109,7 +112,7 @@ export default async function Page() {
         </div>
       </section>
 
-      <section className="hiltech-products-catalog-section">
+      <section id="product-catalog" className="hiltech-products-catalog-section">
         <div className="hiltech-products-shell">
           <div className="hiltech-products-catalog-head">
             <div>

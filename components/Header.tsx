@@ -97,18 +97,36 @@ export default function Header() {
     if (target === pathname) return;
 
     event.preventDefault();
+    const destinationRect = event.currentTarget.getBoundingClientRect();
+    const routeElements = Array.from(
+      document.querySelectorAll<HTMLElement>('.hiltech-creative-header [data-route-continuity-link]'),
+    );
+    const visibleRouteElement = routeElements.find((element) => {
+      const rect = element.getBoundingClientRect();
+      return element.getAttribute('aria-current') === 'page' && rect.width > 0 && rect.height > 0;
+    }) ?? routeElements.find((element) => {
+      const rect = element.getBoundingClientRect();
+      return element.dataset.routeContinuityLink === 'home' && rect.width > 0 && rect.height > 0;
+    });
+    const sourceRect = visibleRouteElement?.getBoundingClientRect() ?? destinationRect;
     setOpen(false);
 
-    const rect = event.currentTarget.getBoundingClientRect();
     emitRouteContinuity({
       kind: 'nav',
       href: target,
       label,
+      destinationKey: href === '/' ? 'home' : label.toLowerCase(),
       sourceRect: {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
+        left: sourceRect.left,
+        top: sourceRect.top,
+        width: sourceRect.width,
+        height: sourceRect.height,
+      },
+      destinationRect: {
+        left: destinationRect.left,
+        top: destinationRect.top,
+        width: destinationRect.width,
+        height: destinationRect.height,
       },
     });
   };
@@ -121,6 +139,7 @@ export default function Header() {
           translate="no"
           className="flex min-w-0 items-center gap-2 text-lg font-extrabold tracking-[0.12em] text-white"
           aria-label={isArabic ? 'العودة إلى الصفحة الرئيسية لهيلتك' : 'HILTECH home'}
+          aria-current={pathname === '/' ? 'page' : undefined}
           data-route-continuity-link={isCreativePublic ? 'home' : undefined}
           onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/', 'HOME') : undefined}
         >
@@ -165,12 +184,18 @@ export default function Header() {
           <LanguageSwitcher className={isCreativePublic ? "hiltech-creative-utility-link" : "inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"} />
           <Link
             href={localizeHref('/rfq')}
+            aria-current={pathname.startsWith('/rfq') ? 'page' : undefined}
+            data-route-continuity-link={isCreativePublic ? 'rfq' : undefined}
+            onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/rfq', 'RFQ') : undefined}
             className={isCreativePublic ? "hiltech-creative-rfq-count" : "inline-flex min-h-10 items-center rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-white/25 hover:bg-white/10"}
           >
             {isArabic ? `السلة ${rfqCount}` : `RFQ ${rfqCount}`}
           </Link>
           <Link
             href={localizeHref('/rfq')}
+            aria-current={pathname.startsWith('/rfq') ? 'page' : undefined}
+            data-route-continuity-link={isCreativePublic ? 'rfq' : undefined}
+            onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/rfq', 'RFQ') : undefined}
             className={isCreativePublic ? "hiltech-creative-project-link" : "inline-flex min-h-10 items-center rounded-lg bg-orange-600 px-4 py-2 text-sm font-bold text-white shadow-[0_10px_24px_rgba(234,88,12,0.18)] transition hover:bg-orange-500"}
           >
             {isArabic ? 'ابدأ طلب السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
@@ -231,7 +256,14 @@ export default function Header() {
                   ] as const
                 : secondaryNav
               ).map(([label, href, arLabel]) => (
-                <Link key={href} href={localizeHref(href)} className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"}>
+                <Link
+                  key={href}
+                  href={localizeHref(href)}
+                  aria-current={isActive(href) ? 'page' : undefined}
+                  data-route-continuity-link={isCreativePublic ? label.toLowerCase() : undefined}
+                  onClick={isCreativePublic ? (event) => handleCreativeRoute(event, href, label.toUpperCase()) : undefined}
+                  className={isCreativePublic ? "hiltech-creative-mobile-secondary-link" : "flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition hover:bg-white/5 hover:text-white"}
+                >
                   {isArabic ? arLabel : label}
                 </Link>
               ))}
@@ -241,11 +273,20 @@ export default function Header() {
             <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
               <Link
                 href={localizeHref('/rfq')}
+                aria-current={pathname.startsWith('/rfq') ? 'page' : undefined}
+                data-route-continuity-link={isCreativePublic ? 'rfq' : undefined}
+                onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/rfq', 'RFQ') : undefined}
                 className={isCreativePublic ? "hiltech-creative-mobile-project-link" : "inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-500"}
               >
                 {isArabic ? 'ابدأ طلب عرض السعر' : isCreativePublic ? 'Start a Project' : 'Start RFQ'}
               </Link>
-              <Link href={localizeHref('/rfq')} className={isCreativePublic ? "hiltech-creative-mobile-basket-link" : "inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10"}>
+              <Link
+                href={localizeHref('/rfq')}
+                aria-current={pathname.startsWith('/rfq') ? 'page' : undefined}
+                data-route-continuity-link={isCreativePublic ? 'rfq' : undefined}
+                onClick={isCreativePublic ? (event) => handleCreativeRoute(event, '/rfq', 'RFQ') : undefined}
+                className={isCreativePublic ? "hiltech-creative-mobile-basket-link" : "inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/10"}
+              >
                 {isArabic ? `السلة (${rfqCount})` : `Basket (${rfqCount})`}
               </Link>
             </div>

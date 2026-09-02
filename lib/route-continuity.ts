@@ -14,10 +14,13 @@ export type RouteContinuityDetail = {
   href: string;
   label: string;
   sourceRect: RouteContinuityRect;
+  destinationRect?: RouteContinuityRect;
+  destinationKey?: string;
   markup?: string;
   src?: string;
   alt?: string;
   targetId?: string;
+  sourceVariant?: 'map';
 };
 
 type RouteClickLike = {

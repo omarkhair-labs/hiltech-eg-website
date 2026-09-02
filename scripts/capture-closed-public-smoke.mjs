@@ -2,10 +2,15 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const baseURL = process.env.HILTECH_QA_URL || 'http://127.0.0.1:3000';
+const requestedTarget = process.env.HILTECH_QA_TARGET;
 const targets = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'mobile', width: 390, height: 844 },
-];
+].filter((target) => !requestedTarget || target.name === requestedTarget);
+
+if (targets.length === 0) {
+  throw new Error(`Unknown HILTECH_QA_TARGET: ${requestedTarget}`);
+}
 
 const checks = [
   { name: 'home-top', path: '/', selector: '#h01' },
@@ -25,6 +30,11 @@ const checks = [
   { name: 'company-final', path: '/company', selector: '.hiltech-company-close' },
 ];
 
+async function openAppPage(page, url) {
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await page.locator('[data-hiltech-app-ready]').waitFor({ state: 'attached', timeout: 120_000 });
+}
+
 await mkdir('visual-qa-closed-public-smoke', { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -33,12 +43,15 @@ try {
     const context = await browser.newContext({
       viewport: { width: target.width, height: target.height },
       deviceScaleFactor: 1,
+      hasTouch: target.name === 'mobile',
+      isMobile: target.name === 'mobile',
       reducedMotion: 'no-preference',
     });
     const page = await context.newPage();
+    page.setDefaultNavigationTimeout(120_000);
 
     for (const check of checks) {
-      await page.goto(`${baseURL}${check.path}`, { waitUntil: 'networkidle' });
+      await openAppPage(page, `${baseURL}${check.path}`);
       await page.locator(check.selector).scrollIntoViewIfNeeded();
       await page.waitForTimeout(700);
       await page.screenshot({
@@ -48,7 +61,7 @@ try {
     }
 
     console.log(`[continuity] ${target.name} primary navigation keeps route context`);
-    await page.goto(baseURL, { waitUntil: 'networkidle' });
+    await openAppPage(page, baseURL);
     if (target.name === 'mobile') {
       const menuButton = page.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
       await menuButton.click();
@@ -62,8 +75,9 @@ try {
     await navContinuity.waitFor({ state: 'detached' });
 
     console.log(`[continuity] ${target.name} Solutions carries system model into detail`);
-    const fiberRow = page.locator('[data-solution-carry-link="fiber-backbone"]');
-    await fiberRow.scrollIntoViewIfNeeded();
+    const solutionMapNodes = page.locator('[data-solution-map-node]');
+    if (await solutionMapNodes.count() !== 6) throw new Error(`${target.name} interactive Solutions map nodes missing`);
+    const fiberRow = page.locator('[data-solution-map-node="fiber-backbone"]');
     if (target.name === 'desktop') await fiberRow.hover();
     await page.waitForTimeout(140);
     await fiberRow.click();
@@ -78,10 +92,10 @@ try {
     await solutionCarry.waitFor({ state: 'detached' });
 
     console.log(`[continuity] ${target.name} Home evidence carries into Work archive`);
-    await page.goto(baseURL, { waitUntil: 'networkidle' });
+    await openAppPage(page, baseURL);
     const workCarryLink = page.locator('[data-work-carry-link="rack-data-room"]');
     await workCarryLink.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(700);
     await workCarryLink.click();
     const workCarry = page.locator('[data-route-continuity-kind="work"]');
     await workCarry.waitFor({ state: 'attached' });
@@ -90,12 +104,55 @@ try {
       fullPage: false,
     });
     await page.waitForURL('**/work');
-    await page.locator('[data-work-carry-target="rack-data-room"]').waitFor();
+    await page.locator('[data-work-carry-target="rack-data-room"]').first().waitFor({ state: 'attached' });
     await workCarry.waitFor({ state: 'detached' });
+
+    console.log(`[interaction] ${target.name} Work evidence selection is URL-backed and navigable`);
+    const workEvidenceButtons = page.locator('.hiltech-work-contact-sheet > button');
+    if (await workEvidenceButtons.count() !== 4) throw new Error(`${target.name} Work evidence controls missing`);
+    await workEvidenceButtons.nth(2).click();
+    await page.waitForTimeout(520);
+    if (!page.url().endsWith('#evidence-fiber-termination')) {
+      throw new Error(`${target.name} Work evidence URL state missing: ${page.url()}`);
+    }
+    const selectedEvidence = (await page.locator('.hiltech-work-record-context strong').first().innerText()).toUpperCase();
+    if (!selectedEvidence.includes('FIBER')) throw new Error(`${target.name} Work evidence state mismatch: ${selectedEvidence}`);
+    const nextEvidence = page.locator('.hiltech-work-record-controls button').last();
+    await nextEvidence.click();
+    if (!page.url().endsWith('#evidence-testing-validation')) {
+      throw new Error(`${target.name} Work next control did not update URL state: ${page.url()}`);
+    }
+
+    console.log(`[interaction] ${target.name} Product Dock routes into real catalog entry states`);
+    await openAppPage(page, `${baseURL}/products-partners`);
+    const dockEntries = page.locator('[data-product-dock-entry]');
+    if (await dockEntries.count() !== 3) throw new Error(`${target.name} Product Dock entries missing`);
+    await page.locator('[data-product-dock-entry="family"]').click();
+    await page.waitForTimeout(700);
+    if (!page.url().endsWith('#physical-library')) throw new Error(`${target.name} Product family entry did not resolve`);
+    const familyEntryTop = await page.locator('#physical-library').evaluate((element) => element.getBoundingClientRect().top);
+    if (familyEntryTop > target.height) throw new Error(`${target.name} Product family entry remained outside viewport`);
+
+    console.log(`[interaction] ${target.name} Company operating map changes state`);
+    await openAppPage(page, `${baseURL}/company`);
+    const companyControls = page.locator('.hiltech-company-map-controls button');
+    if (await companyControls.count() !== 4) throw new Error(`${target.name} Company map controls missing`);
+    await companyControls.nth(1).click();
+    const companyReadout = (await page.locator('.hiltech-company-map-readout strong').innerText()).toUpperCase();
+    if (!companyReadout.includes('PARTS CONNECTED')) throw new Error(`${target.name} Company map readout did not update`);
+
+    console.log(`[interaction] ${target.name} RFQ state board opens the live request stages`);
+    await openAppPage(page, `${baseURL}/rfq`);
+    const rfqStateControls = page.locator('.hiltech-rfq-live-state > button');
+    if (await rfqStateControls.count() !== 3) throw new Error(`${target.name} RFQ state controls missing`);
+    await rfqStateControls.first().click();
+    await page.waitForTimeout(700);
+    const ledgerTop = await page.locator('[data-rfq-ledger]').evaluate((element) => element.getBoundingClientRect().top);
+    if (ledgerTop > target.height) throw new Error(`${target.name} RFQ ledger control did not reveal its stage`);
 
     if (target.name === 'mobile') {
       console.log('[mobile-contract] H07 selector stays image-adjacent');
-      await page.goto(baseURL, { waitUntil: 'networkidle' });
+      await openAppPage(page, baseURL);
       await page.locator('#h07').scrollIntoViewIfNeeded();
       await page.waitForTimeout(350);
       const h07Layout = await page.evaluate(() => {
@@ -140,7 +197,7 @@ try {
       });
 
       console.log('[mobile-contract] Solutions inspector tracks scroll state');
-      await page.goto(`${baseURL}/solutions`, { waitUntil: 'networkidle' });
+      await openAppPage(page, `${baseURL}/solutions`);
       const solutionRows = page.locator('[data-solution-row]');
       if ((await solutionRows.count()) < 2) throw new Error('mobile solutions rows missing');
       await solutionRows.nth(1).scrollIntoViewIfNeeded();
@@ -161,7 +218,7 @@ try {
       });
 
       console.log('[mobile-contract] Company map is visible by default and triggers on downward entry');
-      await page.goto(`${baseURL}/company`, { waitUntil: 'networkidle' });
+      await openAppPage(page, `${baseURL}/company`);
       const companyStage = page.locator('.hiltech-company-system-stage');
       const initialCompanyStageOpacity = await companyStage.evaluate(
         (stage) => Number.parseFloat(getComputedStyle(stage).opacity || '1'),
@@ -214,7 +271,8 @@ try {
     hasTouch: true,
   });
   const reducedPage = await reducedContext.newPage();
-  await reducedPage.goto(baseURL, { waitUntil: 'networkidle' });
+  reducedPage.setDefaultNavigationTimeout(120_000);
+  await openAppPage(reducedPage, baseURL);
   const reducedMenu = reducedPage.getByRole('button', { name: /Open navigation menu|Menu/i }).first();
   await reducedMenu.click();
   await reducedPage.locator('.hiltech-creative-mobile-panel').waitFor();

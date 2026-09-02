@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   ROUTE_CONTINUITY_EVENT,
@@ -74,13 +74,28 @@ function targetSelector(transition: TransitionState) {
   return '';
 }
 
+function findVisibleNavDestination(key: string | undefined) {
+  if (!key) return null;
+  return Array.from(
+    document.querySelectorAll<HTMLElement>(`[data-route-continuity-link="${escapeTargetId(key)}"]`),
+  ).find((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }) ?? null;
+}
+
 export default function RouteContinuity() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
   const [transition, setTransition] = useState<TransitionState | null>(null);
   const navigationTimerRef = useRef<number | null>(null);
   const finishTimerRef = useRef<number | null>(null);
   const locateFrameRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
 
   useEffect(() => {
     const clearTimers = () => {
@@ -117,7 +132,10 @@ export default function RouteContinuity() {
               ? {
                   ...current,
                   phase: 'handoff',
-                  currentRect: getHandoffRect(current.kind),
+                  currentRect:
+                    current.kind === 'nav' && current.destinationRect
+                      ? current.destinationRect
+                      : getHandoffRect(current.kind),
                 }
               : current,
           );
@@ -141,7 +159,15 @@ export default function RouteContinuity() {
     if (!transition || pathname !== transition.targetPath) return;
 
     if (transition.kind === 'nav') {
-      setTransition((current) => current ? { ...current, phase: 'arriving' } : current);
+      const destination = findVisibleNavDestination(transition.destinationKey);
+      const rect = destination?.getBoundingClientRect();
+      setTransition((current) => current ? {
+        ...current,
+        phase: 'arriving',
+        currentRect: rect
+          ? { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+          : current.currentRect,
+      } : current);
       if (finishTimerRef.current) window.clearTimeout(finishTimerRef.current);
       finishTimerRef.current = window.setTimeout(() => setTransition(null), 280);
       return;
@@ -189,7 +215,9 @@ export default function RouteContinuity() {
     locateFrameRef.current = window.requestAnimationFrame(locateDestination);
   }, [pathname, transition?.targetPath]);
 
-  if (!transition) return null;
+  if (!transition) {
+    return isReady ? <span hidden data-hiltech-app-ready /> : null;
+  }
 
   if (transition.kind === 'nav') {
     const viewportWidth = typeof window === 'undefined' ? 1440 : window.innerWidth;
@@ -200,7 +228,12 @@ export default function RouteContinuity() {
         transition.sourceRect.left + transition.sourceRect.width / 2,
       ),
     );
-    const centerX = viewportWidth / 2;
+    const targetRect = transition.destinationRect ?? transition.currentRect;
+    const targetX = Math.max(
+      18,
+      Math.min(viewportWidth - 18, targetRect.left + targetRect.width / 2),
+    );
+    const signalDelta = targetX - sourceX;
 
     return (
       <div
@@ -209,10 +242,15 @@ export default function RouteContinuity() {
         data-route-continuity-kind="nav"
         aria-hidden="true"
       >
-        <svg viewBox={`0 0 ${viewportWidth} 156`} preserveAspectRatio="none">
-          <path pathLength="1" d={`M ${sourceX} 62 V 92 H ${centerX} V 126`} />
-          <circle cx={sourceX} cy="62" r="4" />
-          <circle cx={centerX} cy="126" r="4" />
+        <svg
+          viewBox={`0 0 ${viewportWidth} 104`}
+          preserveAspectRatio="none"
+          style={{ '--hiltech-nav-signal-delta': `${signalDelta}px` } as CSSProperties}
+        >
+          <path pathLength="1" d={`M ${sourceX} 61 V 84 H ${targetX} V 61`} />
+          <circle className="is-source" cx={sourceX} cy="61" r="4" />
+          <circle className="is-target" cx={targetX} cy="61" r="4" />
+          <circle className="is-signal" cx={sourceX} cy="61" r="5" />
         </svg>
         <div>
           <span>PHYSICAL ROUTE</span>
@@ -226,7 +264,7 @@ export default function RouteContinuity() {
 
   return (
     <div
-      className={`hiltech-route-carry-object is-${transition.kind} is-${transition.phase}`}
+      className={`hiltech-route-carry-object is-${transition.kind} is-${transition.phase}${transition.sourceVariant ? ` is-${transition.sourceVariant}` : ''}`}
       data-route-continuity
       data-route-continuity-kind={transition.kind}
       data-route-continuity-target={transition.targetId}

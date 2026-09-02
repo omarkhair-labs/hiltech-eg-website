@@ -10,6 +10,11 @@ import { emitRouteContinuity, shouldInterceptRouteClick } from '@/lib/route-cont
 gsap.registerPlugin(ScrollTrigger);
 
 type DiagramKind = 'structured' | 'fiber' | 'room' | 'cctv' | 'test' | 'rfq';
+type SolutionEntry = (typeof solutions)[number] & {
+  code: string;
+  kind: DiagramKind;
+  mode: string;
+};
 
 const profileBySlug: Record<string, { code: string; kind: DiagramKind; mode: string }> = {
   'structured-cabling': { code: 'ACCESS / 01', kind: 'structured', mode: 'ENDPOINT → PATCH → RACK' },
@@ -134,14 +139,24 @@ function SolutionDiagram({ kind }: { kind: DiagramKind }) {
   );
 }
 
-function SolutionsOpeningMap() {
+function SolutionsOpeningMap({
+  entries,
+  activeIndex,
+  onActivate,
+  onRoute,
+}: {
+  entries: SolutionEntry[];
+  activeIndex: number;
+  onActivate: (index: number) => void;
+  onRoute: (event: ReactMouseEvent<HTMLAnchorElement>, solution: SolutionEntry, index: number) => void;
+}) {
   const nodes = [
-    { x: 92, y: 164, code: '01', label: 'ACCESS' },
-    { x: 230, y: 112, code: '02', label: 'CORE' },
-    { x: 370, y: 220, code: '03', label: 'ROOM' },
-    { x: 510, y: 144, code: '04', label: 'SECURITY' },
-    { x: 654, y: 236, code: '05', label: 'VERIFY' },
-    { x: 786, y: 176, code: '06', label: 'PROCURE' },
+    { x: 92, y: 164, label: 'ACCESS' },
+    { x: 230, y: 112, label: 'CORE' },
+    { x: 370, y: 220, label: 'ROOM' },
+    { x: 510, y: 144, label: 'SECURITY' },
+    { x: 654, y: 236, label: 'VERIFY' },
+    { x: 786, y: 176, label: 'PROCURE' },
   ] as const;
 
   return (
@@ -150,27 +165,41 @@ function SolutionsOpeningMap() {
         <span>LIVE SYSTEM INDEX</span>
         <strong>06 ROUTES / ONE PHYSICAL LAYER</strong>
       </div>
-      <svg viewBox="0 0 880 340" role="img" aria-label="Illustrative map of HILTECH solution routes">
-        <rect width="880" height="340" fill="#071008" />
-        <path d="M0 84H880M0 170H880M0 256H880M176 0V340M352 0V340M528 0V340M704 0V340" stroke="#dce8df" strokeOpacity=".045" />
-        <path
-          className="hiltech-solutions-hero-map-route"
-          d="M92 164 C152 164 170 112 230 112 S310 220 370 220 S448 144 510 144 S592 236 654 236 S726 176 786 176"
-          fill="none"
-          stroke="#8ff257"
-          strokeWidth="2"
-        />
-        <path d="M230 112 V272 H510" fill="none" stroke="#405347" strokeWidth="1.2" />
-        <path d="M510 144 V286 H786" fill="none" stroke="#405347" strokeWidth="1.2" />
-        {nodes.map((node) => (
-          <g key={node.code} transform={`translate(${node.x} ${node.y})`}>
-            <circle r="8" fill="#08100a" stroke="#8ff257" strokeWidth="1.4" />
-            <circle r="2.5" fill="#8ff257" />
-            <text x="14" y="-7" fill="#8ff257" fontSize="9" fontFamily="monospace" letterSpacing="1">{node.code}</text>
-            <text x="14" y="10" fill="#b9c5bd" fontSize="10" fontFamily="monospace" letterSpacing="1">{node.label}</text>
-          </g>
-        ))}
-      </svg>
+      <div className="hiltech-solutions-hero-map-canvas">
+        <svg viewBox="0 0 880 340" aria-hidden="true">
+          <rect width="880" height="340" fill="#071008" />
+          <path d="M0 84H880M0 170H880M0 256H880M176 0V340M352 0V340M528 0V340M704 0V340" stroke="#dce8df" strokeOpacity=".045" />
+          <path
+            className="hiltech-solutions-hero-map-route"
+            d="M92 164 C152 164 170 112 230 112 S310 220 370 220 S448 144 510 144 S592 236 654 236 S726 176 786 176"
+            fill="none"
+            stroke="#8ff257"
+            strokeWidth="2"
+          />
+          <path d="M230 112 V272 H510" fill="none" stroke="#405347" strokeWidth="1.2" />
+          <path d="M510 144 V286 H786" fill="none" stroke="#405347" strokeWidth="1.2" />
+        </svg>
+        {nodes.map((node, index) => {
+          const entry = entries[index];
+          return (
+            <Link
+              key={entry.slug}
+              href={`/solutions/${entry.slug}`}
+              className={activeIndex === index ? 'is-active' : undefined}
+              style={{ left: `${(node.x / 880) * 100}%`, top: `${(node.y / 340) * 100}%` }}
+              aria-label={`${entry.shortTitle}: ${entry.eyebrow}`}
+              data-solution-map-node={entry.slug}
+              onMouseEnter={() => onActivate(index)}
+              onFocus={() => onActivate(index)}
+              onClick={(event) => onRoute(event, entry, index)}
+            >
+              <i aria-hidden="true" />
+              <span>{entry.code.split(' / ')[1] ?? String(index + 1).padStart(2, '0')}</span>
+              <strong>{node.label}</strong>
+            </Link>
+          );
+        })}
+      </div>
       <div className="hiltech-solutions-hero-map-foot">
         <span>DISCOVER → UNDERSTAND → TRANSACT</span>
         <strong>SYSTEM BEFORE SERVICE LABEL</strong>
@@ -190,6 +219,7 @@ export default function SolutionsIndexExperience() {
     event: ReactMouseEvent<HTMLAnchorElement>,
     solution: (typeof entries)[number],
     index: number,
+    sourceMode: 'map' | 'inspector' = 'inspector',
   ) => {
     if (!shouldInterceptRouteClick(event)) return;
 
@@ -198,7 +228,9 @@ export default function SolutionsIndexExperience() {
 
     const rowRect = event.currentTarget.getBoundingClientRect();
     window.requestAnimationFrame(() => {
-      const source = rootRef.current?.querySelector<HTMLElement>('.hiltech-solutions-index-diagram');
+      const source = rootRef.current?.querySelector<HTMLElement>(
+        sourceMode === 'map' ? '.hiltech-solutions-hero-map-canvas' : '.hiltech-solutions-index-diagram',
+      );
       const svg = source?.querySelector('svg');
       const rect = source?.getBoundingClientRect() ?? rowRect;
       if (source && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -210,6 +242,7 @@ export default function SolutionsIndexExperience() {
         href: `/solutions/${solution.slug}`,
         label: solution.shortTitle,
         targetId: solution.slug,
+        sourceVariant: sourceMode === 'map' ? 'map' : undefined,
         markup: svg?.outerHTML ?? '',
         sourceRect: {
           left: rect.left,
@@ -280,7 +313,12 @@ export default function SolutionsIndexExperience() {
           </div>
 
           <div className="hiltech-solutions-hero-system">
-            <SolutionsOpeningMap />
+            <SolutionsOpeningMap
+              entries={entries}
+              activeIndex={activeIndex}
+              onActivate={setActiveIndex}
+              onRoute={(event, solution, index) => handleSolutionRoute(event, solution, index, 'map')}
+            />
             <div className="hiltech-solutions-index-hero-grid">
               <h1 data-solutions-title>
                 CHOOSE THE SYSTEM.<br />
