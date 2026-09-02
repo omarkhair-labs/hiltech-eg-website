@@ -63,8 +63,8 @@ export default function CapabilitiesFlow() {
 
       if (!reduced) {
         gsap.from(row.querySelector('[data-capability-title]'), {
-          clipPath: 'inset(0 100% 0 0)',
           xPercent: -3,
+          immediateRender: false,
           duration: 0.78,
           ease: 'power4.out',
           scrollTrigger: {
@@ -75,8 +75,8 @@ export default function CapabilitiesFlow() {
         });
 
         gsap.from(row.querySelectorAll('[data-capability-detail]'), {
-          opacity: 0,
           y: 14,
+          immediateRender: false,
           duration: 0.55,
           stagger: 0.055,
           ease: 'power3.out',
